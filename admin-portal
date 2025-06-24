@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>HealMed Admin Portal</h1>
+        <button id="adminLogoutBtn">Logout</button>
+    </div>
+    <div class="container">
+        <div class="section">
+            <h2>Patient Test Results</h2>
+            <ul id="allTestResultsList">
+                </ul>
+        </div>
+
+        <div class="section">
+            <h2>Pending Appointments</h2>
+            <ul id="pendingAppointmentsList">
+                </ul>
+        </div>
+
+        <div class="section">
+            <h2>Approved Appointments Calendar</h2>
+            <div id="approvedAppointmentsCalendar">
+                </div>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
