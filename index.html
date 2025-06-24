@@ -130,6 +130,14 @@
             transition: transform 0.2s;
             margin-bottom: 10px;
         }
+        .btn.external-link-btn { /* Style for external link buttons */
+            width: auto;
+            padding: 10px 25px;
+            margin-top: 15px;
+            display: inline-block; /* Allows text to wrap without full width */
+            text-decoration: none; /* Remove underline for anchor tag */
+            text-align: center;
+        }
 
         .btn:hover {
             transform: translateY(-2px);
@@ -416,7 +424,7 @@
         }
         /* Default FullCalendar event background */
         .fc-event {
-            background-color: #0984e3 !important; /* Default blue for event */
+            background-color: #0984e3 !important; /* Main appointment color */
             border-color: #0984e3 !important;
             border-radius: 5px !important;
             padding: 3px 5px !important;
@@ -646,6 +654,7 @@
                     <li data-section="mentalHealth">Mental Health Tests</li>
                     <li data-section="healthRecords">Health Records</li>
                     <li data-section="profile">Profile</li>
+                    <li data-section="consentForms">Consent Forms</li> <!-- New Patient Section -->
                 </ul>
             </div>
             <div class="main-content">
@@ -724,6 +733,13 @@
                     <h2>Profile</h2>
                     <div id="profileInfo"></div>
                 </div>
+
+                <!-- Patient Consent Forms Section -->
+                <div id="consentFormsSection" class="section hidden">
+                    <h2>Consent Forms</h2>
+                    <p>Please review and complete any necessary consent forms below.</p>
+                    <a href="https://v-gedipudi1.github.io/consent-forms/" target="_blank" class="btn external-link-btn">TMS Consent Form</a>
+                </div>
             </div>
         </div>
 
@@ -736,7 +752,8 @@
                     <li class="active" data-section="appointments">Appointment Requests</li>
                     <li data-section="patients">Patient Management</li>
                     <li data-section="testResults">Test Results</li>
-                    <li data-section="calendar">Calendar</li> <!-- New Calendar Section -->
+                    <li data-section="calendar">Calendar</li>
+                    <li data-section="doctorPortal">Doctor Portal</li> <!-- Admin Sidebar Link for Doctor Portal -->
                 </ul>
             </div>
             <div class="main-content">
@@ -810,6 +827,13 @@
                 <div id="adminCalendarSection" class="section hidden">
                     <h2>Approved Appointments Calendar</h2>
                     <div id="calendar"></div> <!-- FullCalendar will render here -->
+                </div>
+
+                <!-- Admin Doctor Portal Section (FIXED ID) -->
+                <div id="adminDoctorPortalSection" class="section hidden">
+                    <h2>Doctor Portal</h2>
+                    <p>Access the specialized doctor's interface here.</p>
+                    <a href="https://v-gedipudi1.github.io/consent-forms/doctor_portal.html" target="_blank" class="btn external-link-btn">Access Doctor Portal</a> <!-- Doctor Portal Button -->
                 </div>
             </div>
         </div>
@@ -1171,7 +1195,17 @@
                 targetListItem.classList.add('active');
             }
 
-            document.getElementById(`admin${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)}Section`).classList.remove('hidden');
+            // This is the crucial part for showing the section
+            // The sectionId is 'doctorPortal' but the div ID is 'adminDoctorPortalSection'
+            // Construct the ID correctly: admin + capitalized sectionId + Section
+            const targetSectionId = `admin${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)}Section`;
+            const targetSectionElement = document.getElementById(targetSectionId);
+            
+            if (targetSectionElement) {
+                targetSectionElement.classList.remove('hidden');
+            } else {
+                console.error(`Admin: Could not find section with ID: ${targetSectionId}`);
+            }
 
             if (sectionId === 'calendar') {
                 loadAdminCalendar(); // Initialize/reload calendar when this section is shown
@@ -1930,10 +1964,10 @@
 
                                 // Case 1: New appointments with precise date and time
                                 if (appt.appointmentDate && appt.appointmentTime) {
-                                    eventStart = `${appt.appointmentDate}T${appt.appointmentTime}:00`; // YYYY-MM-DDTHH:MM:SS
+                                    eventStart = `${appt.appointmentDate}T${appt.appointmentTime}:00`; //YYYY-MM-DDTHH:MM:SS
                                     const startDateTime = new Date(eventStart);
                                     const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // 1-hour appointment
-                                    eventEnd = endDateTime.toISOString().slice(0, 19); // YYYY-MM-DDTHH:MM:SS
+                                    eventEnd = endDateTime.toISOString().slice(0, 19); //YYYY-MM-DDTHH:MM:SS
                                     
                                     displayTimeForModal = startDateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                                     eventTitle = `Appt with ${patientFirstName}`; 
