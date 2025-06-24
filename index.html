@@ -319,6 +319,20 @@
             z-index: 100; /* Ensure it's above other content */
         }
 
+        .calendar-entry {
+            background: linear-gradient(135deg, #81ecec 0%, #00cec9 100%);
+            color: #333;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .calendar-entry h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+
         @media (max-width: 768px) {
             .dashboard {
                 flex-direction: column;
@@ -517,6 +531,7 @@
                     <li class="active" data-section="appointments">Appointment Requests</li>
                     <li data-section="patients">Patient Management</li>
                     <li data-section="testResults">Test Results</li>
+                    <li data-section="calendar">Calendar</li> <!-- New Calendar Section -->
                 </ul>
             </div>
             <div class="main-content">
@@ -571,6 +586,14 @@
                     <h2>Patient Test Results</h2>
                     <div id="adminTestResultsList"></div>
                 </div>
+
+                <!-- New Admin Calendar Section -->
+                <div id="adminCalendarSection" class="section hidden">
+                    <h2>Approved Appointments Calendar</h2>
+                    <div id="calendarEntries">
+                        <p>Approved appointments will appear here.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -608,14 +631,12 @@
         let currentUser = null; // Stores current Firebase authenticated user object
         let isAdmin = false; // Flag for admin status (based on hardcoded credentials for simplicity)
         let currentTest = null; // Stores details of the test currently being taken
-        let currentTestAnswers = []; // Initialized globally to fix ReferenceError
 
         // --- Admin Credentials (Hardcoded for Simplicity - NOT SECURE FOR PRODUCTION) ---
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD = 'healthcare2024';
 
         // --- Mental Health Test Questions and Scoring ---
-        // Retaining your previously provided questions and scoring logic.
         const testQuestions = {
             depression: {
                 title: 'Depression Screening (PHQ-9)',
@@ -628,7 +649,7 @@
                     'Feeling bad about yourself — or that you are a failure or have let yourself or your family down',
                     'Trouble concentrating on things, such as reading the newspaper or watching television',
                     'Moving or speaking so slowly that other people could have noticed. Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual',
-                    'Thoughts that you would be better off dead, or of hurting yourself in any way' // Slight rephrase for common PHQ-9
+                    'Thoughts that you would be better off dead, or of hurting yourself in any way'
                 ],
                 options: [
                     { text: 'Not at all', value: 0 },
@@ -766,7 +787,7 @@
             }
         }
 
-        // Admin Login (using hardcoded credentials, not Firebase Auth)
+        // Admin Login (using hardcoded credentials, not Firebase Auth for simplicity)
         function adminLogin() {
             const username = document.getElementById('adminUsername').value;
             const password = document.getElementById('adminPassword').value;
@@ -794,6 +815,12 @@
 
             if (!name || !email || !password || !phone || !gender) {
                 showMessage('Please fill in all fields', true);
+                return;
+            }
+
+            // Client-side password length check for Firebase Auth
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters long.', true);
                 return;
             }
 
@@ -883,6 +910,7 @@
             loadAdminAppointments();
             loadPatientsList(); // Load all patients for management
             loadAdminTestResults(); // Load all test results for review
+            loadAdminCalendar(); // Load approved appointments for calendar
         }
 
         // Generic function to show a specific section within patient dashboard
@@ -891,7 +919,11 @@
             document.getElementById('testInterface').classList.add('hidden'); // Ensure test interface is hidden
 
             document.querySelectorAll('#patientSidebarNav li').forEach(li => li.classList.remove('active'));
-            document.querySelector(`#patientSidebarNav li[data-section="${sectionId}"]`).classList.add('active');
+            // Use dataset for better event handling consistency
+            const targetListItem = document.querySelector(`#patientSidebarNav li[data-section="${sectionId}"]`);
+            if (targetListItem) {
+                targetListItem.classList.add('active');
+            }
 
             document.getElementById(`${sectionId}Section`).classList.remove('hidden');
         }
@@ -901,7 +933,11 @@
             document.querySelectorAll('#adminDashboard .section').forEach(s => s.classList.add('hidden'));
 
             document.querySelectorAll('#adminSidebarNav li').forEach(li => li.classList.remove('active'));
-            document.querySelector(`#adminSidebarNav li[data-section="${sectionId}"]`).classList.add('active');
+            // Use dataset for better event handling consistency
+            const targetListItem = document.querySelector(`#adminSidebarNav li[data-section="${sectionId}"]`);
+            if (targetListItem) {
+                targetListItem.classList.add('active');
+            }
 
             document.getElementById(`admin${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)}Section`).classList.remove('hidden');
         }
@@ -1046,20 +1082,21 @@
                 showMessage("Selected test not found. Please try again.", true);
                 return;
             }
-            currentTestAnswers = []; // Reset answers for new test
+            // Clear previous answers for a new test
+            const testQuestionsDiv = document.getElementById('testQuestions');
+            testQuestionsDiv.innerHTML = '';
 
             document.getElementById('testTitle').textContent = currentTest.title;
-            const testQuestionsDiv = document.getElementById('testQuestions');
-            testQuestionsDiv.innerHTML = ''; // Clear previous questions
+
 
             currentTest.questions.forEach((questionText, index) => {
                 const questionHtml = `
                     <div class="question">
-                        <h4>${index + 1}. ${questionText}?</h4>
+                        <h4>${index + 1}. ${currentTest.title.includes('PHQ-9') || currentTest.title.includes('GAD-7') ? 'Over the last 2 weeks, how often have you been bothered by: ' : ''}${questionText}?</h4>
                         <div class="radio-group">
-                            ${currentTest.options.map(option => `
+                            ${currentTest.options.map((option, optIndex) => `
                                 <label class="radio-option">
-                                    <input type="radio" name="q${index}" value="${option.value}" required>
+                                    <input type="radio" name="q${index}" value="${option.value}" id="q${index}_${optIndex}" required>
                                     ${option.text}
                                 </label>
                             `).join('')}
@@ -1084,12 +1121,12 @@
             for (let i = 0; i < totalQuestions; i++) {
                 const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
                 if (!selectedOption) {
-                    showMessage('Please answer all questions before submitting.', true);
+                    showMessage(`Please answer question ${i + 1} before submitting.`, true);
                     return;
                 }
                 const value = parseInt(selectedOption.value);
                 score += value;
-                answers.push({ question: currentTest.questions[i], answer: value });
+                answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
             }
 
             const breakdown = currentTest.getBreakdown(score);
@@ -1151,7 +1188,7 @@
                     }
                 });
                 if (!hasResults) {
-                    testResultsListDiv.innerHTML = '<p>No test results found.</p>';
+                    testResultsListDiv.innerHTML = '<p>No test results found. Take a test to see your results here.</p>';
                 }
                 console.log("Patient: Test results loaded. Total displayed:", testResultsListDiv.children.length);
             }, {
@@ -1173,29 +1210,31 @@
                 adminAppointmentsListDiv.innerHTML = ''; // Clear previous content
                 let hasAppointments = false;
                 const rawSnapshotData = snapshot.val();
-                console.log("Admin: Raw appointments snapshot data (from Firebase):", rawSnapshotData); // CRITICAL: Log raw data from Firebase
+                console.log("Admin: Raw appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2)); // CRITICAL: Log raw data from Firebase, stringified for readability
 
                 if (rawSnapshotData) { // Only iterate if there's data
-                    snapshot.forEach((childSnapshot) => {
-                        const appt = childSnapshot.val();
-                        const apptId = childSnapshot.key; // Get the unique key from Firebase
-                        console.log("Admin: Processing individual appointment:", apptId, appt); // Log each appointment
+                    // Convert object to array for sorting by creation date (newest first)
+                    const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
+                    appointmentsArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                    appointmentsArray.forEach((appt) => {
+                        console.log("Admin: Processing individual appointment:", appt.id, appt); // Log each appointment
 
                         hasAppointments = true;
                         const statusClass = `status-${appt.status}`;
                         adminAppointmentsListDiv.innerHTML += `
                             <div class="appointment-card admin-card">
-                                <h4>Appointment Request for ${appt.fullName}</h4>
+                                <h4>Appointment Request from ${appt.fullName}</h4>
                                 <p><strong>Email:</strong> ${appt.email}</p>
                                 <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
-                                <p><strong>Time:</strong> ${appt.time}</p>
+                                <p><strong>Requested Time:</strong> ${appt.time}</p>
                                 <p><strong>Reason:</strong> ${appt.reason}</p>
                                 <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${apptId}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${appt.id}</p>
                                 <div class="action-buttons">
-                                    <button class="btn-approve" data-id="${apptId}" ${appt.status === 'approved' ? 'disabled' : ''}>Approve</button>
-                                    <button class="btn-deny" data-id="${apptId}" ${appt.status === 'denied' ? 'disabled' : ''}>Deny</button>
+                                    <button class="btn-approve" data-id="${appt.id}" ${appt.status === 'approved' || appt.status === 'denied' ? 'disabled' : ''}>Approve</button>
+                                    <button class="btn-deny" data-id="${appt.id}" ${appt.status === 'approved' || appt.status === 'denied' ? 'disabled' : ''}>Deny</button>
                                 </div>
                             </div>
                         `;
@@ -1206,10 +1245,10 @@
                 }
                 console.log("Admin: Appointments loaded. Total displayed elements:", adminAppointmentsListDiv.children.length);
                 // Attach event listeners to new buttons (must be done after elements are added to DOM)
-                document.querySelectorAll('.btn-approve').forEach(button => {
+                document.querySelectorAll('#adminAppointmentsSection .btn-approve').forEach(button => {
                     button.onclick = (e) => approveAppointment(e.target.dataset.id);
                 });
-                document.querySelectorAll('.btn-deny').forEach(button => {
+                document.querySelectorAll('#adminAppointmentsSection .btn-deny').forEach(button => {
                     button.onclick = (e) => denyAppointment(e.target.dataset.id);
                 });
             }, {
@@ -1227,7 +1266,8 @@
             try {
                 await update(ref(database, 'appointments/' + apptId), { status: 'approved' });
                 console.log("Admin: Appointment approved:", apptId);
-                showMessage('Appointment approved!');
+                showMessage('Appointment approved successfully!');
+                loadAdminCalendar(); // Refresh calendar after approval
             } catch (error) {
                 console.error("Admin: Error approving appointment:", error);
                 showMessage(`Error approving appointment: ${error.message}`, true);
@@ -1244,7 +1284,8 @@
             try {
                 await update(ref(database, 'appointments/' + apptId), { status: 'denied' });
                 console.log("Admin: Appointment denied:", apptId);
-                showMessage('Appointment denied!');
+                showMessage('Appointment denied.');
+                loadAdminCalendar(); // Refresh calendar as status might change
             } catch (error) {
                 console.error("Admin: Error denying appointment:", error);
                 showMessage(`Error denying appointment: ${error.message}`, true);
@@ -1276,12 +1317,18 @@
             }
             const name = document.getElementById('newPatientName').value;
             const email = document.getElementById('newPatientEmail').value;
-            const password = document.getElementById('newPatientPassword').value;
+            const password = document.getElementById('newPatientPassword').value; // Password for the new patient
             const phone = document.getElementById('newPatientPhone').value;
             const gender = document.getElementById('newPatientGender').value;
 
             if (!name || !email || !password || !phone || !gender) {
                 showMessage('Please fill in all fields for the new patient', true);
+                return;
+            }
+
+            // Check for password length as per Firebase Auth requirement
+            if (password.length < 6) {
+                showMessage('Password for the new patient must be at least 6 characters long.', true);
                 return;
             }
 
@@ -1299,7 +1346,7 @@
                     createdAt: new Date().toISOString()
                 });
                 console.log("Admin: Saved patient data to Realtime Database for UID:", userId);
-                showMessage(`Patient ${name} added successfully!`);
+                showMessage(`Patient ${name} added successfully! Temporary password: ${password}`);
                 hideAddPatientForm();
                 // loadPatientsList() will automatically update
             } catch (error) {
@@ -1320,13 +1367,15 @@
                 patientsListDiv.innerHTML = ''; // Clear previous content
                 let hasPatients = false;
                 const rawSnapshotData = snapshot.val();
-                console.log("Admin: Raw patients snapshot data (from Firebase):", rawSnapshotData); // CRITICAL: Log raw data from Firebase
+                console.log("Admin: Raw patients snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2)); // CRITICAL: Log raw data from Firebase, stringified
 
                 if (rawSnapshotData) {
-                    snapshot.forEach((childSnapshot) => {
+                    const patientsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
+                    patientsArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by newest first
+
+                    patientsArray.forEach((patient) => {
                         hasPatients = true;
-                        const patient = childSnapshot.val();
-                        const patientId = childSnapshot.key;
+                        const patientId = patient.id;
                         console.log("Admin: Processing individual patient:", patientId, patient);
                         patientsListDiv.innerHTML += `
                             <div class="admin-card" style="background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);">
@@ -1362,7 +1411,7 @@
                 let hasResults = false;
                 const results = [];
                 const rawSnapshotData = snapshot.val();
-                console.log("Admin: Raw test results snapshot data (from Firebase):", rawSnapshotData); // CRITICAL: Log raw data from Firebase
+                console.log("Admin: Raw test results snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2)); // CRITICAL: Log raw data from Firebase, stringified
 
                 if (rawSnapshotData) {
                     snapshot.forEach((childSnapshot) => {
@@ -1370,37 +1419,85 @@
                     });
                 }
 
-                // Fetch patient names for display
-                const patientPromises = results.map(result => get(ref(database, 'patients/' + result.userId)));
-                const patientSnapshots = await Promise.all(patientPromises);
-                const patientMap = {};
-                patientSnapshots.forEach(snap => {
-                    if (snap.exists()) {
-                        patientMap[snap.key] = snap.val().fullName || 'Unknown Patient';
-                    }
-                });
+                // Fetch patient names for display (only if results exist)
+                if (results.length > 0) {
+                    const patientPromises = results.map(result => get(ref(database, 'patients/' + result.userId)));
+                    const patientSnapshots = await Promise.all(patientPromises);
+                    const patientMap = {};
+                    patientSnapshots.forEach(snap => {
+                        if (snap.exists()) {
+                            patientMap[snap.key] = snap.val().fullName || 'Unknown Patient';
+                        }
+                    });
 
-                results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by newest first
+                    results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by newest first
 
-                results.forEach(result => {
-                    hasResults = true;
-                    const patientName = patientMap[result.userId] || 'N/A';
-                    console.log("Admin: Processing individual test result for", patientName, ":", result);
-                    adminTestResultsListDiv.innerHTML += `
-                        <div class="test-result-item admin-card" style="background: linear-gradient(135deg, #00b894 0%, #00a085 100%);">
-                            <h4>${result.testType} for ${patientName}</h4>
-                            <p><strong>Score:</strong> ${result.score}</p>
-                            <p><strong>Breakdown:</strong> ${result.breakdown}</p>
-                            <p style="font-size: 0.8em; opacity: 0.8;">Taken on: ${new Date(result.createdAt).toLocaleString()}</p>
-                            <!-- Optional: Display individual answers -->
-                            <!-- <details><summary>View Answers</summary><pre>${JSON.stringify(result.answers, null, 2)}</pre></details> -->
-                        </div>
-                    `;
-                });
+                    results.forEach(result => {
+                        hasResults = true;
+                        const patientName = patientMap[result.userId] || 'N/A';
+                        console.log("Admin: Processing individual test result for", patientName, ":", result);
+                        adminTestResultsListDiv.innerHTML += `
+                            <div class="test-result-item admin-card" style="background: linear-gradient(135deg, #00b894 0%, #00a085 100%);">
+                                <h4>${result.testType} for ${patientName}</h4>
+                                <p><strong>Score:</strong> ${result.score}</p>
+                                <p><strong>Breakdown:</strong> ${result.breakdown}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Taken on: ${new Date(result.createdAt).toLocaleString()}</p>
+                                <!-- Optional: Display individual answers -->
+                                <!-- <details><summary>View Answers</summary><pre>${JSON.stringify(result.answers, null, 2)}</pre></details> -->
+                            </div>
+                        `;
+                    });
+                }
                 if (!hasResults) {
                     adminTestResultsListDiv.innerHTML = '<p>No test results found.</p>';
                 }
                 console.log("Admin: Test results loaded. Total displayed elements:", adminTestResultsListDiv.children.length);
+            }, {
+                onlyOnce: false
+            });
+        }
+
+        // Load Approved Appointments for Admin Calendar
+        function loadAdminCalendar() {
+            const calendarEntriesDiv = document.getElementById('calendarEntries');
+            if (!isAdmin) {
+                calendarEntriesDiv.innerHTML = '<p>Unauthorized access.</p>';
+                return;
+            }
+            console.log("Admin: Loading approved appointments for calendar.");
+            onValue(ref(database, 'appointments'), (snapshot) => {
+                calendarEntriesDiv.innerHTML = ''; // Clear previous content
+                let hasApprovedAppointments = false;
+                const rawSnapshotData = snapshot.val();
+                console.log("Admin: Raw calendar appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
+
+                if (rawSnapshotData) {
+                    const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
+                    const approvedAppointments = appointmentsArray.filter(appt => appt.status === 'approved');
+                    // Sorting logic might need refinement based on exact time string formats
+                    approvedAppointments.sort((a, b) => {
+                        // More robust date parsing for sorting
+                        const dateA = new Date(a.time.replace('PM', ' PM').replace('AM', ' AM')); // Ensure space for parsing
+                        const dateB = new Date(b.time.replace('PM', ' PM').replace('AM', ' AM'));
+                        return dateA - dateB;
+                    });
+
+                    approvedAppointments.forEach((appt) => {
+                        hasApprovedAppointments = true;
+                        calendarEntriesDiv.innerHTML += `
+                            <div class="calendar-entry">
+                                <h4>Approved Appointment for ${appt.fullName}</h4>
+                                <p><strong>Time:</strong> ${appt.time}</p>
+                                <p><strong>Reason:</strong> ${appt.reason}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${appt.id}</p>
+                            </div>
+                        `;
+                    });
+                }
+                if (!hasApprovedAppointments) {
+                    calendarEntriesDiv.innerHTML = '<p>No approved appointments found in the calendar.</p>';
+                }
+                console.log("Admin: Approved appointments loaded for calendar. Total displayed:", calendarEntriesDiv.children.length);
             }, {
                 onlyOnce: false
             });
