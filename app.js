@@ -1,18 +1,24 @@
-// Replace with your actual Firebase configuration
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    databaseURL: "YOUR_DATABASE_URL",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyD440QOEKOT3oRUORipguPtttraawzPGgs",
+  authDomain: "healmed-portal-backend.firebaseapp.com",
+  projectId: "healmed-portal-backend",
+  storageBucket: "healmed-portal-backend.firebasestorage.app",
+  messagingSenderId: "979152928801",
+  appId: "1:979152928801:web:2e5dbbd801732a4e44e360",
+  measurementId: "G-1MKT9TNCJ5"
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const database = firebase.database();
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 // --- General Helper Functions ---
 function showMessage(message, isError = false) {
