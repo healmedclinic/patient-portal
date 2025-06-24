@@ -578,7 +578,7 @@
     <script type="module">
         // --- Firebase Configuration (YOUR ACTUAL KEYS) ---
         // This configuration has been updated with the details you provided.
-        // It is crucial for connecting your app to your Firebase project.
+        // The 'databaseURL' has been explicitly added, as it's crucial for Realtime Database operations.
         const firebaseConfig = {
             apiKey: "AIzaSyD440QOEKOT3oRUORipguPtttraawzPGgs",
             authDomain: "healmed-portal-backend.firebaseapp.com",
@@ -586,7 +586,9 @@
             storageBucket: "healmed-portal-backend.firebasestorage.app",
             messagingSenderId: "979152928801",
             appId: "1:979152928801:web:2e5dbbd801732a4e44e360",
-            measurementId: "G-1MKT9TNCJ5"
+            measurementId: "G-1MKT9TNCJ5",
+            // IMPORTANT: databaseURL is derived from your projectId
+            databaseURL: "https://healmed-portal-backend-default-rtdb.firebaseio.com"
         };
 
         // --- Firebase SDK v9 Modular Imports from CDN ---
@@ -594,24 +596,26 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
         import { getDatabase, ref, set, push, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js"; // Included as per your snippet
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
 
         // --- Initialize Firebase Services ---
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const database = getDatabase(app);
-        const analytics = getAnalytics(app); // Initialized Analytics
+        const analytics = getAnalytics(app);
 
         // --- Global State Variables ---
         let currentUser = null; // Stores current Firebase authenticated user object
         let isAdmin = false; // Flag for admin status (based on hardcoded credentials for simplicity)
         let currentTest = null; // Stores details of the test currently being taken
+        let currentTestAnswers = []; // Initialized globally to fix ReferenceError
 
         // --- Admin Credentials (Hardcoded for Simplicity - NOT SECURE FOR PRODUCTION) ---
         const ADMIN_USERNAME = 'admin';
-        const ADMIN_PASSWORD = 'healthcare2024'; // Updated from your snippet
+        const ADMIN_PASSWORD = 'healthcare2024';
 
         // --- Mental Health Test Questions and Scoring ---
+        // Retaining your previously provided questions and scoring logic.
         const testQuestions = {
             depression: {
                 title: 'Depression Screening (PHQ-9)',
@@ -624,7 +628,7 @@
                     'Feeling bad about yourself — or that you are a failure or have let yourself or your family down',
                     'Trouble concentrating on things, such as reading the newspaper or watching television',
                     'Moving or speaking so slowly that other people could have noticed. Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual',
-                    'Thoughts that you would be better off dead, or of hurting yourself in some way'
+                    'Thoughts that you would be better off dead, or of hurting yourself in any way' // Slight rephrase for common PHQ-9
                 ],
                 options: [
                     { text: 'Not at all', value: 0 },
@@ -753,9 +757,11 @@
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 currentUser = userCredential.user;
                 isAdmin = false; // Ensure admin flag is false for patient login
+                console.log("Patient login successful for UID:", currentUser.uid);
                 showMessage('Patient login successful!');
                 showPatientDashboard();
             } catch (error) {
+                console.error("Login failed:", error);
                 showMessage(`Login failed: ${error.message}`, true);
             }
         }
@@ -769,9 +775,11 @@
                 // Admin login is successful via hardcoded credentials, store in session
                 sessionStorage.setItem('isAdminLoggedIn', 'true');
                 isAdmin = true;
+                console.log("Admin login successful.");
                 showMessage('Admin login successful!');
                 showAdminDashboard();
             } else {
+                console.error("Invalid admin credentials.");
                 showMessage('Invalid admin credentials', true);
             }
         }
@@ -790,9 +798,11 @@
             }
 
             try {
+                console.log("Attempting to create user with email:", email);
                 // Create user with Firebase Authentication
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const userId = userCredential.user.uid;
+                console.log("User created in Firebase Auth with UID:", userId);
 
                 // Save additional patient data to Realtime Database
                 await set(ref(database, 'patients/' + userId), {
@@ -802,10 +812,12 @@
                     gender: gender,
                     createdAt: new Date().toISOString()
                 });
+                console.log("Patient data saved to Realtime Database for UID:", userId);
 
                 showMessage('Account created successfully! Please login.');
                 showLogin(); // Redirect to login screen after successful signup
             } catch (error) {
+                console.error("Firebase Auth Error during signup:", error);
                 showMessage(`Error creating account: ${error.message}`, true);
             }
         }
@@ -817,6 +829,7 @@
                 sessionStorage.removeItem('isAdminLoggedIn');
                 isAdmin = false;
                 currentUser = null;
+                console.log("Admin logged out.");
                 showMessage('Admin logged out.');
                 showLogin();
             } else {
@@ -824,9 +837,11 @@
                 try {
                     await signOut(auth);
                     currentUser = null;
+                    console.log("Patient logged out successfully.");
                     showMessage('Logged out successfully.');
                     showLogin();
                 } catch (error) {
+                    console.error("Logout failed:", error);
                     showMessage(`Logout failed: ${error.message}`, true);
                 }
             }
@@ -897,6 +912,7 @@
         function loadProfile() {
             if (!currentUser) return;
             const profileInfoDiv = document.getElementById('profileInfo');
+            console.log("Patient: Loading profile for UID:", currentUser.uid);
             onValue(ref(database, 'patients/' + currentUser.uid), (snapshot) => {
                 const patientData = snapshot.val();
                 if (patientData) {
@@ -907,8 +923,10 @@
                         <p><strong>Gender:</strong> ${patientData.gender}</p>
                         <p><strong>Account Created:</strong> ${new Date(patientData.createdAt).toLocaleString()}</p>
                     `;
+                    console.log("Patient: Profile data loaded:", patientData.fullName);
                 } else {
                     profileInfoDiv.innerHTML = '<p>No profile data found.</p>';
+                    console.log("Patient: No profile data found for UID:", currentUser.uid);
                 }
             }, {
                 onlyOnce: false // Listen for real-time changes
@@ -918,6 +936,7 @@
         // Show/Hide Appointment Booking Form
         function showBookingForm() {
             document.getElementById('bookingForm').classList.remove('hidden');
+            console.log("Patient: Showing booking form.");
         }
 
         function hideBookingForm() {
@@ -925,6 +944,7 @@
             // Clear form fields
             document.getElementById('appointmentTime').value = '';
             document.getElementById('appointmentReason').value = '';
+            console.log("Patient: Hiding booking form.");
         }
 
         // Book New Appointment
@@ -942,12 +962,14 @@
             }
 
             try {
+                console.log("Patient: Attempting to book appointment for user UID:", currentUser.uid);
                 // Fetch current patient details for the appointment record
                 const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
                 const patientData = patientSnapshot.val();
 
                 if (!patientData) {
                     showMessage('Could not retrieve patient data. Please try logging in again.', true);
+                    console.error("Patient: Data not found for UID:", currentUser.uid);
                     return;
                 }
 
@@ -962,10 +984,12 @@
                     status: 'pending', // Initial status
                     createdAt: new Date().toISOString()
                 });
+                console.log("Patient: Appointment request submitted successfully to Firebase. Path:", newAppointmentRef.toString());
                 showMessage('Appointment request submitted successfully!');
                 hideBookingForm();
                 // loadAppointments() will automatically update due to onValue listener
             } catch (error) {
+                console.error("Patient: Error booking appointment:", error);
                 showMessage(`Error booking appointment: ${error.message}`, true);
             }
         }
@@ -977,11 +1001,14 @@
                 appointmentsListDiv.innerHTML = '<p>Please log in to view your appointments.</p>';
                 return;
             }
+            console.log("Patient: Loading appointments for patient UID:", currentUser.uid);
             onValue(ref(database, 'appointments'), (snapshot) => {
                 appointmentsListDiv.innerHTML = ''; // Clear previous content
                 let hasAppointments = false;
                 snapshot.forEach((childSnapshot) => {
                     const appt = childSnapshot.val();
+                    const apptId = childSnapshot.key; // Get the unique key for possible future modifications
+
                     if (appt.userId === currentUser.uid) { // Filter appointments for current user
                         hasAppointments = true;
                         const statusClass = `status-${appt.status}`;
@@ -992,6 +1019,7 @@
                                 <p><strong>Reason:</strong> ${appt.reason}</p>
                                 <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${apptId}</p>
                             </div>
                         `;
                     }
@@ -999,6 +1027,7 @@
                 if (!hasAppointments) {
                     appointmentsListDiv.innerHTML = '<p>No appointments found.</p>';
                 }
+                console.log("Patient: Appointments loaded. Total displayed:", appointmentsListDiv.children.length);
             }, {
                 onlyOnce: false // Listen for real-time changes
             });
@@ -1010,7 +1039,13 @@
                 showMessage('You must be logged in to take a test.', true);
                 return;
             }
+            console.log("Patient: Starting test:", testType);
             currentTest = testQuestions[testType];
+            if (!currentTest) {
+                console.error("Patient: Test type not found in testQuestions object:", testType);
+                showMessage("Selected test not found. Please try again.", true);
+                return;
+            }
             currentTestAnswers = []; // Reset answers for new test
 
             document.getElementById('testTitle').textContent = currentTest.title;
@@ -1037,6 +1072,7 @@
             // Show test interface, hide mental health section
             document.getElementById('mentalHealthSection').classList.add('hidden');
             document.getElementById('testInterface').classList.remove('hidden');
+            console.log("Patient: Test interface displayed for:", testType);
         }
 
         // Submit Mental Health Test
@@ -1057,6 +1093,7 @@
             }
 
             const breakdown = currentTest.getBreakdown(score);
+            console.log("Patient: Test submitted. Calculated Score:", score, "Breakdown:", breakdown);
 
             try {
                 const newTestResultRef = push(ref(database, 'testResults')); // Firebase generates unique ID
@@ -1068,16 +1105,19 @@
                     answers: answers, // Store for admin review
                     createdAt: new Date().toISOString()
                 });
+                console.log("Patient: Test results saved to Firebase. Path:", newTestResultRef.toString());
                 showMessage('Test submitted successfully!');
                 cancelTest(); // Clear test interface
                 loadTestResults(); // Refresh patient's test results
             } catch (error) {
+                console.error("Patient: Error submitting test:", error);
                 showMessage(`Error submitting test: ${error.message}`, true);
             }
         }
 
         // Cancel Test
         function cancelTest() {
+            console.log("Patient: Test cancelled.");
             currentTest = null;
             document.getElementById('testInterface').classList.add('hidden');
             document.getElementById('mentalHealthSection').classList.remove('hidden');
@@ -1092,6 +1132,7 @@
                 testResultsListDiv.innerHTML = '<p>Please log in to view your test results.</p>';
                 return;
             }
+            console.log("Patient: Loading past test results for patient UID:", currentUser.uid);
             onValue(ref(database, 'testResults'), (snapshot) => {
                 testResultsListDiv.innerHTML = ''; // Clear previous content
                 let hasResults = false;
@@ -1112,6 +1153,7 @@
                 if (!hasResults) {
                     testResultsListDiv.innerHTML = '<p>No test results found.</p>';
                 }
+                console.log("Patient: Test results loaded. Total displayed:", testResultsListDiv.children.length);
             }, {
                 onlyOnce: false // Listen for real-time changes
             });
@@ -1126,35 +1168,44 @@
                 adminAppointmentsListDiv.innerHTML = '<p>Unauthorized access.</p>';
                 return;
             }
+            console.log("Admin: Loading all appointment requests.");
             onValue(ref(database, 'appointments'), (snapshot) => {
                 adminAppointmentsListDiv.innerHTML = ''; // Clear previous content
                 let hasAppointments = false;
-                snapshot.forEach((childSnapshot) => {
-                    const appt = childSnapshot.val();
-                    const apptId = childSnapshot.key; // Get the unique key from Firebase
+                const rawSnapshotData = snapshot.val();
+                console.log("Admin: Raw appointments snapshot data (from Firebase):", rawSnapshotData); // CRITICAL: Log raw data from Firebase
 
-                    hasAppointments = true;
-                    const statusClass = `status-${appt.status}`;
-                    adminAppointmentsListDiv.innerHTML += `
-                        <div class="appointment-card admin-card">
-                            <h4>Appointment Request for ${appt.fullName}</h4>
-                            <p><strong>Email:</strong> ${appt.email}</p>
-                            <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
-                            <p><strong>Time:</strong> ${appt.time}</p>
-                            <p><strong>Reason:</strong> ${appt.reason}</p>
-                            <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
-                            <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
-                            <div class="action-buttons">
-                                <button class="btn-approve" data-id="${apptId}" ${appt.status === 'approved' ? 'disabled' : ''}>Approve</button>
-                                <button class="btn-deny" data-id="${apptId}" ${appt.status === 'denied' ? 'disabled' : ''}>Deny</button>
+                if (rawSnapshotData) { // Only iterate if there's data
+                    snapshot.forEach((childSnapshot) => {
+                        const appt = childSnapshot.val();
+                        const apptId = childSnapshot.key; // Get the unique key from Firebase
+                        console.log("Admin: Processing individual appointment:", apptId, appt); // Log each appointment
+
+                        hasAppointments = true;
+                        const statusClass = `status-${appt.status}`;
+                        adminAppointmentsListDiv.innerHTML += `
+                            <div class="appointment-card admin-card">
+                                <h4>Appointment Request for ${appt.fullName}</h4>
+                                <p><strong>Email:</strong> ${appt.email}</p>
+                                <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
+                                <p><strong>Time:</strong> ${appt.time}</p>
+                                <p><strong>Reason:</strong> ${appt.reason}</p>
+                                <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${apptId}</p>
+                                <div class="action-buttons">
+                                    <button class="btn-approve" data-id="${apptId}" ${appt.status === 'approved' ? 'disabled' : ''}>Approve</button>
+                                    <button class="btn-deny" data-id="${apptId}" ${appt.status === 'denied' ? 'disabled' : ''}>Deny</button>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                });
+                        `;
+                    });
+                }
                 if (!hasAppointments) {
                     adminAppointmentsListDiv.innerHTML = '<p>No appointment requests found.</p>';
                 }
-                // Attach event listeners to new buttons
+                console.log("Admin: Appointments loaded. Total displayed elements:", adminAppointmentsListDiv.children.length);
+                // Attach event listeners to new buttons (must be done after elements are added to DOM)
                 document.querySelectorAll('.btn-approve').forEach(button => {
                     button.onclick = (e) => approveAppointment(e.target.dataset.id);
                 });
@@ -1172,10 +1223,13 @@
                 showMessage('Unauthorized action.', true);
                 return;
             }
+            console.log("Admin: Attempting to approve appointment ID:", apptId);
             try {
                 await update(ref(database, 'appointments/' + apptId), { status: 'approved' });
+                console.log("Admin: Appointment approved:", apptId);
                 showMessage('Appointment approved!');
             } catch (error) {
+                console.error("Admin: Error approving appointment:", error);
                 showMessage(`Error approving appointment: ${error.message}`, true);
             }
         }
@@ -1186,10 +1240,13 @@
                 showMessage('Unauthorized action.', true);
                 return;
             }
+            console.log("Admin: Attempting to deny appointment ID:", apptId);
             try {
                 await update(ref(database, 'appointments/' + apptId), { status: 'denied' });
+                console.log("Admin: Appointment denied:", apptId);
                 showMessage('Appointment denied!');
             } catch (error) {
+                console.error("Admin: Error denying appointment:", error);
                 showMessage(`Error denying appointment: ${error.message}`, true);
             }
         }
@@ -1197,6 +1254,7 @@
         // Show Add Patient Form
         function showAddPatientForm() {
             document.getElementById('addPatientForm').classList.remove('hidden');
+            console.log("Admin: Showing add patient form.");
         }
 
         function hideAddPatientForm() {
@@ -1207,6 +1265,7 @@
             document.getElementById('newPatientPassword').value = '';
             document.getElementById('newPatientPhone').value = '';
             document.getElementById('newPatientGender').value = '';
+            console.log("Admin: Hiding add patient form.");
         }
 
         // Add New Patient via Admin Portal (This will create a Firebase Auth user)
@@ -1227,13 +1286,10 @@
             }
 
             try {
-                // Admin can create a user, but it's more complex with client-side SDK.
-                // For simplicity, this client-side `addPatient` function will
-                // simulate creating a user in Firebase Auth using createUserWithEmailAndPassword,
-                // then store their data in Realtime DB.
-                // In a real admin scenario, you'd use Firebase Admin SDK on a server.
+                console.log("Admin: Attempting to add new patient with email:", email);
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const userId = userCredential.user.uid;
+                console.log("Admin: Created new user in Auth with UID:", userId);
 
                 await set(ref(database, 'patients/' + userId), {
                     fullName: name,
@@ -1242,10 +1298,12 @@
                     gender: gender,
                     createdAt: new Date().toISOString()
                 });
+                console.log("Admin: Saved patient data to Realtime Database for UID:", userId);
                 showMessage(`Patient ${name} added successfully!`);
                 hideAddPatientForm();
                 // loadPatientsList() will automatically update
             } catch (error) {
+                console.error("Admin: Error adding patient via admin portal:", error);
                 showMessage(`Error adding patient: ${error.message}`, true);
             }
         }
@@ -1257,27 +1315,35 @@
                 patientsListDiv.innerHTML = '<p>Unauthorized access.</p>';
                 return;
             }
+            console.log("Admin: Loading all patients.");
             onValue(ref(database, 'patients'), (snapshot) => {
                 patientsListDiv.innerHTML = ''; // Clear previous content
                 let hasPatients = false;
-                snapshot.forEach((childSnapshot) => {
-                    hasPatients = true;
-                    const patient = childSnapshot.val();
-                    const patientId = childSnapshot.key;
-                    patientsListDiv.innerHTML += `
-                        <div class="admin-card" style="background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);">
-                            <h4>${patient.fullName}</h4>
-                            <p><strong>Email:</strong> ${patient.email}</p>
-                            <p><strong>Phone:</strong> ${patient.phoneNumber}</p>
-                            <p><strong>Gender:</strong> ${patient.gender}</p>
-                            <p style="font-size: 0.8em; opacity: 0.8;">Firebase ID: ${patientId}</p>
-                            <!-- You could add buttons here for 'View Records' or 'Delete Patient' -->
-                        </div>
-                    `;
-                });
+                const rawSnapshotData = snapshot.val();
+                console.log("Admin: Raw patients snapshot data (from Firebase):", rawSnapshotData); // CRITICAL: Log raw data from Firebase
+
+                if (rawSnapshotData) {
+                    snapshot.forEach((childSnapshot) => {
+                        hasPatients = true;
+                        const patient = childSnapshot.val();
+                        const patientId = childSnapshot.key;
+                        console.log("Admin: Processing individual patient:", patientId, patient);
+                        patientsListDiv.innerHTML += `
+                            <div class="admin-card" style="background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);">
+                                <h4>${patient.fullName}</h4>
+                                <p><strong>Email:</strong> ${patient.email}</p>
+                                <p><strong>Phone:</strong> ${patient.phoneNumber}</p>
+                                <p><strong>Gender:</strong> ${patient.gender}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Firebase ID: ${patientId}</p>
+                                <!-- You could add buttons here for 'View Records' or 'Delete Patient' -->
+                            </div>
+                        `;
+                    });
+                }
                 if (!hasPatients) {
                     patientsListDiv.innerHTML = '<p>No patients registered.</p>';
                 }
+                console.log("Admin: Patients loaded. Total displayed elements:", patientsListDiv.children.length);
             }, {
                 onlyOnce: false
             });
@@ -1290,13 +1356,19 @@
                 adminTestResultsListDiv.innerHTML = '<p>Unauthorized access.</p>';
                 return;
             }
+            console.log("Admin: Loading all test results.");
             onValue(ref(database, 'testResults'), async (snapshot) => {
                 adminTestResultsListDiv.innerHTML = ''; // Clear previous content
                 let hasResults = false;
                 const results = [];
-                snapshot.forEach((childSnapshot) => {
-                    results.push(childSnapshot.val());
-                });
+                const rawSnapshotData = snapshot.val();
+                console.log("Admin: Raw test results snapshot data (from Firebase):", rawSnapshotData); // CRITICAL: Log raw data from Firebase
+
+                if (rawSnapshotData) {
+                    snapshot.forEach((childSnapshot) => {
+                        results.push(childSnapshot.val());
+                    });
+                }
 
                 // Fetch patient names for display
                 const patientPromises = results.map(result => get(ref(database, 'patients/' + result.userId)));
@@ -1313,6 +1385,7 @@
                 results.forEach(result => {
                     hasResults = true;
                     const patientName = patientMap[result.userId] || 'N/A';
+                    console.log("Admin: Processing individual test result for", patientName, ":", result);
                     adminTestResultsListDiv.innerHTML += `
                         <div class="test-result-item admin-card" style="background: linear-gradient(135deg, #00b894 0%, #00a085 100%);">
                             <h4>${result.testType} for ${patientName}</h4>
@@ -1327,6 +1400,7 @@
                 if (!hasResults) {
                     adminTestResultsListDiv.innerHTML = '<p>No test results found.</p>';
                 }
+                console.log("Admin: Test results loaded. Total displayed elements:", adminTestResultsListDiv.children.length);
             }, {
                 onlyOnce: false
             });
@@ -1388,16 +1462,20 @@
 
             // Check Firebase Auth state on page load
             onAuthStateChanged(auth, (user) => {
+                console.log("Auth state changed. Current user:", user ? user.uid : "No user");
                 if (user) {
                     currentUser = user;
-                    isAdmin = false; // Assume not admin unless coming from admin login path
+                    isAdmin = false; // Assume not admin unless explicitly logged in as admin
+                    console.log("Auth state changed: User logged in. UID:", user.uid);
                     showPatientDashboard();
                 } else {
-                    // Check if coming from admin login via session storage
+                    // Check if admin was previously logged in via session storage
                     if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
                          isAdmin = true;
+                         console.log("Auth state changed: Admin session found.");
                          showAdminDashboard();
                     } else {
+                        console.log("Auth state changed: No user or admin session found. Showing login.");
                         showLogin(); // Show login screen by default
                     }
                 }
