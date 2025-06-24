@@ -3,22 +3,1407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HealMed - Patient/Admin Login</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>HealMed Patient/Admin Portal</title>
+    <style>
+        /* All your CSS styles are now embedded here */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto; /* Allow scrolling for content that overflows viewport */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            padding: 60px;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh; /* Ensure login screen takes full height too */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .login-form h2 {
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #333;
+        }
+
+        .link-btn {
+            background: none;
+            color: #667eea;
+            text-decoration: underline;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+            position: relative; /* For logout button positioning */
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px 0;
+            flex-shrink: 0; /* Prevent sidebar from shrinking */
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar li:hover, .sidebar li.active {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            background: #f8f9fa;
+            overflow-y: auto; /* Allow scrolling for main content */
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px; /* Add margin between sections */
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 24px;
+        }
+
+        /* Appointments */
+        .appointment-card {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .appointment-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .status-pending {
+            background: #f39c12;
+        }
+
+        .status-approved {
+            background: #27ae60;
+        }
+
+        .status-denied {
+            background: #e74c3c;
+        }
+
+        /* Mental Health Tests */
+        .test-card {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .test-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            color: #333; /* Ensure text is readable */
+        }
+
+        .question h4 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .radio-option:hover {
+            background: #e9ecef;
+        }
+
+        .test-result-item { /* Changed from test-result to avoid conflict */
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 15px; /* Add margin for list items */
+        }
+
+        /* Admin specific styles */
+        .admin-card {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .action-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-approve {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-approve:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-deny {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-deny:hover {
+            transform: translateY(-2px);
+        }
+
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100; /* Ensure it's above other content */
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px 0;
+            }
+
+            .sidebar ul {
+                display: flex;
+                overflow-x: auto;
+                justify-content: space-around; /* Distribute items */
+            }
+
+            .sidebar li {
+                white-space: nowrap;
+                min-width: 120px; /* Adjusted minimum width for smaller screens */
+                text-align: center;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+            .login-screen {
+                padding: 30px;
+            }
+            .login-form {
+                padding: 30px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to HealMed</h1>
-        <div class="login-section">
-            <h2>Login</h2>
-            <form id="loginForm">
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-            </form>
-            <p>Don't have an account? <a href="create-account.html">Create New Account</a></p>
+        <!-- Login Screen -->
+        <div id="loginScreen" class="login-screen">
+            <div class="login-form">
+                <h2>Patient Portal Login</h2>
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button class="btn" id="loginBtn">Login</button>
+                <button class="btn btn-secondary" id="showSignupBtn">Create Account</button>
+                <button class="link-btn" id="showAdminLoginBtn">Staff Login</button>
+            </div>
+        </div>
+
+        <!-- Signup Screen -->
+        <div id="signupScreen" class="login-screen hidden">
+            <div class="login-form">
+                <h2>Create Account</h2>
+                <div class="form-group">
+                    <label for="signupName">Full Name:</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email:</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password:</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number:</label>
+                    <input type="tel" id="signupPhone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupGender">Gender:</label>
+                    <select id="signupGender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                    </select>
+                </div>
+                <button class="btn" id="signupBtn">Create Account</button>
+                <button class="link-btn" id="backToLoginBtn">Back to Login</button>
+            </div>
+        </div>
+
+        <!-- Admin Login Screen -->
+        <div id="adminLoginScreen" class="login-screen hidden">
+            <div class="login-form">
+                <h2>Staff Login</h2>
+                <div class="form-group">
+                    <label for="adminUsername">Username:</label>
+                    <input type="text" id="adminUsername" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password:</label>
+                    <input type="password" id="adminPassword" placeholder="Enter password" required>
+                </div>
+                <button class="btn" id="adminLoginBtn">Login</button>
+                <button class="link-btn" id="backToPatientLoginBtn">Back to Patient Login</button>
+            </div>
+        </div>
+
+        <!-- Patient Dashboard -->
+        <div id="patientDashboard" class="dashboard hidden">
+            <button class="logout-btn" id="patientLogoutBtn">Logout</button>
+            <div class="sidebar">
+                <h3>Patient Portal</h3>
+                <ul id="patientSidebarNav">
+                    <li class="active" data-section="appointments">Manage Appointments</li>
+                    <li data-section="mentalHealth">Mental Health Tests</li>
+                    <li data-section="healthRecords">Health Records</li>
+                    <li data-section="profile">Profile</li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <!-- Appointments Section -->
+                <div id="appointmentsSection" class="section">
+                    <h2>Manage Appointments</h2>
+                    <div id="appointmentsList"></div>
+                    <button class="btn" id="showBookingFormBtn">Book New Appointment</button>
+
+                    <!-- Booking Form -->
+                    <div id="bookingForm" class="hidden" style="margin-top: 20px; background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                        <h3>Book New Appointment</h3>
+                        <div class="form-group">
+                            <label for="appointmentTime">Preferred Appointment Time:</label>
+                            <select id="appointmentTime" required>
+                                <option value="">Select Time</option>
+                                <option value="Thursday 1-2 PM">Thursday 1-2 PM</option>
+                                <option value="Friday 1-2 PM">Friday 1-2 PM</option>
+                                <option value="Monday 10-11 AM">Monday 10-11 AM</option>
+                                <option value="Tuesday 2-3 PM">Tuesday 2-3 PM</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointmentReason">Reason for Visit:</label>
+                            <textarea id="appointmentReason" placeholder="Please describe the reason for your visit" required></textarea>
+                        </div>
+                        <button class="btn" id="submitAppointmentRequestBtn">Submit Request</button>
+                        <button class="btn btn-secondary" id="hideBookingFormBtn">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- Mental Health Tests Section -->
+                <div id="mentalHealthSection" class="section hidden">
+                    <h2>Mental Health Tests</h2>
+                    <div class="test-card" data-test-type="depression">
+                        <h3>Depression Screening (PHQ-9)</h3>
+                        <p>Take a self-assessment to screen for depression symptoms</p>
+                    </div>
+                    <div class="test-card" data-test-type="anxiety">
+                        <h3>Anxiety Screening (GAD-7)</h3>
+                        <p>Take a self-assessment to screen for anxiety symptoms</p>
+                    </div>
+                    <div class="test-card" data-test-type="adhd">
+                        <h3>ADHD Screening</h3>
+                        <p>Take a self-assessment to screen for ADHD symptoms</p>
+                    </div>
+                    <h4>Your Past Test Results:</h4>
+                    <div id="testResultsList"></div>
+                </div>
+
+                <!-- Test Taking Interface -->
+                <div id="testInterface" class="section hidden">
+                    <h2 id="testTitle"></h2>
+                    <div id="testQuestions"></div>
+                    <button class="btn" id="submitTestBtn">Submit Test</button>
+                    <button class="btn btn-secondary" id="cancelTestBtn">Cancel</button>
+                </div>
+
+                <!-- Health Records Section -->
+                <div id="healthRecordsSection" class="section hidden">
+                    <h2>Health Records</h2>
+                    <p>Your health records and medical history will be displayed here.</p>
+                    <div id="healthRecordsList"></div>
+                </div>
+
+                <!-- Profile Section -->
+                <div id="profileSection" class="section hidden">
+                    <h2>Profile</h2>
+                    <div id="profileInfo"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="dashboard hidden">
+            <button class="logout-btn" id="adminLogoutBtn">Logout</button>
+            <div class="sidebar">
+                <h3>Admin Portal</h3>
+                <ul id="adminSidebarNav">
+                    <li class="active" data-section="appointments">Appointment Requests</li>
+                    <li data-section="patients">Patient Management</li>
+                    <li data-section="testResults">Test Results</li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <!-- Admin Appointments Section -->
+                <div id="adminAppointmentsSection" class="section">
+                    <h2>Appointment Requests</h2>
+                    <div id="adminAppointmentsList"></div>
+                </div>
+
+                <!-- Admin Patients Section -->
+                <div id="adminPatientsSection" class="section hidden">
+                    <h2>Patient Management</h2>
+                    <button class="btn" id="showAddPatientFormBtn">Add New Patient (via Admin)</button>
+                    <div id="patientsList"></div>
+
+                    <!-- Add Patient Form -->
+                    <div id="addPatientForm" class="hidden" style="margin-top: 20px; background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                        <h3>Add New Patient</h3>
+                        <div class="form-group">
+                            <label for="newPatientName">Full Name:</label>
+                            <input type="text" id="newPatientName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPatientEmail">Email:</label>
+                            <input type="email" id="newPatientEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPatientPassword">Password:</label>
+                            <input type="password" id="newPatientPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPatientPhone">Phone:</label>
+                            <input type="tel" id="newPatientPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPatientGender">Gender:</label>
+                            <select id="newPatientGender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        <button class="btn" id="addPatientBtn">Add Patient</button>
+                        <button class="btn btn-secondary" id="hideAddPatientFormBtn">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- Admin Test Results Section -->
+                <div id="adminTestResultsSection" class="section hidden">
+                    <h2>Patient Test Results</h2>
+                    <div id="adminTestResultsList"></div>
+                </div>
+            </div>
         </div>
     </div>
-    <script type="module" src="app.js"></script>
+
+    <script type="module">
+        // --- Firebase Configuration (YOUR ACTUAL KEYS) ---
+        // This configuration has been updated with the details you provided.
+        // It is crucial for connecting your app to your Firebase project.
+        const firebaseConfig = {
+            apiKey: "AIzaSyD440QOEKOT3oRUORipguPtttraawzPGgs",
+            authDomain: "healmed-portal-backend.firebaseapp.com",
+            projectId: "healmed-portal-backend",
+            storageBucket: "healmed-portal-backend.firebasestorage.app",
+            messagingSenderId: "979152928801",
+            appId: "1:979152928801:web:2e5dbbd801732a4e44e360",
+            measurementId: "G-1MKT9TNCJ5"
+        };
+
+        // --- Firebase SDK v9 Modular Imports from CDN ---
+        // These URLs are stable and directly link to Firebase's CDN for modular SDK.
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getDatabase, ref, set, push, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js"; // Included as per your snippet
+
+        // --- Initialize Firebase Services ---
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+        const analytics = getAnalytics(app); // Initialized Analytics
+
+        // --- Global State Variables ---
+        let currentUser = null; // Stores current Firebase authenticated user object
+        let isAdmin = false; // Flag for admin status (based on hardcoded credentials for simplicity)
+        let currentTest = null; // Stores details of the test currently being taken
+
+        // --- Admin Credentials (Hardcoded for Simplicity - NOT SECURE FOR PRODUCTION) ---
+        const ADMIN_USERNAME = 'admin';
+        const ADMIN_PASSWORD = 'healthcare2024'; // Updated from your snippet
+
+        // --- Mental Health Test Questions and Scoring ---
+        const testQuestions = {
+            depression: {
+                title: 'Depression Screening (PHQ-9)',
+                questions: [
+                    'Little interest or pleasure in doing things',
+                    'Feeling down, depressed, or hopeless',
+                    'Trouble falling or staying asleep, or sleeping too much',
+                    'Feeling tired or having little energy',
+                    'Poor appetite or overeating',
+                    'Feeling bad about yourself — or that you are a failure or have let yourself or your family down',
+                    'Trouble concentrating on things, such as reading the newspaper or watching television',
+                    'Moving or speaking so slowly that other people could have noticed. Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual',
+                    'Thoughts that you would be better off dead, or of hurting yourself in some way'
+                ],
+                options: [
+                    { text: 'Not at all', value: 0 },
+                    { text: 'Several days', value: 1 },
+                    { text: 'More than half the days', value: 2 },
+                    { text: 'Nearly every day', value: 3 }
+                ],
+                scoring: {
+                    ranges: [
+                        { min: 0, max: 4, level: 'Minimal', description: 'Minimal depression symptoms' },
+                        { min: 5, max: 9, level: 'Mild', description: 'Mild depression symptoms' },
+                        { min: 10, max: 14, level: 'Moderate', description: 'Moderate depression symptoms' },
+                        { min: 15, max: 19, level: 'Moderately Severe', description: 'Moderately severe depression symptoms' },
+                        { min: 20, max: 27, level: 'Severe', description: 'Severe depression symptoms' }
+                    ]
+                },
+                 getBreakdown: (score) => {
+                    for (const range of testQuestions.depression.scoring.ranges) {
+                        if (score >= range.min && score <= range.max) {
+                            return range.description;
+                        }
+                    }
+                    return 'N/A';
+                }
+            },
+            anxiety: {
+                title: 'Anxiety Screening (GAD-7)',
+                questions: [
+                    'Feeling nervous, anxious, or on edge',
+                    'Not being able to stop or control worrying',
+                    'Worrying too much about different things',
+                    'Trouble relaxing',
+                    'Being so restless that it is hard to sit still',
+                    'Becoming easily annoyed or irritable',
+                    'Feeling afraid, as if something awful might happen'
+                ],
+                options: [
+                    { text: 'Not at all', value: 0 },
+                    { text: 'Several days', value: 1 },
+                    { text: 'More than half the days', value: 2 },
+                    { text: 'Nearly every day', value: 3 }
+                ],
+                scoring: {
+                    ranges: [
+                        { min: 0, max: 4, level: 'Minimal', description: 'Minimal anxiety symptoms' },
+                        { min: 5, max: 9, level: 'Mild', description: 'Mild anxiety symptoms' },
+                        { min: 10, max: 14, level: 'Moderate', description: 'Moderate anxiety symptoms' },
+                        { min: 15, max: 21, level: 'Severe', description: 'Severe anxiety symptoms' }
+                    ]
+                },
+                getBreakdown: (score) => {
+                    for (const range of testQuestions.anxiety.scoring.ranges) {
+                        if (score >= range.min && score <= range.max) {
+                            return range.description;
+                        }
+                    }
+                    return 'N/A';
+                }
+            },
+            adhd: {
+                title: 'ADHD Screening',
+                questions: [
+                    'How often do you have trouble wrapping up the final details of a project, once the challenging parts have been done?',
+                    'How often do you have difficulty getting things in order when you have to do a task that requires organization?',
+                    'How often do you have problems remembering appointments or obligations?',
+                    'When you have a task that requires a lot of thought, how often do you avoid or delay getting started?',
+                    'How often do you fidget or squirm with your hands or feet when you have to sit down for a long time?',
+                    'How often do you feel overly active and compelled to do things, like you were driven by a motor?'
+                ],
+                options: [
+                    { text: 'Never', value: 0 },
+                    { text: 'Rarely', value: 1 },
+                    { text: 'Sometimes', value: 2 },
+                    { text: 'Often', value: 3 },
+                    { text: 'Very Often', value: 4 }
+                ],
+                scoring: {
+                    ranges: [
+                        { min: 0, max: 8, level: 'Low', description: 'Low likelihood of ADHD symptoms' },
+                        { min: 9, max: 13, level: 'Moderate', description: 'Moderate likelihood of ADHD symptoms' },
+                        { min: 14, max: 24, level: 'High', description: 'High likelihood of ADHD symptoms' }
+                    ]
+                },
+                getBreakdown: (score) => {
+                    for (const range of testQuestions.adhd.scoring.ranges) {
+                        if (score >= range.min && score <= range.max) {
+                            return range.description;
+                        }
+                    }
+                    return 'N/A';
+                }
+            }
+        };
+
+        // --- Helper Functions for UI and Messages ---
+        function showMessage(message, isError = false) {
+            alert(message); // Using alert as per previous pattern. Consider a custom modal for better UX.
+            if (isError) {
+                console.error(message);
+            } else {
+                console.log(message);
+            }
+        }
+
+        function hideAllScreens() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('signupScreen').classList.add('hidden');
+            document.getElementById('adminLoginScreen').classList.add('hidden');
+            document.getElementById('patientDashboard').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+        }
+
+        // --- Authentication Functions (Firebase Integrated) ---
+
+        // Patient Login
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showMessage('Please enter both email and password', true);
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                currentUser = userCredential.user;
+                isAdmin = false; // Ensure admin flag is false for patient login
+                showMessage('Patient login successful!');
+                showPatientDashboard();
+            } catch (error) {
+                showMessage(`Login failed: ${error.message}`, true);
+            }
+        }
+
+        // Admin Login (using hardcoded credentials, not Firebase Auth)
+        function adminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                // Admin login is successful via hardcoded credentials, store in session
+                sessionStorage.setItem('isAdminLoggedIn', 'true');
+                isAdmin = true;
+                showMessage('Admin login successful!');
+                showAdminDashboard();
+            } else {
+                showMessage('Invalid admin credentials', true);
+            }
+        }
+
+        // Patient Signup
+        async function signup() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const phone = document.getElementById('signupPhone').value;
+            const gender = document.getElementById('signupGender').value;
+
+            if (!name || !email || !password || !phone || !gender) {
+                showMessage('Please fill in all fields', true);
+                return;
+            }
+
+            try {
+                // Create user with Firebase Authentication
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const userId = userCredential.user.uid;
+
+                // Save additional patient data to Realtime Database
+                await set(ref(database, 'patients/' + userId), {
+                    fullName: name,
+                    email: email,
+                    phoneNumber: phone,
+                    gender: gender,
+                    createdAt: new Date().toISOString()
+                });
+
+                showMessage('Account created successfully! Please login.');
+                showLogin(); // Redirect to login screen after successful signup
+            } catch (error) {
+                showMessage(`Error creating account: ${error.message}`, true);
+            }
+        }
+
+        // Logout
+        async function logout() {
+            if (isAdmin) {
+                // For hardcoded admin, just reset state and session storage
+                sessionStorage.removeItem('isAdminLoggedIn');
+                isAdmin = false;
+                currentUser = null;
+                showMessage('Admin logged out.');
+                showLogin();
+            } else {
+                // For Firebase authenticated patient, sign out
+                try {
+                    await signOut(auth);
+                    currentUser = null;
+                    showMessage('Logged out successfully.');
+                    showLogin();
+                } catch (error) {
+                    showMessage(`Logout failed: ${error.message}`, true);
+                }
+            }
+        }
+
+        // --- UI Navigation Functions ---
+        function showLogin() {
+            hideAllScreens();
+            document.getElementById('loginScreen').classList.remove('hidden');
+        }
+
+        function showSignup() {
+            hideAllScreens();
+            document.getElementById('signupScreen').classList.remove('hidden');
+        }
+
+        function showAdminLogin() {
+            hideAllScreens();
+            document.getElementById('adminLoginScreen').classList.remove('hidden');
+        }
+
+        function showPatientDashboard() {
+            hideAllScreens();
+            document.getElementById('patientDashboard').classList.remove('hidden');
+            // Default to appointments section
+            showPatientSection('appointments');
+            // Load patient-specific data when dashboard is shown
+            loadAppointments();
+            loadTestResults(); // Load patient's test results
+            loadProfile();
+        }
+
+        function showAdminDashboard() {
+            hideAllScreens();
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            // Default to appointment requests
+            showAdminSection('appointments');
+            // Load admin-specific data when dashboard is shown
+            loadAdminAppointments();
+            loadPatientsList(); // Load all patients for management
+            loadAdminTestResults(); // Load all test results for review
+        }
+
+        // Generic function to show a specific section within patient dashboard
+        function showPatientSection(sectionId) {
+            document.querySelectorAll('#patientDashboard .section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('testInterface').classList.add('hidden'); // Ensure test interface is hidden
+
+            document.querySelectorAll('#patientSidebarNav li').forEach(li => li.classList.remove('active'));
+            document.querySelector(`#patientSidebarNav li[data-section="${sectionId}"]`).classList.add('active');
+
+            document.getElementById(`${sectionId}Section`).classList.remove('hidden');
+        }
+
+        // Generic function to show a specific section within admin dashboard
+        function showAdminSection(sectionId) {
+            document.querySelectorAll('#adminDashboard .section').forEach(s => s.classList.add('hidden'));
+
+            document.querySelectorAll('#adminSidebarNav li').forEach(li => li.classList.remove('active'));
+            document.querySelector(`#adminSidebarNav li[data-section="${sectionId}"]`).classList.add('active');
+
+            document.getElementById(`admin${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)}Section`).classList.remove('hidden');
+        }
+
+        // --- Patient-Specific Functionality ---
+
+        // Load Patient Profile
+        function loadProfile() {
+            if (!currentUser) return;
+            const profileInfoDiv = document.getElementById('profileInfo');
+            onValue(ref(database, 'patients/' + currentUser.uid), (snapshot) => {
+                const patientData = snapshot.val();
+                if (patientData) {
+                    profileInfoDiv.innerHTML = `
+                        <p><strong>Name:</strong> ${patientData.fullName}</p>
+                        <p><strong>Email:</strong> ${patientData.email}</p>
+                        <p><strong>Phone:</strong> ${patientData.phoneNumber}</p>
+                        <p><strong>Gender:</strong> ${patientData.gender}</p>
+                        <p><strong>Account Created:</strong> ${new Date(patientData.createdAt).toLocaleString()}</p>
+                    `;
+                } else {
+                    profileInfoDiv.innerHTML = '<p>No profile data found.</p>';
+                }
+            }, {
+                onlyOnce: false // Listen for real-time changes
+            });
+        }
+
+        // Show/Hide Appointment Booking Form
+        function showBookingForm() {
+            document.getElementById('bookingForm').classList.remove('hidden');
+        }
+
+        function hideBookingForm() {
+            document.getElementById('bookingForm').classList.add('hidden');
+            // Clear form fields
+            document.getElementById('appointmentTime').value = '';
+            document.getElementById('appointmentReason').value = '';
+        }
+
+        // Book New Appointment
+        async function bookAppointment() {
+            const time = document.getElementById('appointmentTime').value;
+            const reason = document.getElementById('appointmentReason').value;
+
+            if (!time || !reason) {
+                showMessage('Please select a time and enter a reason for your visit', true);
+                return;
+            }
+            if (!currentUser) {
+                showMessage('You must be logged in to book an appointment.', true);
+                return;
+            }
+
+            try {
+                // Fetch current patient details for the appointment record
+                const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
+                const patientData = patientSnapshot.val();
+
+                if (!patientData) {
+                    showMessage('Could not retrieve patient data. Please try logging in again.', true);
+                    return;
+                }
+
+                const newAppointmentRef = push(ref(database, 'appointments')); // Firebase generates unique ID
+                await set(newAppointmentRef, {
+                    userId: currentUser.uid,
+                    fullName: patientData.fullName,
+                    email: patientData.email,
+                    phoneNumber: patientData.phoneNumber,
+                    time: time,
+                    reason: reason,
+                    status: 'pending', // Initial status
+                    createdAt: new Date().toISOString()
+                });
+                showMessage('Appointment request submitted successfully!');
+                hideBookingForm();
+                // loadAppointments() will automatically update due to onValue listener
+            } catch (error) {
+                showMessage(`Error booking appointment: ${error.message}`, true);
+            }
+        }
+
+        // Load Patient's Appointments
+        function loadAppointments() {
+            const appointmentsListDiv = document.getElementById('appointmentsList');
+            if (!currentUser) {
+                appointmentsListDiv.innerHTML = '<p>Please log in to view your appointments.</p>';
+                return;
+            }
+            onValue(ref(database, 'appointments'), (snapshot) => {
+                appointmentsListDiv.innerHTML = ''; // Clear previous content
+                let hasAppointments = false;
+                snapshot.forEach((childSnapshot) => {
+                    const appt = childSnapshot.val();
+                    if (appt.userId === currentUser.uid) { // Filter appointments for current user
+                        hasAppointments = true;
+                        const statusClass = `status-${appt.status}`;
+                        appointmentsListDiv.innerHTML += `
+                            <div class="appointment-card">
+                                <h4>Appointment Request</h4>
+                                <p><strong>Time:</strong> ${appt.time}</p>
+                                <p><strong>Reason:</strong> ${appt.reason}</p>
+                                <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
+                            </div>
+                        `;
+                    }
+                });
+                if (!hasAppointments) {
+                    appointmentsListDiv.innerHTML = '<p>No appointments found.</p>';
+                }
+            }, {
+                onlyOnce: false // Listen for real-time changes
+            });
+        }
+
+        // Start a Mental Health Test
+        function startTest(testType) {
+            if (!currentUser) {
+                showMessage('You must be logged in to take a test.', true);
+                return;
+            }
+            currentTest = testQuestions[testType];
+            currentTestAnswers = []; // Reset answers for new test
+
+            document.getElementById('testTitle').textContent = currentTest.title;
+            const testQuestionsDiv = document.getElementById('testQuestions');
+            testQuestionsDiv.innerHTML = ''; // Clear previous questions
+
+            currentTest.questions.forEach((questionText, index) => {
+                const questionHtml = `
+                    <div class="question">
+                        <h4>${index + 1}. ${questionText}?</h4>
+                        <div class="radio-group">
+                            ${currentTest.options.map(option => `
+                                <label class="radio-option">
+                                    <input type="radio" name="q${index}" value="${option.value}" required>
+                                    ${option.text}
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                testQuestionsDiv.innerHTML += questionHtml;
+            });
+
+            // Show test interface, hide mental health section
+            document.getElementById('mentalHealthSection').classList.add('hidden');
+            document.getElementById('testInterface').classList.remove('hidden');
+        }
+
+        // Submit Mental Health Test
+        async function submitTest() {
+            let score = 0;
+            const totalQuestions = currentTest.questions.length;
+            const answers = [];
+
+            for (let i = 0; i < totalQuestions; i++) {
+                const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!selectedOption) {
+                    showMessage('Please answer all questions before submitting.', true);
+                    return;
+                }
+                const value = parseInt(selectedOption.value);
+                score += value;
+                answers.push({ question: currentTest.questions[i], answer: value });
+            }
+
+            const breakdown = currentTest.getBreakdown(score);
+
+            try {
+                const newTestResultRef = push(ref(database, 'testResults')); // Firebase generates unique ID
+                await set(newTestResultRef, {
+                    userId: currentUser.uid,
+                    testType: currentTest.title,
+                    score: score,
+                    breakdown: breakdown,
+                    answers: answers, // Store for admin review
+                    createdAt: new Date().toISOString()
+                });
+                showMessage('Test submitted successfully!');
+                cancelTest(); // Clear test interface
+                loadTestResults(); // Refresh patient's test results
+            } catch (error) {
+                showMessage(`Error submitting test: ${error.message}`, true);
+            }
+        }
+
+        // Cancel Test
+        function cancelTest() {
+            currentTest = null;
+            document.getElementById('testInterface').classList.add('hidden');
+            document.getElementById('mentalHealthSection').classList.remove('hidden');
+            // Clear questions
+            document.getElementById('testQuestions').innerHTML = '';
+        }
+
+        // Load Patient's Past Test Results
+        function loadTestResults() {
+            const testResultsListDiv = document.getElementById('testResultsList');
+            if (!currentUser) {
+                testResultsListDiv.innerHTML = '<p>Please log in to view your test results.</p>';
+                return;
+            }
+            onValue(ref(database, 'testResults'), (snapshot) => {
+                testResultsListDiv.innerHTML = ''; // Clear previous content
+                let hasResults = false;
+                snapshot.forEach((childSnapshot) => {
+                    const result = childSnapshot.val();
+                    if (result.userId === currentUser.uid) { // Filter results for current user
+                        hasResults = true;
+                        testResultsListDiv.innerHTML += `
+                            <div class="test-result-item">
+                                <h4>${result.testType}</h4>
+                                <p><strong>Score:</strong> ${result.score}</p>
+                                <p><strong>Breakdown:</strong> ${result.breakdown}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Taken on: ${new Date(result.createdAt).toLocaleString()}</p>
+                            </div>
+                        `;
+                    }
+                });
+                if (!hasResults) {
+                    testResultsListDiv.innerHTML = '<p>No test results found.</p>';
+                }
+            }, {
+                onlyOnce: false // Listen for real-time changes
+            });
+        }
+
+        // --- Admin-Specific Functionality ---
+
+        // Load All Appointment Requests for Admin
+        function loadAdminAppointments() {
+            const adminAppointmentsListDiv = document.getElementById('adminAppointmentsList');
+            if (!isAdmin) {
+                adminAppointmentsListDiv.innerHTML = '<p>Unauthorized access.</p>';
+                return;
+            }
+            onValue(ref(database, 'appointments'), (snapshot) => {
+                adminAppointmentsListDiv.innerHTML = ''; // Clear previous content
+                let hasAppointments = false;
+                snapshot.forEach((childSnapshot) => {
+                    const appt = childSnapshot.val();
+                    const apptId = childSnapshot.key; // Get the unique key from Firebase
+
+                    hasAppointments = true;
+                    const statusClass = `status-${appt.status}`;
+                    adminAppointmentsListDiv.innerHTML += `
+                        <div class="appointment-card admin-card">
+                            <h4>Appointment Request for ${appt.fullName}</h4>
+                            <p><strong>Email:</strong> ${appt.email}</p>
+                            <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
+                            <p><strong>Time:</strong> ${appt.time}</p>
+                            <p><strong>Reason:</strong> ${appt.reason}</p>
+                            <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
+                            <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
+                            <div class="action-buttons">
+                                <button class="btn-approve" data-id="${apptId}" ${appt.status === 'approved' ? 'disabled' : ''}>Approve</button>
+                                <button class="btn-deny" data-id="${apptId}" ${appt.status === 'denied' ? 'disabled' : ''}>Deny</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                if (!hasAppointments) {
+                    adminAppointmentsListDiv.innerHTML = '<p>No appointment requests found.</p>';
+                }
+                // Attach event listeners to new buttons
+                document.querySelectorAll('.btn-approve').forEach(button => {
+                    button.onclick = (e) => approveAppointment(e.target.dataset.id);
+                });
+                document.querySelectorAll('.btn-deny').forEach(button => {
+                    button.onclick = (e) => denyAppointment(e.target.dataset.id);
+                });
+            }, {
+                onlyOnce: false
+            });
+        }
+
+        // Approve Appointment
+        async function approveAppointment(apptId) {
+            if (!isAdmin) {
+                showMessage('Unauthorized action.', true);
+                return;
+            }
+            try {
+                await update(ref(database, 'appointments/' + apptId), { status: 'approved' });
+                showMessage('Appointment approved!');
+            } catch (error) {
+                showMessage(`Error approving appointment: ${error.message}`, true);
+            }
+        }
+
+        // Deny Appointment
+        async function denyAppointment(apptId) {
+            if (!isAdmin) {
+                showMessage('Unauthorized action.', true);
+                return;
+            }
+            try {
+                await update(ref(database, 'appointments/' + apptId), { status: 'denied' });
+                showMessage('Appointment denied!');
+            } catch (error) {
+                showMessage(`Error denying appointment: ${error.message}`, true);
+            }
+        }
+
+        // Show Add Patient Form
+        function showAddPatientForm() {
+            document.getElementById('addPatientForm').classList.remove('hidden');
+        }
+
+        function hideAddPatientForm() {
+            document.getElementById('addPatientForm').classList.add('hidden');
+            // Clear form fields
+            document.getElementById('newPatientName').value = '';
+            document.getElementById('newPatientEmail').value = '';
+            document.getElementById('newPatientPassword').value = '';
+            document.getElementById('newPatientPhone').value = '';
+            document.getElementById('newPatientGender').value = '';
+        }
+
+        // Add New Patient via Admin Portal (This will create a Firebase Auth user)
+        async function addPatient() {
+            if (!isAdmin) {
+                showMessage('Unauthorized action.', true);
+                return;
+            }
+            const name = document.getElementById('newPatientName').value;
+            const email = document.getElementById('newPatientEmail').value;
+            const password = document.getElementById('newPatientPassword').value;
+            const phone = document.getElementById('newPatientPhone').value;
+            const gender = document.getElementById('newPatientGender').value;
+
+            if (!name || !email || !password || !phone || !gender) {
+                showMessage('Please fill in all fields for the new patient', true);
+                return;
+            }
+
+            try {
+                // Admin can create a user, but it's more complex with client-side SDK.
+                // For simplicity, this client-side `addPatient` function will
+                // simulate creating a user in Firebase Auth using createUserWithEmailAndPassword,
+                // then store their data in Realtime DB.
+                // In a real admin scenario, you'd use Firebase Admin SDK on a server.
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const userId = userCredential.user.uid;
+
+                await set(ref(database, 'patients/' + userId), {
+                    fullName: name,
+                    email: email,
+                    phoneNumber: phone,
+                    gender: gender,
+                    createdAt: new Date().toISOString()
+                });
+                showMessage(`Patient ${name} added successfully!`);
+                hideAddPatientForm();
+                // loadPatientsList() will automatically update
+            } catch (error) {
+                showMessage(`Error adding patient: ${error.message}`, true);
+            }
+        }
+
+        // Load All Patients for Admin
+        function loadPatientsList() {
+            const patientsListDiv = document.getElementById('patientsList');
+            if (!isAdmin) {
+                patientsListDiv.innerHTML = '<p>Unauthorized access.</p>';
+                return;
+            }
+            onValue(ref(database, 'patients'), (snapshot) => {
+                patientsListDiv.innerHTML = ''; // Clear previous content
+                let hasPatients = false;
+                snapshot.forEach((childSnapshot) => {
+                    hasPatients = true;
+                    const patient = childSnapshot.val();
+                    const patientId = childSnapshot.key;
+                    patientsListDiv.innerHTML += `
+                        <div class="admin-card" style="background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);">
+                            <h4>${patient.fullName}</h4>
+                            <p><strong>Email:</strong> ${patient.email}</p>
+                            <p><strong>Phone:</strong> ${patient.phoneNumber}</p>
+                            <p><strong>Gender:</strong> ${patient.gender}</p>
+                            <p style="font-size: 0.8em; opacity: 0.8;">Firebase ID: ${patientId}</p>
+                            <!-- You could add buttons here for 'View Records' or 'Delete Patient' -->
+                        </div>
+                    `;
+                });
+                if (!hasPatients) {
+                    patientsListDiv.innerHTML = '<p>No patients registered.</p>';
+                }
+            }, {
+                onlyOnce: false
+            });
+        }
+
+        // Load All Test Results for Admin
+        function loadAdminTestResults() {
+            const adminTestResultsListDiv = document.getElementById('adminTestResultsList');
+            if (!isAdmin) {
+                adminTestResultsListDiv.innerHTML = '<p>Unauthorized access.</p>';
+                return;
+            }
+            onValue(ref(database, 'testResults'), async (snapshot) => {
+                adminTestResultsListDiv.innerHTML = ''; // Clear previous content
+                let hasResults = false;
+                const results = [];
+                snapshot.forEach((childSnapshot) => {
+                    results.push(childSnapshot.val());
+                });
+
+                // Fetch patient names for display
+                const patientPromises = results.map(result => get(ref(database, 'patients/' + result.userId)));
+                const patientSnapshots = await Promise.all(patientPromises);
+                const patientMap = {};
+                patientSnapshots.forEach(snap => {
+                    if (snap.exists()) {
+                        patientMap[snap.key] = snap.val().fullName || 'Unknown Patient';
+                    }
+                });
+
+                results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by newest first
+
+                results.forEach(result => {
+                    hasResults = true;
+                    const patientName = patientMap[result.userId] || 'N/A';
+                    adminTestResultsListDiv.innerHTML += `
+                        <div class="test-result-item admin-card" style="background: linear-gradient(135deg, #00b894 0%, #00a085 100%);">
+                            <h4>${result.testType} for ${patientName}</h4>
+                            <p><strong>Score:</strong> ${result.score}</p>
+                            <p><strong>Breakdown:</strong> ${result.breakdown}</p>
+                            <p style="font-size: 0.8em; opacity: 0.8;">Taken on: ${new Date(result.createdAt).toLocaleString()}</p>
+                            <!-- Optional: Display individual answers -->
+                            <!-- <details><summary>View Answers</summary><pre>${JSON.stringify(result.answers, null, 2)}</pre></details> -->
+                        </div>
+                    `;
+                });
+                if (!hasResults) {
+                    adminTestResultsListDiv.innerHTML = '<p>No test results found.</p>';
+                }
+            }, {
+                onlyOnce: false
+            });
+        }
+
+
+        // --- Initial Load Logic and Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set up main screen navigation
+            document.getElementById('loginBtn').addEventListener('click', login);
+            document.getElementById('showSignupBtn').addEventListener('click', showSignup);
+            document.getElementById('showAdminLoginBtn').addEventListener('click', showAdminLogin);
+
+            document.getElementById('signupBtn').addEventListener('click', signup);
+            document.getElementById('backToLoginBtn').addEventListener('click', showLogin);
+
+            document.getElementById('adminLoginBtn').addEventListener('click', adminLogin);
+            document.getElementById('backToPatientLoginBtn').addEventListener('click', showLogin);
+
+            // Set up dashboard logout buttons
+            document.getElementById('patientLogoutBtn').addEventListener('click', logout);
+            document.getElementById('adminLogoutBtn').addEventListener('click', logout);
+
+            // Set up patient dashboard buttons
+            document.getElementById('showBookingFormBtn').addEventListener('click', showBookingForm);
+            document.getElementById('submitAppointmentRequestBtn').addEventListener('click', bookAppointment);
+            document.getElementById('hideBookingFormBtn').addEventListener('click', hideBookingForm);
+            document.getElementById('submitTestBtn').addEventListener('click', submitTest);
+            document.getElementById('cancelTestBtn').addEventListener('click', cancelTest);
+
+
+            // Set up patient sidebar navigation using event delegation
+            document.getElementById('patientSidebarNav').addEventListener('click', (event) => {
+                if (event.target.tagName === 'LI' && event.target.dataset.section) {
+                    showPatientSection(event.target.dataset.section);
+                }
+            });
+
+            // Set up test card event listeners using event delegation for mentalHealthSection
+            document.getElementById('mentalHealthSection').addEventListener('click', (event) => {
+                if (event.target.closest('.test-card')) {
+                    const testType = event.target.closest('.test-card').dataset.testType;
+                    startTest(testType);
+                }
+            });
+
+            // Set up admin sidebar navigation using event delegation
+            document.getElementById('adminSidebarNav').addEventListener('click', (event) => {
+                if (event.target.tagName === 'LI' && event.target.dataset.section) {
+                    showAdminSection(event.target.dataset.section);
+                }
+            });
+
+            // Set up admin patient management buttons
+            document.getElementById('showAddPatientFormBtn').addEventListener('click', showAddPatientForm);
+            document.getElementById('addPatientBtn').addEventListener('click', addPatient);
+            document.getElementById('hideAddPatientFormBtn').addEventListener('click', hideAddPatientForm);
+
+
+            // Check Firebase Auth state on page load
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    isAdmin = false; // Assume not admin unless coming from admin login path
+                    showPatientDashboard();
+                } else {
+                    // Check if coming from admin login via session storage
+                    if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                         isAdmin = true;
+                         showAdminDashboard();
+                    } else {
+                        showLogin(); // Show login screen by default
+                    }
+                }
+            });
+        });
+
+    </script>
 </body>
 </html>
