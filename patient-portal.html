@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Account</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Create Your HealMed Account</h1>
+        <form id="createAccountForm">
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
+            <select id="gender" required>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="text" id="newUsername" placeholder="Username" required>
+            <input type="password" id="newPassword" placeholder="Password" required>
+            <button type="submit">Create Account</button>
+        </form>
+        <p>Already have an account? <a href="index.html">Login here</a></p>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
