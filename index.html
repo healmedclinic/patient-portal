@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HealMed Patient/Admin Portal</title>
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
+    <!-- Font Awesome for Icons (Still useful for general icons if needed) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* All your CSS styles are now embedded here */
         * {
@@ -17,8 +21,9 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column; /* Changed to column to stack header on top */
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; /* Align content from the top */
             overflow-y: auto; /* Allow scrolling for content that overflows viewport */
         }
 
@@ -30,18 +35,42 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
             margin: 20px;
+            flex-grow: 1; /* Allow container to grow and fill space below header */
         }
 
         .hidden {
             display: none !important;
         }
 
+        /* Top Header for Branding */
+        .header-branding {
+            width: 100%; /* Take full width */
+            padding: 20px;
+            background: #2c3e50; /* Dark background for header */
+            color: white;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px; /* Space between header and container */
+        }
+
+        .header-branding h1 {
+            font-size: 2.5em; /* Larger for main name */
+            font-weight: 700;
+            margin-bottom: 5px; /* Space between name and slogan */
+        }
+        .header-branding p {
+            font-size: 1.2em; /* Slogan size */
+            opacity: 0.8;
+            margin: 0; /* Remove default paragraph margin */
+        }
+
+
         /* Login Screen */
         .login-screen {
             padding: 60px;
             text-align: center;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh; /* Ensure login screen takes full height too */
+            min-height: 100%; /* Take full height of its parent (container) */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -123,7 +152,7 @@
         /* Dashboard */
         .dashboard {
             display: flex;
-            min-height: 100vh;
+            min-height: 100%; /* Take full height of its parent (container) */
             position: relative; /* For logout button positioning */
         }
 
@@ -272,6 +301,13 @@
             border-radius: 10px;
             margin-bottom: 15px;
         }
+        .admin-card.approved-status {
+             background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); /* Green for approved */
+        }
+        .admin-card.denied-status {
+             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); /* Red for denied */
+        }
+
 
         .action-buttons {
             margin-top: 15px;
@@ -332,6 +368,151 @@
             margin-bottom: 5px;
         }
 
+        /* FullCalendar specific styles */
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            min-height: 500px; /* Ensure calendar has some initial height */
+        }
+
+        .fc .fc-toolbar-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+        }
+
+        .fc .fc-button-primary {
+            background-color: #667eea;
+            border-color: #667eea;
+            color: white;
+            border-radius: 5px;
+            padding: 8px 15px;
+            transition: background-color 0.2s;
+        }
+        .fc .fc-button-primary:hover {
+            background-color: #5a6de0;
+            border-color: #5a6de0;
+        }
+        .fc .fc-button-primary:not(:disabled).fc-button-active {
+            background-color: #4a5dc1;
+            border-color: #4a5dc1;
+        }
+
+        /* Custom event rendering for FullCalendar: green circle */
+        .fc-event-main-frame {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between circle and text */
+        }
+        .event-circle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #27ae60; /* Green color for approved */
+            flex-shrink: 0; /* Prevent it from shrinking */
+        }
+        /* Default FullCalendar event background */
+        .fc-event {
+            background-color: #0984e3 !important; /* Default blue for event */
+            border-color: #0984e3 !important;
+            border-radius: 5px !important;
+            padding: 3px 5px !important;
+            font-size: 0.85em !important;
+            cursor: pointer; /* Indicate clickable event */
+        }
+        /* Specific styling for the green dot events (if you want to override default background) */
+        .fc-event.approved-event {
+            background-color: #27ae60 !important; /* Make the event itself green */
+            border-color: #27ae60 !important;
+        }
+
+        .fc-event-title {
+            color: white !important;
+            font-weight: bold;
+        }
+        
+        .fc-event-time {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        /* Modal for event details */
+        .modal {
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        .modal-content p {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        /* Admin Appointment Category Buttons */
+        .admin-appt-category-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .admin-appt-category-buttons .btn {
+            width: auto; /* Allow buttons to size based on content */
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            background: #e9ecef; /* Neutral background */
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .admin-appt-category-buttons .btn.active-category {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Active style */
+            color: white;
+        }
+
 
         @media (max-width: 768px) {
             .dashboard {
@@ -364,10 +545,26 @@
             .login-form {
                 padding: 30px;
             }
+            #calendar {
+                padding: 10px;
+            }
+            .fc .fc-toolbar-title {
+                font-size: 1.2em;
+            }
+            .admin-appt-category-buttons {
+                flex-wrap: wrap;
+            }
+            .admin-appt-category-buttons .btn {
+                flex-grow: 1; /* Allow them to grow and fill space */
+            }
         }
     </style>
 </head>
 <body>
+    <div class="header-branding">
+        <h1>HealMed Clinic &trade;</h1>
+        <p>Let's heal minds</p>
+    </div>
     <div class="container">
         <!-- Login Screen -->
         <div id="loginScreen" class="login-screen">
@@ -427,7 +624,6 @@
             <div class="login-form">
                 <h2>Staff Login</h2>
                 <div class="form-group">
-                    <!-- Changed from username to email as we'll use Firebase Auth -->
                     <label for="adminEmail">Email:</label>
                     <input type="email" id="adminEmail" placeholder="Enter admin email" required>
                 </div>
@@ -459,17 +655,25 @@
                     <div id="appointmentsList"></div>
                     <button class="btn" id="showBookingFormBtn">Book New Appointment</button>
 
-                    <!-- Booking Form -->
+                    <!-- Booking Form (Updated to include date picker) -->
                     <div id="bookingForm" class="hidden" style="margin-top: 20px; background: #f8f9fa; padding: 20px; border-radius: 10px;">
                         <h3>Book New Appointment</h3>
+                        <div class="form-group">
+                            <label for="appointmentDate">Preferred Date:</label>
+                            <input type="date" id="appointmentDate" required>
+                        </div>
                         <div class="form-group">
                             <label for="appointmentTime">Preferred Appointment Time:</label>
                             <select id="appointmentTime" required>
                                 <option value="">Select Time</option>
-                                <option value="Thursday 1-2 PM">Thursday 1-2 PM</option>
-                                <option value="Friday 1-2 PM">Friday 1-2 PM</option>
-                                <option value="Monday 10-11 AM">Monday 10-11 AM</option>
-                                <option value="Tuesday 2-3 PM">Tuesday 2-3 PM</option>
+                                <option value="09:00">09:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">01:00 PM</option>
+                                <option value="14:00">02:00 PM</option>
+                                <option value="15:00">03:00 PM</option>
+                                <option value="16:00">04:00 PM</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -536,10 +740,24 @@
                 </ul>
             </div>
             <div class="main-content">
-                <!-- Admin Appointments Section -->
+                <!-- Admin Appointments Section (Reorganized) -->
                 <div id="adminAppointmentsSection" class="section">
-                    <h2>Appointment Requests</h2>
-                    <div id="adminAppointmentsList"></div>
+                    <div class="admin-appt-category-buttons">
+                        <button class="btn active-category" data-category="pending" id="showPendingAppointmentsBtn">Pending</button>
+                        <button class="btn" data-category="approved" id="showApprovedAppointmentsBtn">Approved</button>
+                        <button class="btn" data-category="denied" id="showDeniedAppointmentsBtn">Denied</button>
+                    </div>
+                    
+                    <h2 id="adminAppointmentsTitle">Appointment Requests (Pending)</h2>
+                    
+                    <!-- Pending Appointments List (Default View) -->
+                    <div id="adminPendingAppointmentsList"></div> 
+                    
+                    <!-- Approved Appointments List (Initially Hidden) -->
+                    <div id="adminApprovedAppointmentsList" class="hidden"></div>
+
+                    <!-- Denied Appointments List (Initially Hidden) -->
+                    <div id="adminDeniedAppointmentsList" class="hidden"></div>
                 </div>
 
                 <!-- Admin Patients Section -->
@@ -588,21 +806,35 @@
                     <div id="adminTestResultsList"></div>
                 </div>
 
-                <!-- New Admin Calendar Section -->
+                <!-- New Admin Calendar Section (Updated for FullCalendar) -->
                 <div id="adminCalendarSection" class="section hidden">
                     <h2>Approved Appointments Calendar</h2>
-                    <div id="calendarEntries">
-                        <p>Approved appointments will appear here.</p>
-                    </div>
+                    <div id="calendar"></div> <!-- FullCalendar will render here -->
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal for displaying FullCalendar event details -->
+    <div id="eventDetailsModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalBtn">&times;</span>
+            <h3 id="modalEventTitle"></h3>
+            <p><strong>Patient:</strong> <span id="modalPatientName"></span></p>
+            <p><strong>Email:</strong> <span id="modalPatientEmail"></span></p>
+            <p><strong>Phone:</strong> <span id="modalPatientPhone"></span></p>
+            <p><strong>Date & Time:</strong> <span id="modalEventDateTime"></span></p>
+            <p><strong>Reason:</strong> <span id="modalEventReason"></span></p>
+            <p><strong>Status:</strong> <span id="modalEventStatus"></span></p>
+        </div>
+    </div>
+
+
+    <!-- FullCalendar JavaScript (Must be loaded AFTER the DOM elements) -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
     <script type="module">
         // --- Firebase Configuration (YOUR ACTUAL KEYS) ---
-        // This configuration has been updated with the details you provided.
-        // The 'databaseURL' has been explicitly added, as it's crucial for Realtime Database operations.
         const firebaseConfig = {
             apiKey: "AIzaSyD440QOEKOT3oRUORipguPtttraawzPGgs",
             authDomain: "healmed-portal-backend.firebaseapp.com",
@@ -611,12 +843,10 @@
             messagingSenderId: "979152928801",
             appId: "1:979152928801:web:2e5dbbd801732a4e44e360",
             measurementId: "G-1MKT9TNCJ5",
-            // IMPORTANT: databaseURL is derived from your projectId
             databaseURL: "https://healmed-portal-backend-default-rtdb.firebaseio.com"
         };
 
         // --- Firebase SDK v9 Modular Imports from CDN ---
-        // These URLs are stable and directly link to Firebase's CDN for modular SDK.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
         import { getDatabase, ref, set, push, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
@@ -632,11 +862,11 @@
         let currentUser = null; // Stores current Firebase authenticated user object
         let isAdmin = false; // Flag for admin status (set after successful Firebase admin login)
         let currentTest = null; // Stores details of the test currently being taken
+        let adminCalendarInstance = null; // To hold the FullCalendar object for the admin portal
 
-        // --- Admin Credentials (No longer hardcoded as username, but for reference) ---
-        // The actual admin credentials will be a user created in Firebase Authentication
-        const ADMIN_EMAIL = 'admin@healmed.com'; // Use the email you create in Firebase Auth
-        const ADMIN_PASSWORD_REFERENCE = 'healthcare2024'; // For clarity, we still refer to it.
+        // --- Admin Credentials (Email must exist in Firebase Authentication) ---
+        const ADMIN_EMAIL = 'admin@healmed.com'; // Use the email you created in Firebase Auth
+        const ADMIN_PASSWORD_REFERENCE = 'healthcare2024'; // For clarity, we refer to it.
 
         // --- Mental Health Test Questions and Scoring ---
         const testQuestions = {
@@ -791,7 +1021,6 @@
 
         // Admin Login (NOW using Firebase Auth)
         async function adminLogin() {
-            // Updated: Using adminEmail instead of adminUsername
             const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
 
@@ -801,29 +1030,28 @@
             }
 
             try {
-                // IMPORTANT: We now try to sign in the admin with Firebase Authentication
+                // IMPORTANT: Sign in the admin with Firebase Authentication
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                currentUser = userCredential.user; // Set current user to admin's Firebase user object
+                currentUser = userCredential.user;
                 
-                // Optional: You could check user.uid against a list of known admin UIDs
-                // For simplicity, we assume anyone logging in with the specific admin credentials is an admin.
-                if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD_REFERENCE) { // Perform local check too
-                    sessionStorage.setItem('isAdminLoggedIn', 'true');
+                // Confirm it's the expected admin user
+                if (email === ADMIN_EMAIL) {
+                    sessionStorage.setItem('isAdminLoggedIn', 'true'); // Keep this for session tracking
                     isAdmin = true;
                     console.log("Admin login successful via Firebase Auth. UID:", currentUser.uid);
                     showMessage('Admin login successful!');
                     showAdminDashboard();
                 } else {
-                    // This case should ideally not be hit if credentials are correct and user exists in Auth
-                    console.error("Admin: Firebase Auth login succeeded but local check failed. This is unexpected.");
-                    showMessage('Admin login failed: Internal error or credentials mismatch.', true);
-                    await signOut(auth); // Sign out if local check fails for safety
+                    console.error("Admin: A Firebase user logged in, but not the designated admin email.");
+                    showMessage('Admin login failed: Invalid admin credentials.', true);
+                    await signOut(auth); // Sign out the unexpected user
+                    sessionStorage.removeItem('isAdminLoggedIn');
+                    isAdmin = false;
                 }
 
             } catch (error) {
                 console.error("Admin login failed:", error);
                 showMessage(`Admin login failed: ${error.message}`, true);
-                // Clear any stored admin session if login fails
                 sessionStorage.removeItem('isAdminLoggedIn');
                 isAdmin = false;
             }
@@ -841,8 +1069,6 @@
                 showMessage('Please fill in all fields', true);
                 return;
             }
-
-            // Client-side password length check for Firebase Auth
             if (password.length < 6) {
                 showMessage('Password must be at least 6 characters long.', true);
                 return;
@@ -850,12 +1076,10 @@
 
             try {
                 console.log("Attempting to create user with email:", email);
-                // Create user with Firebase Authentication
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const userId = userCredential.user.uid;
                 console.log("User created in Firebase Auth with UID:", userId);
 
-                // Save additional patient data to Realtime Database
                 await set(ref(database, 'patients/' + userId), {
                     fullName: name,
                     email: email,
@@ -866,7 +1090,7 @@
                 console.log("Patient data saved to Realtime Database for UID:", userId);
 
                 showMessage('Account created successfully! Please login.');
-                showLogin(); // Redirect to login screen after successful signup
+                showLogin();
             } catch (error) {
                 console.error("Firebase Auth Error during signup:", error);
                 showMessage(`Error creating account: ${error.message}`, true);
@@ -875,16 +1099,12 @@
 
         // Logout
         async function logout() {
-            // Always try to sign out from Firebase Auth
             try {
                 await signOut(auth);
                 console.log("Firebase Auth user signed out.");
             } catch (error) {
                 console.error("Firebase Auth signOut failed:", error);
-                // Continue with local cleanup even if Firebase signOut fails
             }
-
-            // Clear local state and session storage
             sessionStorage.removeItem('isAdminLoggedIn');
             isAdmin = false;
             currentUser = null;
@@ -907,7 +1127,6 @@
         function showAdminLogin() {
             hideAllScreens();
             document.getElementById('adminLoginScreen').classList.remove('hidden');
-            // Clear fields on showing admin login
             document.getElementById('adminEmail').value = '';
             document.getElementById('adminPassword').value = '';
         }
@@ -915,33 +1134,25 @@
         function showPatientDashboard() {
             hideAllScreens();
             document.getElementById('patientDashboard').classList.remove('hidden');
-            // Default to appointments section
             showPatientSection('appointments');
-            // Load patient-specific data when dashboard is shown
             loadAppointments();
-            loadTestResults(); // Load patient's test results
+            loadTestResults();
             loadProfile();
         }
 
         function showAdminDashboard() {
             hideAllScreens();
             document.getElementById('adminDashboard').classList.remove('hidden');
-            // Default to appointment requests
-            showAdminSection('appointments');
-            // Load admin-specific data when dashboard is shown
-            loadAdminAppointments();
-            loadPatientsList(); // Load all patients for management
-            loadAdminTestResults(); // Load all test results for review
-            loadAdminCalendar(); // Load approved appointments for calendar
+            showAdminSection('appointments'); // Default to showing pending appointments when admin dashboard loads
+            loadPatientsList();
+            loadAdminTestResults();
         }
 
-        // Generic function to show a specific section within patient dashboard
         function showPatientSection(sectionId) {
             document.querySelectorAll('#patientDashboard .section').forEach(s => s.classList.add('hidden'));
-            document.getElementById('testInterface').classList.add('hidden'); // Ensure test interface is hidden
+            document.getElementById('testInterface').classList.add('hidden');
 
             document.querySelectorAll('#patientSidebarNav li').forEach(li => li.classList.remove('active'));
-            // Use dataset for better event handling consistency
             const targetListItem = document.querySelector(`#patientSidebarNav li[data-section="${sectionId}"]`);
             if (targetListItem) {
                 targetListItem.classList.add('active');
@@ -955,13 +1166,53 @@
             document.querySelectorAll('#adminDashboard .section').forEach(s => s.classList.add('hidden'));
 
             document.querySelectorAll('#adminSidebarNav li').forEach(li => li.classList.remove('active'));
-            // Use dataset for better event handling consistency
             const targetListItem = document.querySelector(`#adminSidebarNav li[data-section="${sectionId}"]`);
             if (targetListItem) {
                 targetListItem.classList.add('active');
             }
 
             document.getElementById(`admin${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)}Section`).classList.remove('hidden');
+
+            if (sectionId === 'calendar') {
+                loadAdminCalendar(); // Initialize/reload calendar when this section is shown
+            } else if (sectionId === 'appointments') {
+                 showAdminAppointmentCategory('pending'); // Default to pending on appt tab
+            }
+        }
+
+        // Helper to manage visibility of different appointment lists in admin portal
+        function showAdminAppointmentCategory(category) {
+            document.getElementById('adminPendingAppointmentsList').classList.add('hidden');
+            document.getElementById('adminApprovedAppointmentsList').classList.add('hidden');
+            document.getElementById('adminDeniedAppointmentsList').classList.add('hidden');
+
+            document.querySelectorAll('.admin-appt-category-buttons .btn').forEach(btn => {
+                btn.classList.remove('active-category');
+            });
+
+            let titleText = "Appointment Requests";
+            switch (category) {
+                case 'pending':
+                    document.getElementById('adminPendingAppointmentsList').classList.remove('hidden');
+                    document.getElementById('showPendingAppointmentsBtn').classList.add('active-category');
+                    loadAdminAppointments(); // Load pending appointments
+                    titleText = "Appointment Requests (Pending)";
+                    break;
+                case 'approved':
+                    document.getElementById('adminApprovedAppointmentsList').classList.remove('hidden');
+                    document.getElementById('showApprovedAppointmentsBtn').classList.add('active-category');
+                    loadAdminApprovedAppointments(); // Load approved appointments
+                    titleText = "Approved Appointments (Historical)";
+                    break;
+                case 'denied':
+                    document.getElementById('adminDeniedAppointmentsList').classList.remove('hidden');
+                    document.getElementById('showDeniedAppointmentsBtn').classList.add('active-category');
+                    loadAdminDeniedAppointments(); // Load denied appointments
+                    titleText = "Denied Appointments (Historical)";
+                    break;
+            }
+            document.getElementById('adminAppointmentsTitle').textContent = titleText;
+            console.log(`Admin: Showing ${category} appointments.`);
         }
 
         // --- Patient-Specific Functionality ---
@@ -987,31 +1238,34 @@
                     console.log("Patient: No profile data found for UID:", currentUser.uid);
                 }
             }, {
-                onlyOnce: false // Listen for real-time changes
+                onlyOnce: false
             });
         }
 
         // Show/Hide Appointment Booking Form
         function showBookingForm() {
             document.getElementById('bookingForm').classList.remove('hidden');
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointmentDate').min = today;
             console.log("Patient: Showing booking form.");
         }
 
         function hideBookingForm() {
             document.getElementById('bookingForm').classList.add('hidden');
-            // Clear form fields
+            document.getElementById('appointmentDate').value = '';
             document.getElementById('appointmentTime').value = '';
             document.getElementById('appointmentReason').value = '';
             console.log("Patient: Hiding booking form.");
         }
 
-        // Book New Appointment
+        // Book New Appointment (Updated to save date)
         async function bookAppointment() {
-            const time = document.getElementById('appointmentTime').value;
+            const date = document.getElementById('appointmentDate').value; //YYYY-MM-DD
+            const time = document.getElementById('appointmentTime').value; // HH:MM (e.g., "09:00")
             const reason = document.getElementById('appointmentReason').value;
 
-            if (!time || !reason) {
-                showMessage('Please select a time and enter a reason for your visit', true);
+            if (!date || !time || !reason) {
+                showMessage('Please select a date and time, and enter a reason for your visit', true);
                 return;
             }
             if (!currentUser) {
@@ -1021,7 +1275,6 @@
 
             try {
                 console.log("Patient: Attempting to book appointment for user UID:", currentUser.uid);
-                // Fetch current patient details for the appointment record
                 const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
                 const patientData = patientSnapshot.val();
 
@@ -1031,28 +1284,28 @@
                     return;
                 }
 
-                const newAppointmentRef = push(ref(database, 'appointments')); // Firebase generates unique ID
+                const newAppointmentRef = push(ref(database, 'appointments'));
                 await set(newAppointmentRef, {
                     userId: currentUser.uid,
                     fullName: patientData.fullName,
                     email: patientData.email,
                     phoneNumber: patientData.phoneNumber,
-                    time: time,
+                    appointmentDate: date, // Specific date (YYYY-MM-DD)
+                    appointmentTime: time, // Specific time (HH:MM)
                     reason: reason,
-                    status: 'pending', // Initial status
+                    status: 'pending',
                     createdAt: new Date().toISOString()
                 });
                 console.log("Patient: Appointment request submitted successfully to Firebase. Path:", newAppointmentRef.toString());
                 showMessage('Appointment request submitted successfully!');
                 hideBookingForm();
-                // loadAppointments() will automatically update due to onValue listener
             } catch (error) {
                 console.error("Patient: Error booking appointment:", error);
                 showMessage(`Error booking appointment: ${error.message}`, true);
             }
         }
 
-        // Load Patient's Appointments
+        // Load Patient's Appointments (Updated to show date)
         function loadAppointments() {
             const appointmentsListDiv = document.getElementById('appointmentsList');
             if (!currentUser) {
@@ -1061,19 +1314,23 @@
             }
             console.log("Patient: Loading appointments for patient UID:", currentUser.uid);
             onValue(ref(database, 'appointments'), (snapshot) => {
-                appointmentsListDiv.innerHTML = ''; // Clear previous content
+                appointmentsListDiv.innerHTML = '';
                 let hasAppointments = false;
                 snapshot.forEach((childSnapshot) => {
                     const appt = childSnapshot.val();
-                    const apptId = childSnapshot.key; // Get the unique key for possible future modifications
+                    const apptId = childSnapshot.key;
 
-                    if (appt.userId === currentUser.uid) { // Filter appointments for current user
+                    if (appt.userId === currentUser.uid) {
                         hasAppointments = true;
                         const statusClass = `status-${appt.status}`;
+                        // Display both date and time if available, otherwise fallback to old 'time' string
+                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
+                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
+                            : appt.time || 'N/A'; // Fallback for old data without specific date/time
                         appointmentsListDiv.innerHTML += `
                             <div class="appointment-card">
                                 <h4>Appointment Request</h4>
-                                <p><strong>Time:</strong> ${appt.time}</p>
+                                <p><strong>Date & Time:</strong> ${displayDateTime}</p>
                                 <p><strong>Reason:</strong> ${appt.reason}</p>
                                 <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
@@ -1087,7 +1344,7 @@
                 }
                 console.log("Patient: Appointments loaded. Total displayed:", appointmentsListDiv.children.length);
             }, {
-                onlyOnce: false // Listen for real-time changes
+                onlyOnce: false
             });
         }
 
@@ -1104,7 +1361,6 @@
                 showMessage("Selected test not found. Please try again.", true);
                 return;
             }
-            // Clear previous answers for a new test
             const testQuestionsDiv = document.getElementById('testQuestions');
             testQuestionsDiv.innerHTML = '';
 
@@ -1128,7 +1384,6 @@
                 testQuestionsDiv.innerHTML += questionHtml;
             });
 
-            // Show test interface, hide mental health section
             document.getElementById('mentalHealthSection').classList.add('hidden');
             document.getElementById('testInterface').classList.remove('hidden');
             console.log("Patient: Test interface displayed for:", testType);
@@ -1155,19 +1410,19 @@
             console.log("Patient: Test submitted. Calculated Score:", score, "Breakdown:", breakdown);
 
             try {
-                const newTestResultRef = push(ref(database, 'testResults')); // Firebase generates unique ID
+                const newTestResultRef = push(ref(database, 'testResults'));
                 await set(newTestResultRef, {
                     userId: currentUser.uid,
                     testType: currentTest.title,
                     score: score,
                     breakdown: breakdown,
-                    answers: answers, // Store for admin review
+                    answers: answers,
                     createdAt: new Date().toISOString()
                 });
                 console.log("Patient: Test results saved to Firebase. Path:", newTestResultRef.toString());
                 showMessage('Test submitted successfully!');
-                cancelTest(); // Clear test interface
-                loadTestResults(); // Refresh patient's test results
+                cancelTest();
+                loadTestResults();
             } catch (error) {
                 console.error("Patient: Error submitting test:", error);
                 showMessage(`Error submitting test: ${error.message}`, true);
@@ -1180,7 +1435,6 @@
             currentTest = null;
             document.getElementById('testInterface').classList.add('hidden');
             document.getElementById('mentalHealthSection').classList.remove('hidden');
-            // Clear questions
             document.getElementById('testQuestions').innerHTML = '';
         }
 
@@ -1193,11 +1447,11 @@
             }
             console.log("Patient: Loading past test results for patient UID:", currentUser.uid);
             onValue(ref(database, 'testResults'), (snapshot) => {
-                testResultsListDiv.innerHTML = ''; // Clear previous content
+                testResultsListDiv.innerHTML = '';
                 let hasResults = false;
                 snapshot.forEach((childSnapshot) => {
                     const result = childSnapshot.val();
-                    if (result.userId === currentUser.uid) { // Filter results for current user
+                    if (result.userId === currentUser.uid) {
                         hasResults = true;
                         testResultsListDiv.innerHTML += `
                             <div class="test-result-item">
@@ -1214,64 +1468,64 @@
                 }
                 console.log("Patient: Test results loaded. Total displayed:", testResultsListDiv.children.length);
             }, {
-                onlyOnce: false // Listen for real-time changes
+                onlyOnce: false
             });
         }
 
         // --- Admin-Specific Functionality ---
 
-        // Load All Appointment Requests for Admin
+        // Load Pending Appointment Requests for Admin
         function loadAdminAppointments() {
-            const adminAppointmentsListDiv = document.getElementById('adminAppointmentsList');
-            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true based on Firebase Auth
+            const adminPendingAppointmentsListDiv = document.getElementById('adminPendingAppointmentsList');
             if (!currentUser || !isAdmin) {
-                adminAppointmentsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
+                adminPendingAppointmentsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
-            console.log("Admin: Loading all appointment requests.");
+            console.log("Admin: Loading pending appointment requests.");
             onValue(ref(database, 'appointments'), (snapshot) => {
-                adminAppointmentsListDiv.innerHTML = ''; // Clear previous content
+                adminPendingAppointmentsListDiv.innerHTML = '';
                 let hasAppointments = false;
                 const rawSnapshotData = snapshot.val();
-                console.log("Admin: Raw appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2)); // CRITICAL: Log raw data from Firebase, stringified for readability
+                console.log("Admin: Raw appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
 
-                if (rawSnapshotData) { // Only iterate if there's data
-                    // Convert object to array for sorting by creation date (newest first)
+                if (rawSnapshotData) {
                     const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                    appointmentsArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    const pendingAppointments = appointmentsArray.filter(appt => appt.status === 'pending');
+                    pendingAppointments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-                    appointmentsArray.forEach((appt) => {
-                        console.log("Admin: Processing individual appointment:", appt.id, appt); // Log each appointment
-
+                    pendingAppointments.forEach((appt) => {
+                        console.log("Admin: Processing individual pending appointment:", appt.id, appt);
                         hasAppointments = true;
                         const statusClass = `status-${appt.status}`;
-                        adminAppointmentsListDiv.innerHTML += `
+                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
+                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
+                            : appt.time || 'N/A';
+                        adminPendingAppointmentsListDiv.innerHTML += `
                             <div class="appointment-card admin-card">
                                 <h4>Appointment Request from ${appt.fullName}</h4>
                                 <p><strong>Email:</strong> ${appt.email}</p>
                                 <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
-                                <p><strong>Requested Time:</strong> ${appt.time}</p>
+                                <p><strong>Requested Date & Time:</strong> ${displayDateTime}</p>
                                 <p><strong>Reason:</strong> ${appt.reason}</p>
                                 <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${appt.id}</p>
                                 <div class="action-buttons">
-                                    <button class="btn-approve" data-id="${appt.id}" ${appt.status === 'approved' || appt.status === 'denied' ? 'disabled' : ''}>Approve</button>
-                                    <button class="btn-deny" data-id="${appt.id}" ${appt.status === 'approved' || appt.status === 'denied' ? 'disabled' : ''}>Deny</button>
+                                    <button class="btn-approve" data-id="${appt.id}">Approve</button>
+                                    <button class="btn-deny" data-id="${appt.id}">Deny</button>
                                 </div>
                             </div>
                         `;
                     });
                 }
                 if (!hasAppointments) {
-                    adminAppointmentsListDiv.innerHTML = '<p>No appointment requests found.</p>';
+                    adminPendingAppointmentsListDiv.innerHTML = '<p>No pending appointment requests found.</p>';
                 }
-                console.log("Admin: Appointments loaded. Total displayed elements:", adminAppointmentsListDiv.children.length);
-                // Attach event listeners to new buttons (must be done after elements are added to DOM)
-                document.querySelectorAll('#adminAppointmentsSection .btn-approve').forEach(button => {
+                console.log("Admin: Pending appointments loaded. Total displayed elements:", adminPendingAppointmentsListDiv.children.length);
+                document.querySelectorAll('#adminPendingAppointmentsList .btn-approve').forEach(button => {
                     button.onclick = (e) => approveAppointment(e.target.dataset.id);
                 });
-                document.querySelectorAll('#adminAppointmentsSection .btn-deny').forEach(button => {
+                document.querySelectorAll('#adminPendingAppointmentsList .btn-deny').forEach(button => {
                     button.onclick = (e) => denyAppointment(e.target.dataset.id);
                 });
             }, {
@@ -1279,9 +1533,106 @@
             });
         }
 
+        // Load Approved Appointment Requests for Admin
+        function loadAdminApprovedAppointments() {
+            const adminApprovedAppointmentsListDiv = document.getElementById('adminApprovedAppointmentsList');
+            if (!currentUser || !isAdmin) {
+                adminApprovedAppointmentsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
+                return;
+            }
+            console.log("Admin: Loading approved appointment requests.");
+            onValue(ref(database, 'appointments'), (snapshot) => {
+                adminApprovedAppointmentsListDiv.innerHTML = '';
+                let hasAppointments = false;
+                const rawSnapshotData = snapshot.val();
+
+                if (rawSnapshotData) {
+                    const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
+                    const approvedAppointments = appointmentsArray.filter(appt => appt.status === 'approved');
+                    approvedAppointments.sort((a, b) => {
+                        const dateA = appt.appointmentDate && appt.appointmentTime ? new Date(`${appt.appointmentDate}T${appt.appointmentTime}`) : new Date(appt.createdAt);
+                        const dateB = appt.appointmentDate && appt.appointmentTime ? new Date(`${appt.appointmentDate}T${appt.appointmentTime}`) : new Date(appt.createdAt);
+                        return dateB - dateA;
+                    });
+
+                    approvedAppointments.forEach((appt) => {
+                        hasAppointments = true;
+                        const statusClass = `status-${appt.status}`;
+                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
+                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
+                            : appt.time || 'N/A';
+                        adminApprovedAppointmentsListDiv.innerHTML += `
+                            <div class="appointment-card admin-card approved-status">
+                                <h4>Appointment for ${appt.fullName}</h4>
+                                <p><strong>Email:</strong> ${appt.email}</p>
+                                <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
+                                <p><strong>Date & Time:</strong> ${displayDateTime}</p>
+                                <p><strong>Reason:</strong> ${appt.reason}</p>
+                                <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${appt.id}</p>
+                            </div>
+                        `;
+                    });
+                }
+                if (!hasAppointments) {
+                    adminApprovedAppointmentsListDiv.innerHTML = '<p>No approved appointment requests found.</p>';
+                }
+                console.log("Admin: Approved appointments loaded. Total displayed elements:", adminApprovedAppointmentsListDiv.children.length);
+            }, {
+                onlyOnce: false
+            });
+        }
+
+        // Load Denied Appointment Requests for Admin
+        function loadAdminDeniedAppointments() {
+            const adminDeniedAppointmentsListDiv = document.getElementById('adminDeniedAppointmentsList');
+            if (!currentUser || !isAdmin) {
+                adminDeniedAppointmentsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
+                return;
+            }
+            console.log("Admin: Loading denied appointment requests.");
+            onValue(ref(database, 'appointments'), (snapshot) => {
+                adminDeniedAppointmentsListDiv.innerHTML = '';
+                let hasAppointments = false;
+                const rawSnapshotData = snapshot.val();
+
+                if (rawSnapshotData) {
+                    const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
+                    const deniedAppointments = appointmentsArray.filter(appt => appt.status === 'denied');
+                    deniedAppointments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                    deniedAppointments.forEach((appt) => {
+                        hasAppointments = true;
+                        const statusClass = `status-${appt.status}`;
+                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
+                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
+                            : appt.time || 'N/A';
+                        adminDeniedAppointmentsListDiv.innerHTML += `
+                            <div class="appointment-card admin-card denied-status">
+                                <h4>Appointment for ${appt.fullName}</h4>
+                                <p><strong>Email:</strong> ${appt.email}</p>
+                                <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
+                                <p><strong>Date & Time:</strong> ${displayDateTime}</p>
+                                <p><strong>Reason:</strong> ${appt.reason}</p>
+                                <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${appt.id}</p>
+                            </div>
+                        `;
+                    });
+                }
+                if (!hasAppointments) {
+                    adminDeniedAppointmentsListDiv.innerHTML = '<p>No denied appointment requests found.</p>';
+                }
+                console.log("Admin: Denied appointments loaded. Total displayed elements:", adminDeniedAppointmentsListDiv.children.length);
+            }, {
+                onlyOnce: false
+            });
+        }
+
         // Approve Appointment
         async function approveAppointment(apptId) {
-            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
                 return;
@@ -1291,7 +1642,6 @@
                 await update(ref(database, 'appointments/' + apptId), { status: 'approved' });
                 console.log("Admin: Appointment approved:", apptId);
                 showMessage('Appointment approved successfully!');
-                loadAdminCalendar(); // Refresh calendar after approval
             } catch (error) {
                 console.error("Admin: Error approving appointment:", error);
                 showMessage(`Error approving appointment: ${error.message}`, true);
@@ -1300,7 +1650,6 @@
 
         // Deny Appointment
         async function denyAppointment(apptId) {
-            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
                 return;
@@ -1310,7 +1659,6 @@
                 await update(ref(database, 'appointments/' + apptId), { status: 'denied' });
                 console.log("Admin: Appointment denied:", apptId);
                 showMessage('Appointment denied.');
-                loadAdminCalendar(); // Refresh calendar as status might change
             } catch (error) {
                 console.error("Admin: Error denying appointment:", error);
                 showMessage(`Error denying appointment: ${error.message}`, true);
@@ -1319,7 +1667,7 @@
 
         // Show Add Patient Form
         function showAddPatientForm() {
-            if (!currentUser || !isAdmin) { // Check admin status
+            if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized access.', true);
                 return;
             }
@@ -1329,7 +1677,6 @@
 
         function hideAddPatientForm() {
             document.getElementById('addPatientForm').classList.add('hidden');
-            // Clear form fields
             document.getElementById('newPatientName').value = '';
             document.getElementById('newPatientEmail').value = '';
             document.getElementById('newPatientPassword').value = '';
@@ -1338,16 +1685,15 @@
             console.log("Admin: Hiding add patient form.");
         }
 
-        // Add New Patient via Admin Portal (This will create a Firebase Auth user)
+        // Add New Patient via Admin Portal
         async function addPatient() {
-            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
                 return;
             }
             const name = document.getElementById('newPatientName').value;
             const email = document.getElementById('newPatientEmail').value;
-            const password = document.getElementById('newPatientPassword').value; // Password for the new patient
+            const password = document.getElementById('newPatientPassword').value;
             const phone = document.getElementById('newPatientPhone').value;
             const gender = document.getElementById('newPatientGender').value;
 
@@ -1355,8 +1701,6 @@
                 showMessage('Please fill in all fields for the new patient', true);
                 return;
             }
-
-            // Check for password length as per Firebase Auth requirement
             if (password.length < 6) {
                 showMessage('Password for the new patient must be at least 6 characters long.', true);
                 return;
@@ -1378,7 +1722,6 @@
                 console.log("Admin: Saved patient data to Realtime Database for UID:", userId);
                 showMessage(`Patient ${name} added successfully! Temporary password: ${password}`);
                 hideAddPatientForm();
-                // loadPatientsList() will automatically update
             } catch (error) {
                 console.error("Admin: Error adding patient via admin portal:", error);
                 showMessage(`Error adding patient: ${error.message}`, true);
@@ -1387,35 +1730,31 @@
 
         // Load All Patients for Admin
         function loadPatientsList() {
-            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
+            const patientsListDiv = document.getElementById('patientsList');
             if (!currentUser || !isAdmin) {
                 patientsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
-            const patientsListDiv = document.getElementById('patientsList');
             console.log("Admin: Loading all patients.");
             onValue(ref(database, 'patients'), (snapshot) => {
-                patientsListDiv.innerHTML = ''; // Clear previous content
+                patientsListDiv.innerHTML = '';
                 let hasPatients = false;
                 const rawSnapshotData = snapshot.val();
-                console.log("Admin: Raw patients snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2)); // CRITICAL: Log raw data from Firebase, stringified
+                console.log("Admin: Raw patients snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
 
                 if (rawSnapshotData) {
                     const patientsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                    patientsArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by newest first
+                    patientsArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
                     patientsArray.forEach((patient) => {
                         hasPatients = true;
-                        const patientId = patient.id;
-                        console.log("Admin: Processing individual patient:", patientId, patient);
                         patientsListDiv.innerHTML += `
                             <div class="admin-card" style="background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);">
                                 <h4>${patient.fullName}</h4>
                                 <p><strong>Email:</strong> ${patient.email}</p>
                                 <p><strong>Phone:</strong> ${patient.phoneNumber}</p>
                                 <p><strong>Gender:</strong> ${patient.gender}</p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Firebase ID: ${patientId}</p>
-                                <!-- You could add buttons here for 'View Records' or 'Delete Patient' -->
+                                <p style="font-size: 0.8em; opacity: 0.8;">Firebase ID: ${patient.id}</p>
                             </div>
                         `;
                     });
@@ -1432,18 +1771,17 @@
         // Load All Test Results for Admin
         function loadAdminTestResults() {
             const adminTestResultsListDiv = document.getElementById('adminTestResultsList');
-            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
             if (!currentUser || !isAdmin) {
                 adminTestResultsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
             console.log("Admin: Loading all test results.");
             onValue(ref(database, 'testResults'), async (snapshot) => {
-                adminTestResultsListDiv.innerHTML = ''; // Clear previous content
+                adminTestResultsListDiv.innerHTML = '';
                 let hasResults = false;
                 const results = [];
                 const rawSnapshotData = snapshot.val();
-                console.log("Admin: Raw test results snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2)); // CRITICAL: Log raw data from Firebase, stringified
+                console.log("Admin: Raw test results snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
 
                 if (rawSnapshotData) {
                     snapshot.forEach((childSnapshot) => {
@@ -1451,7 +1789,6 @@
                     });
                 }
 
-                // Fetch patient names for display (only if results exist)
                 if (results.length > 0) {
                     const patientPromises = results.map(result => get(ref(database, 'patients/' + result.userId)));
                     const patientSnapshots = await Promise.all(patientPromises);
@@ -1462,7 +1799,7 @@
                         }
                     });
 
-                    results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by newest first
+                    results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
                     results.forEach(result => {
                         hasResults = true;
@@ -1474,8 +1811,6 @@
                                 <p><strong>Score:</strong> ${result.score}</p>
                                 <p><strong>Breakdown:</strong> ${result.breakdown}</p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Taken on: ${new Date(result.createdAt).toLocaleString()}</p>
-                                <!-- Optional: Display individual answers -->
-                                <!-- <details><summary>View Answers</summary><pre>${JSON.stringify(result.answers, null, 2)}</pre></details> -->
                             </div>
                         `;
                     });
@@ -1489,51 +1824,199 @@
             });
         }
 
-        // Load Approved Appointments for Admin Calendar
+        // Helper to parse old string format (e.g., "Thursday 1-2 PM") to a Date object
+        // This function will find the NEXT upcoming occurrence of the specified day/time from TODAY.
+        function getNextOccurringDateTime(dayTimeString) {
+            const now = new Date();
+            const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            
+            const dayPartMatch = dayTimeString.match(/^(monday|tuesday|wednesday|thursday|friday|saturday|sunday)/i);
+            const timePartMatch = dayTimeString.match(/(\d+)(?:-\d+)?\s*(AM|PM)/i);
+
+            if (!dayPartMatch || !timePartMatch) {
+                console.warn("Could not parse old time format for getNextOccurringDateTime:", dayTimeString, "Returning null.");
+                return null;
+            }
+
+            const targetDayName = dayPartMatch[1].toLowerCase();
+            const targetDayIndex = daysOfWeek.indexOf(targetDayName);
+
+            let hour = parseInt(timePartMatch[1]);
+            const ampm = timePartMatch[2] ? timePartMatch[2].toLowerCase() : '';
+
+            if (ampm === 'pm' && hour < 12) hour += 12;
+            if (ampm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
+
+            let resultDate = new Date(now);
+            resultDate.setHours(hour, 0, 0, 0); // Set desired time for today
+
+            let currentDayIndex = resultDate.getDay();
+            let dayDifference = targetDayIndex - currentDayIndex;
+
+            // If target day is earlier in the week, or it's today and time has passed, jump to next week.
+            if (dayDifference < 0 || (dayDifference === 0 && resultDate < now)) {
+                dayDifference += 7;
+            }
+
+            resultDate.setDate(resultDate.getDate() + dayDifference);
+            return resultDate;
+        }
+
+
+        // Load Approved Appointments for Admin Calendar (Now integrates FullCalendar)
         function loadAdminCalendar() {
-            const calendarEntriesDiv = document.getElementById('calendarEntries');
-            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
+            const calendarEl = document.getElementById('calendar');
+            const eventDetailsModal = document.getElementById('eventDetailsModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+
             if (!currentUser || !isAdmin) {
-                calendarEntriesDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
+                calendarEl.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
+                if (adminCalendarInstance) {
+                    adminCalendarInstance.destroy();
+                    adminCalendarInstance = null;
+                }
                 return;
             }
-            console.log("Admin: Loading approved appointments for calendar.");
-            onValue(ref(database, 'appointments'), (snapshot) => {
-                calendarEntriesDiv.innerHTML = ''; // Clear previous content
-                let hasApprovedAppointments = false;
-                const rawSnapshotData = snapshot.val();
-                console.log("Admin: Raw calendar appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
 
-                if (rawSnapshotData) {
-                    const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                    const approvedAppointments = appointmentsArray.filter(appt => appt.status === 'approved');
-                    // Sorting logic might need refinement based on exact time string formats
-                    approvedAppointments.sort((a, b) => {
-                        // More robust date parsing for sorting
-                        const dateA = new Date(a.time.replace('PM', ' PM').replace('AM', ' AM')); // Ensure space for parsing
-                        const dateB = new Date(b.time.replace('PM', ' PM').replace('AM', ' AM'));
-                        return dateA - dateB;
-                    });
+            console.log("Admin: Initializing/Reloading FullCalendar for approved appointments.");
 
-                    approvedAppointments.forEach((appt) => {
-                        hasApprovedAppointments = true;
-                        calendarEntriesDiv.innerHTML += `
-                            <div class="calendar-entry">
-                                <h4>Approved Appointment for ${appt.fullName}</h4>
-                                <p><strong>Time:</strong> ${appt.time}</p>
-                                <p><strong>Reason:</strong> ${appt.reason}</p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${appt.id}</p>
-                            </div>
-                        `;
+            if (adminCalendarInstance) {
+                adminCalendarInstance.destroy(); // Destroy previous instance to prevent re-rendering issues
+                adminCalendarInstance = null;
+            }
+
+            adminCalendarInstance = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                // Customize event display to include a green circle
+                eventContent: function(arg) {
+                    // Check if the event is an approved event using its classNames
+                    if (arg.event.classNames.includes('approved-event')) {
+                        return { html: `<div class="event-circle"></div><span>${arg.event.title}</span>` };
+                    }
+                    // For other event types (if any, not relevant here but good practice)
+                    return { html: `<span>${arg.event.title}</span>` };
+                },
+                events: async function(fetchInfo, successCallback, failureCallback) {
+                    onValue(ref(database, 'appointments'), async (snapshot) => {
+                        const rawSnapshotData = snapshot.val();
+                        console.log("Admin: Raw calendar appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
+
+                        const events = [];
+                        if (rawSnapshotData) {
+                            const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
+                            const approvedAppointments = appointmentsArray.filter(appt => appt.status === 'approved');
+
+                            const patientPromises = approvedAppointments.map(appt => get(ref(database, 'patients/' + appt.userId)));
+                            const patientSnapshots = await Promise.all(patientPromises);
+                            const patientMap = {};
+                            patientSnapshots.forEach(snap => {
+                                if (snap.exists()) {
+                                    patientMap[snap.key] = snap.val().fullName || 'Unknown Patient';
+                                }
+                            });
+
+                            approvedAppointments.forEach(appt => {
+                                let eventStart;
+                                let eventEnd;
+                                let eventTitle;
+                                let displayTimeForModal;
+                                
+                                const patientFirstName = patientMap[appt.userId] ? patientMap[appt.userId].split(' ')[0] : 'N/A';
+
+                                // Case 1: New appointments with precise date and time
+                                if (appt.appointmentDate && appt.appointmentTime) {
+                                    eventStart = `${appt.appointmentDate}T${appt.appointmentTime}:00`; // YYYY-MM-DDTHH:MM:SS
+                                    const startDateTime = new Date(eventStart);
+                                    const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // 1-hour appointment
+                                    eventEnd = endDateTime.toISOString().slice(0, 19); // YYYY-MM-DDTHH:MM:SS
+                                    
+                                    displayTimeForModal = startDateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                                    eventTitle = `Appt with ${patientFirstName}`; 
+
+                                    console.log(`Calendar Event (NEW): ID: ${appt.id}, Title: "${eventTitle}", Start: "${eventStart}", End: "${eventEnd}"`);
+
+                                } 
+                                // Case 2: Legacy appointments with only day and time string (e.g., "Friday 1-2 PM")
+                                else if (appt.time) {
+                                    const inferredDate = getNextOccurringDateTime(appt.time);
+                                    if (inferredDate) {
+                                        eventStart = inferredDate.toISOString().slice(0, 19);
+                                        const endDateTime = new Date(inferredDate.getTime() + 60 * 60 * 1000); // Assume 1-hour appt
+                                        eventEnd = endDateTime.toISOString().slice(0, 19);
+                                        
+                                        displayTimeForModal = appt.time; // Use original string for modal
+                                        eventTitle = `Appt (Legacy) ${patientFirstName}`;
+                                        console.log(`Calendar Event (LEGACY): ID: ${appt.id}, Title: "${eventTitle}", Inferred Start: "${eventStart}", Inferred End: "${eventEnd}"`);
+                                    } else {
+                                        console.error(`Admin: Could not infer date for legacy appointment ID ${appt.id} with time: ${appt.time}. Skipping event.`);
+                                        return;
+                                    }
+                                } else {
+                                    console.error(`Admin: Appointment ID ${appt.id} missing valid date/time information. Skipping event.`);
+                                    return;
+                                }
+                                
+                                events.push({
+                                    id: appt.id,
+                                    title: eventTitle,
+                                    start: eventStart,
+                                    end: eventEnd,
+                                    allDay: false, // These are time-specific appointments
+                                    classNames: ['approved-event'], // Add a class for specific styling if needed
+                                    extendedProps: { // Custom properties to retrieve later
+                                        patientName: patientMap[appt.userId] || 'N/A',
+                                        patientEmail: appt.email,
+                                        patientPhone: appt.phoneNumber,
+                                        reason: appt.reason,
+                                        status: appt.status,
+                                        displayTime: displayTimeForModal, // Store the formatted/original time for the modal
+                                        originalApptDate: appt.appointmentDate // Store original date for debugging/formatting
+                                    }
+                                });
+                            });
+                        }
+                        successCallback(events);
+                        console.log("Admin: FullCalendar events processed. Total approved events prepared:", events.length);
+                    }, {
+                        onlyOnce: false
                     });
+                },
+                // Handler for when an event is clicked on the calendar
+                eventClick: function(info) {
+                    const event = info.event;
+                    const props = event.extendedProps;
+                    
+                    const startDateTime = new Date(event.start);
+                    const formattedDate = startDateTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    
+                    document.getElementById('modalEventTitle').textContent = `Appointment with ${props.patientName}`;
+                    document.getElementById('modalPatientName').textContent = props.patientName;
+                    document.getElementById('modalPatientEmail').textContent = props.patientEmail;
+                    document.getElementById('modalPatientPhone').textContent = props.patientPhone;
+                    document.getElementById('modalEventDateTime').textContent = `${formattedDate} at ${props.displayTime}`;
+                    document.getElementById('modalEventReason').textContent = props.reason;
+                    document.getElementById('modalEventStatus').textContent = props.status.toUpperCase();
+
+                    eventDetailsModal.classList.remove('hidden'); // Show the modal
                 }
-                if (!hasApprovedAppointments) {
-                    calendarEntriesDiv.innerHTML = '<p>No approved appointments found in the calendar.</p>';
-                }
-                console.log("Admin: Approved appointments loaded for calendar. Total displayed:", calendarEntriesDiv.children.length);
-            }, {
-                onlyOnce: false
             });
+
+            adminCalendarInstance.render(); // Render the calendar for the first time
+
+            closeModalBtn.onclick = function() {
+                eventDetailsModal.classList.add('hidden');
+            };
+
+            window.onclick = function(event) {
+                if (event.target == eventDetailsModal) {
+                    eventDetailsModal.classList.add('hidden');
+                }
+            };
         }
 
 
@@ -1584,6 +2067,12 @@
                 }
             });
 
+            // Set up admin appointment category buttons
+            document.getElementById('showPendingAppointmentsBtn').addEventListener('click', () => showAdminAppointmentCategory('pending'));
+            document.getElementById('showApprovedAppointmentsBtn').addEventListener('click', () => showAdminAppointmentCategory('approved'));
+            document.getElementById('showDeniedAppointmentsBtn').addEventListener('click', () => showAdminAppointmentCategory('denied'));
+
+
             // Set up admin patient management buttons
             document.getElementById('showAddPatientFormBtn').addEventListener('click', showAddPatientForm);
             document.getElementById('addPatientBtn').addEventListener('click', addPatient);
@@ -1595,7 +2084,6 @@
                 console.log("Auth state changed. Current user:", user ? user.uid : "No user");
                 if (user) {
                     currentUser = user;
-                    // Check if this logged-in user is our admin user
                     if (currentUser.email === ADMIN_EMAIL) {
                         isAdmin = true;
                         console.log("Auth state changed: Admin user logged in. UID:", user.uid);
@@ -1606,19 +2094,13 @@
                         showPatientDashboard();
                     }
                 } else {
-                    // If no Firebase Auth user, check if admin was previously logged in via session storage
-                    // (This fallback is mostly for initial page load before Auth state is fully determined,
-                    // or if local admin status needs to persist across refreshes without immediate Auth re-check,
-                    // but the primary admin login is now via Firebase Auth.)
                     if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-                         // Note: If using strict Firebase Auth for admin, this might become less critical
-                         // as onAuthStateChanged would typically handle it. Keeping for robustness.
-                         isAdmin = true; // Assume admin based on session storage if no current Auth user
-                         console.log("Auth state changed: Admin session found (from storage, no current Auth user).");
+                         isAdmin = true;
+                         console.log("Auth state changed: Admin session found (from storage, no current Firebase Auth user yet).");
                          showAdminDashboard();
                     } else {
                         console.log("Auth state changed: No user or admin session found. Showing login.");
-                        showLogin(); // Show login screen by default
+                        showLogin();
                     }
                 }
             });
