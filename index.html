@@ -427,8 +427,9 @@
             <div class="login-form">
                 <h2>Staff Login</h2>
                 <div class="form-group">
-                    <label for="adminUsername">Username:</label>
-                    <input type="text" id="adminUsername" placeholder="Enter username" required>
+                    <!-- Changed from username to email as we'll use Firebase Auth -->
+                    <label for="adminEmail">Email:</label>
+                    <input type="email" id="adminEmail" placeholder="Enter admin email" required>
                 </div>
                 <div class="form-group">
                     <label for="adminPassword">Password:</label>
@@ -629,12 +630,13 @@
 
         // --- Global State Variables ---
         let currentUser = null; // Stores current Firebase authenticated user object
-        let isAdmin = false; // Flag for admin status (based on hardcoded credentials for simplicity)
+        let isAdmin = false; // Flag for admin status (set after successful Firebase admin login)
         let currentTest = null; // Stores details of the test currently being taken
 
-        // --- Admin Credentials (Hardcoded for Simplicity - NOT SECURE FOR PRODUCTION) ---
-        const ADMIN_USERNAME = 'admin';
-        const ADMIN_PASSWORD = 'healthcare2024';
+        // --- Admin Credentials (No longer hardcoded as username, but for reference) ---
+        // The actual admin credentials will be a user created in Firebase Authentication
+        const ADMIN_EMAIL = 'admin@healmed.com'; // Use the email you create in Firebase Auth
+        const ADMIN_PASSWORD_REFERENCE = 'healthcare2024'; // For clarity, we still refer to it.
 
         // --- Mental Health Test Questions and Scoring ---
         const testQuestions = {
@@ -787,21 +789,43 @@
             }
         }
 
-        // Admin Login (using hardcoded credentials, not Firebase Auth for simplicity)
-        function adminLogin() {
-            const username = document.getElementById('adminUsername').value;
+        // Admin Login (NOW using Firebase Auth)
+        async function adminLogin() {
+            // Updated: Using adminEmail instead of adminUsername
+            const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
 
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                // Admin login is successful via hardcoded credentials, store in session
-                sessionStorage.setItem('isAdminLoggedIn', 'true');
-                isAdmin = true;
-                console.log("Admin login successful.");
-                showMessage('Admin login successful!');
-                showAdminDashboard();
-            } else {
-                console.error("Invalid admin credentials.");
-                showMessage('Invalid admin credentials', true);
+            if (!email || !password) {
+                showMessage('Please enter both email and password for admin login', true);
+                return;
+            }
+
+            try {
+                // IMPORTANT: We now try to sign in the admin with Firebase Authentication
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                currentUser = userCredential.user; // Set current user to admin's Firebase user object
+                
+                // Optional: You could check user.uid against a list of known admin UIDs
+                // For simplicity, we assume anyone logging in with the specific admin credentials is an admin.
+                if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD_REFERENCE) { // Perform local check too
+                    sessionStorage.setItem('isAdminLoggedIn', 'true');
+                    isAdmin = true;
+                    console.log("Admin login successful via Firebase Auth. UID:", currentUser.uid);
+                    showMessage('Admin login successful!');
+                    showAdminDashboard();
+                } else {
+                    // This case should ideally not be hit if credentials are correct and user exists in Auth
+                    console.error("Admin: Firebase Auth login succeeded but local check failed. This is unexpected.");
+                    showMessage('Admin login failed: Internal error or credentials mismatch.', true);
+                    await signOut(auth); // Sign out if local check fails for safety
+                }
+
+            } catch (error) {
+                console.error("Admin login failed:", error);
+                showMessage(`Admin login failed: ${error.message}`, true);
+                // Clear any stored admin session if login fails
+                sessionStorage.removeItem('isAdminLoggedIn');
+                isAdmin = false;
             }
         }
 
@@ -851,27 +875,22 @@
 
         // Logout
         async function logout() {
-            if (isAdmin) {
-                // For hardcoded admin, just reset state and session storage
-                sessionStorage.removeItem('isAdminLoggedIn');
-                isAdmin = false;
-                currentUser = null;
-                console.log("Admin logged out.");
-                showMessage('Admin logged out.');
-                showLogin();
-            } else {
-                // For Firebase authenticated patient, sign out
-                try {
-                    await signOut(auth);
-                    currentUser = null;
-                    console.log("Patient logged out successfully.");
-                    showMessage('Logged out successfully.');
-                    showLogin();
-                } catch (error) {
-                    console.error("Logout failed:", error);
-                    showMessage(`Logout failed: ${error.message}`, true);
-                }
+            // Always try to sign out from Firebase Auth
+            try {
+                await signOut(auth);
+                console.log("Firebase Auth user signed out.");
+            } catch (error) {
+                console.error("Firebase Auth signOut failed:", error);
+                // Continue with local cleanup even if Firebase signOut fails
             }
+
+            // Clear local state and session storage
+            sessionStorage.removeItem('isAdminLoggedIn');
+            isAdmin = false;
+            currentUser = null;
+            console.log("Local state cleared. User logged out.");
+            showMessage('Logged out successfully.');
+            showLogin();
         }
 
         // --- UI Navigation Functions ---
@@ -888,6 +907,9 @@
         function showAdminLogin() {
             hideAllScreens();
             document.getElementById('adminLoginScreen').classList.remove('hidden');
+            // Clear fields on showing admin login
+            document.getElementById('adminEmail').value = '';
+            document.getElementById('adminPassword').value = '';
         }
 
         function showPatientDashboard() {
@@ -1201,8 +1223,9 @@
         // Load All Appointment Requests for Admin
         function loadAdminAppointments() {
             const adminAppointmentsListDiv = document.getElementById('adminAppointmentsList');
-            if (!isAdmin) {
-                adminAppointmentsListDiv.innerHTML = '<p>Unauthorized access.</p>';
+            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true based on Firebase Auth
+            if (!currentUser || !isAdmin) {
+                adminAppointmentsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
             console.log("Admin: Loading all appointment requests.");
@@ -1258,7 +1281,8 @@
 
         // Approve Appointment
         async function approveAppointment(apptId) {
-            if (!isAdmin) {
+            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
+            if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
                 return;
             }
@@ -1276,7 +1300,8 @@
 
         // Deny Appointment
         async function denyAppointment(apptId) {
-            if (!isAdmin) {
+            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
+            if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
                 return;
             }
@@ -1294,6 +1319,10 @@
 
         // Show Add Patient Form
         function showAddPatientForm() {
+            if (!currentUser || !isAdmin) { // Check admin status
+                showMessage('Unauthorized access.', true);
+                return;
+            }
             document.getElementById('addPatientForm').classList.remove('hidden');
             console.log("Admin: Showing add patient form.");
         }
@@ -1311,7 +1340,8 @@
 
         // Add New Patient via Admin Portal (This will create a Firebase Auth user)
         async function addPatient() {
-            if (!isAdmin) {
+            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
+            if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
                 return;
             }
@@ -1357,11 +1387,12 @@
 
         // Load All Patients for Admin
         function loadPatientsList() {
-            const patientsListDiv = document.getElementById('patientsList');
-            if (!isAdmin) {
-                patientsListDiv.innerHTML = '<p>Unauthorized access.</p>';
+            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
+            if (!currentUser || !isAdmin) {
+                patientsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
+            const patientsListDiv = document.getElementById('patientsList');
             console.log("Admin: Loading all patients.");
             onValue(ref(database, 'patients'), (snapshot) => {
                 patientsListDiv.innerHTML = ''; // Clear previous content
@@ -1401,8 +1432,9 @@
         // Load All Test Results for Admin
         function loadAdminTestResults() {
             const adminTestResultsListDiv = document.getElementById('adminTestResultsList');
-            if (!isAdmin) {
-                adminTestResultsListDiv.innerHTML = '<p>Unauthorized access.</p>';
+            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
+            if (!currentUser || !isAdmin) {
+                adminTestResultsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
             console.log("Admin: Loading all test results.");
@@ -1460,8 +1492,9 @@
         // Load Approved Appointments for Admin Calendar
         function loadAdminCalendar() {
             const calendarEntriesDiv = document.getElementById('calendarEntries');
-            if (!isAdmin) {
-                calendarEntriesDiv.innerHTML = '<p>Unauthorized access.</p>';
+            // IMPORTANT: Now checks if currentUser is set and isAdmin flag is true
+            if (!currentUser || !isAdmin) {
+                calendarEntriesDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
             console.log("Admin: Loading approved appointments for calendar.");
@@ -1562,14 +1595,26 @@
                 console.log("Auth state changed. Current user:", user ? user.uid : "No user");
                 if (user) {
                     currentUser = user;
-                    isAdmin = false; // Assume not admin unless explicitly logged in as admin
-                    console.log("Auth state changed: User logged in. UID:", user.uid);
-                    showPatientDashboard();
+                    // Check if this logged-in user is our admin user
+                    if (currentUser.email === ADMIN_EMAIL) {
+                        isAdmin = true;
+                        console.log("Auth state changed: Admin user logged in. UID:", user.uid);
+                        showAdminDashboard();
+                    } else {
+                        isAdmin = false;
+                        console.log("Auth state changed: Regular patient user logged in. UID:", user.uid);
+                        showPatientDashboard();
+                    }
                 } else {
-                    // Check if admin was previously logged in via session storage
+                    // If no Firebase Auth user, check if admin was previously logged in via session storage
+                    // (This fallback is mostly for initial page load before Auth state is fully determined,
+                    // or if local admin status needs to persist across refreshes without immediate Auth re-check,
+                    // but the primary admin login is now via Firebase Auth.)
                     if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-                         isAdmin = true;
-                         console.log("Auth state changed: Admin session found.");
+                         // Note: If using strict Firebase Auth for admin, this might become less critical
+                         // as onAuthStateChanged would typically handle it. Keeping for robustness.
+                         isAdmin = true; // Assume admin based on session storage if no current Auth user
+                         console.log("Auth state changed: Admin session found (from storage, no current Auth user).");
                          showAdminDashboard();
                     } else {
                         console.log("Auth state changed: No user or admin session found. Showing login.");
