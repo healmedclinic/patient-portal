@@ -567,41 +567,75 @@
                 display: flex;
                 overflow-x: auto;
                 justify-content: space-around; /* Distribute items */
+                padding: 0 10px; /* Added horizontal padding to the list */
             }
 
             .sidebar li {
                 white-space: nowrap;
                 min-width: 120px; /* Adjusted minimum width for smaller screens */
                 text-align: center;
+                padding: 10px 15px; /* Slightly less padding on mobile list items */
             }
 
             .main-content {
-                padding: 20px;
+                padding: 20px; /* Adjusted from 40px */
             }
+
+            .container {
+                margin: 10px; /* Reduced overall container margin on small screens */
+                border-radius: 10px; /* Slightly smaller rounded corners for mobile */
+            }
+
             .login-screen {
                 padding: 30px;
             }
             .login-form {
                 padding: 30px;
+                border-radius: 10px; /* Match container */
             }
+
+            .section {
+                padding: 20px; /* Ensure sections also have reduced padding */
+                border-radius: 10px; /* Match container */
+            }
+
+            /* Specifically target external link buttons for stacking on mobile */
+            .btn.external-link-btn {
+                display: block; /* Make them stack vertically */
+                width: 100%; /* Take full width */
+                margin-right: 0; /* Remove horizontal margin */
+                margin-bottom: 10px; /* Add vertical spacing */
+                padding: 12px; /* Ensure good touch target size */
+            }
+            /* Adjust for the last button in a series to not have extra bottom margin */
+            .section .btn.external-link-btn:last-child {
+                margin-bottom: 0;
+            }
+
+            .admin-appt-category-buttons {
+                flex-wrap: wrap;
+                justify-content: center; /* Center them when they wrap */
+                gap: 8px; /* Slightly less gap for compactness */
+            }
+            .admin-appt-category-buttons .btn {
+                flex-grow: 1;
+                min-width: unset; /* Allow flexibility, don't force minimum width */
+                font-size: 13px; /* Slightly smaller text for compactness */
+                padding: 8px 12px; /* Adjust padding for touch targets */
+            }
+
             #calendar {
                 padding: 10px;
             }
             .fc .fc-toolbar-title {
                 font-size: 1.2em;
             }
-            .admin-appt-category-buttons {
-                flex-wrap: wrap;
-            }
-            .admin-appt-category-buttons .btn {
-                flex-grow: 1; /* Allow them to grow and fill space */
-            }
         }
     </style>
 </head>
 <body>
     <div class="header-branding">
-        <h1>HealMed Clinic &trade;</h1>
+        <h1>HealMed Clinic & trade;</h1>
         <p>Let's heal minds</p>
     </div>
     <div class="container">
@@ -685,8 +719,7 @@
                     <li data-section="mentalHealth">Mental Health Tests</li>
                     <li data-section="healthRecords">Health Records</li>
                     <li data-section="profile">Profile</li>
-                    <li data-section="forms">Forms</li> <!-- Updated Patient Section Name -->
-                    <!-- Removed Document Uploads sidebar item -->
+                    <li data-section="forms">Forms</li>
                 </ul>
             </div>
             <div class="main-content">
@@ -774,8 +807,6 @@
                     <a href="https://www.jotform.com/sign/251304457972056/invite/01jtzza5kqcb83f96f3923b7ac" target="_blank" class="btn external-link-btn">New Patient Form</a>
                     <a href="https://docs.google.com/forms/d/e/1FAIpQLScOt3ov7drpfVaJ3GPPa3GyyEG4i3qErkgpz704BUxhGItg6Q/viewform?usp=header" target="_blank" class="btn external-link-btn">Upload ID and Insurance Form</a>
                 </div>
-
-                <!-- Removed NEW: Document Uploads Section -->
 
             </div>
         </div>
@@ -890,9 +921,6 @@
         </div>
     </div>
 
-    <!-- Removed Modal for full size image view -->
-
-
     <!-- FullCalendar JavaScript (Must be loaded AFTER the DOM elements) -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
@@ -913,14 +941,12 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
         import { getDatabase, ref, set, push, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
-        // Removed Firebase Storage imports
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
 
         // --- Initialize Firebase Services ---
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const database = getDatabase(app);
-        // Removed storage initialization
         const analytics = getAnalytics(app);
 
         // --- Global State Variables ---
@@ -1800,14 +1826,14 @@
             }
         }
 
-        // Load All Patients for Admin (Reverted to no document images as they are external now)
+        // Load All Patients for Admin
         function loadPatientsList() {
             const patientsListDiv = document.getElementById('patientsList');
             if (!currentUser || !isAdmin) {
                 patientsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
-            console.log("Admin: Loading all patients (without document images).");
+            console.log("Admin: Loading all patients.");
             onValue(ref(database, 'patients'), (snapshot) => {
                 patientsListDiv.innerHTML = '';
                 let hasPatients = false;
@@ -2116,8 +2142,6 @@
             document.getElementById('submitTestBtn').addEventListener('click', submitTest);
             document.getElementById('cancelTestBtn').addEventListener('click', cancelTest);
 
-            // Removed patient document upload buttons and their listeners
-
             // Set up patient sidebar navigation using event delegation
             document.getElementById('patientSidebarNav').addEventListener('click', (event) => {
                 if (event.target.tagName === 'LI' && event.target.dataset.section) {
@@ -2150,9 +2174,6 @@
             document.getElementById('showAddPatientFormBtn').addEventListener('click', showAddPatientForm);
             document.getElementById('addPatientBtn').addEventListener('click', addPatient);
             document.getElementById('hideAddPatientFormBtn').addEventListener('click', hideAddPatientForm);
-
-            // Removed Image viewer modal close button and its window listener
-
 
             // Check Firebase Auth state on page load
             onAuthStateChanged(auth, (user) => {
