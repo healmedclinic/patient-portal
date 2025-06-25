@@ -748,8 +748,8 @@
 </head>
 <body>
     <div class="header-branding">
-        <h1>HealMed Clinic & trade;</h1>
-        <p>Let's heal minds</p>
+        <h1>HealMed Clinic</h1>
+        <p>Let's heal minds!</p>
     </div>
     <div class="container">
         <!-- Login Screen -->
@@ -2150,6 +2150,11 @@
                 await update(ref(database, 'appointments/' + apptId), { status: 'approved' });
                 console.log("Admin: Appointment approved:", apptId);
                 showMessage('Appointment approved successfully!');
+                // Re-render calendar after approval to immediately show the new event
+                if (adminCalendarInstance) {
+                     adminCalendarInstance.refetchEvents();
+                     console.log("Admin: Calendar events refetched after approval.");
+                }
             } catch (error) {
                 console.error("Admin: Error approving appointment:", error);
                 showMessage(`Error approving appointment: ${error.message}`, true);
@@ -2167,6 +2172,11 @@
                 await update(ref(database, 'appointments/' + apptId), { status: 'denied' });
                 console.log("Admin: Appointment denied:", apptId);
                 showMessage('Appointment denied.');
+                // Re-render calendar after denial to remove the event if it was somehow on calendar
+                if (adminCalendarInstance) {
+                    adminCalendarInstance.refetchEvents();
+                    console.log("Admin: Calendar events refetched after denial.");
+                }
             } catch (error) {
                 console.error("Admin: Error denying appointment:", error);
                 showMessage(`Error denying appointment: ${error.message}`, true);
@@ -2382,7 +2392,7 @@
                         `;
                     });
                 } else {
-                    contentHtml += '<p>No mental health test results found for this patient.</p>';
+                    contentHtml = '<p>No mental health test results found for this patient.</p>';
                 }
             } else if (dataType === 'tmsQuestionnaires') {
                 const tmsQuestionnairesSnapshot = await get(ref(database, `tmsQuestionnaires/${patientId}`));
@@ -2414,7 +2424,7 @@
                         `;
                     });
                 } else {
-                    contentHtml += '<p>No TMS daily questionnaires found for this patient.</p>';
+                    contentHtml = '<p>No TMS daily questionnaires found for this patient.</p>';
                 }
             } else {
                 contentHtml = '<p>Invalid data type requested.</p>';
@@ -2428,6 +2438,7 @@
         // Helper to parse old string format (e.g., "Thursday 1-2 PM") to a Date object
         // This function will find the NEXT upcoming occurrence of the specified day/time from TODAY.
         function getNextOccurringDateTime(dayTimeString) {
+            console.log("Calendar: Attempting to parse legacy time string:", dayTimeString);
             const now = new Date();
             const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
             
@@ -2435,7 +2446,7 @@
             const timePartMatch = dayTimeString.match(/(\d+)(?:-\d+)?\s*(AM|PM)/i);
 
             if (!dayPartMatch || !timePartMatch) {
-                console.warn("Could not parse old time format for getNextOccurringDateTime:", dayTimeString, "Returning null.");
+                console.warn("Calendar: Could not parse old time format for getNextOccurringDateTime:", dayTimeString, "Returning null.");
                 return null;
             }
 
@@ -2460,6 +2471,7 @@
             }
 
             resultDate.setDate(resultDate.getDate() + dayDifference);
+            console.log("Calendar: Parsed legacy time string to Date object:", resultDate.toISOString());
             return resultDate;
         }
 
@@ -2476,14 +2488,16 @@
                     adminCalendarInstance.destroy();
                     adminCalendarInstance = null;
                 }
+                console.log("Calendar: Unauthorized or not admin, destroying/not initializing calendar.");
                 return;
             }
 
-            console.log("Admin: Initializing/Reloading FullCalendar for approved appointments.");
+            console.log("Calendar: Attempting to initialize/Reload FullCalendar for approved appointments.");
 
             if (adminCalendarInstance) {
                 adminCalendarInstance.destroy(); // Destroy previous instance to prevent re-rendering issues
                 adminCalendarInstance = null;
+                console.log("Calendar: Destroyed existing FullCalendar instance.");
             }
 
             adminCalendarInstance = new FullCalendar.Calendar(calendarEl, {
@@ -2493,25 +2507,33 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
+                // Crucial for enabling interaction with the calendar navigation buttons
+                // By default, this is true. Explicitly setting it to ensure it's not accidentally false.
+                navLinks: true, 
+                editable: false, // Prevents dragging/resizing events unless needed
+                selectable: false, // Prevents date range selection unless needed
+
                 // Customize event display to include a green circle
                 eventContent: function(arg) {
-                    // Check if the event is an approved event using its classNames
+                    // console.log("Calendar: Rendering event content for:", arg.event.title, "with classNames:", arg.event.classNames);
                     if (arg.event.classNames.includes('approved-event')) {
                         return { html: `<div class="event-circle"></div><span>${arg.event.title}</span>` };
                     }
-                    // For other event types (if any, not relevant here but good practice)
                     return { html: `<span>${arg.event.title}</span>` };
                 },
                 events: async function(fetchInfo, successCallback, failureCallback) {
+                    console.log("Calendar: events callback fired. Fetching approved appointments from Firebase.");
                     onValue(ref(database, 'appointments'), async (snapshot) => {
                         const rawSnapshotData = snapshot.val();
-                        console.log("Admin: Raw calendar appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
+                        console.log("Calendar: Raw appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
 
                         const events = [];
                         if (rawSnapshotData) {
                             const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
                             const approvedAppointments = appointmentsArray.filter(appt => appt.status === 'approved');
+                            console.log("Calendar: Filtered approved appointments:", approvedAppointments);
 
+                            // Fetch patient names for event titles
                             const patientPromises = approvedAppointments.map(appt => get(ref(database, 'patients/' + appt.userId)));
                             const patientSnapshots = await Promise.all(patientPromises);
                             const patientMap = {};
@@ -2520,6 +2542,7 @@
                                     patientMap[snap.key] = snap.val().fullName || 'Unknown Patient';
                                 }
                             });
+                            console.log("Calendar: Patient map for event titles:", patientMap);
 
                             approvedAppointments.forEach(appt => {
                                 let eventStart;
@@ -2529,17 +2552,17 @@
                                 
                                 const patientFirstName = patientMap[appt.userId] ? patientMap[appt.userId].split(' ')[0] : 'N/A';
 
-                                // Case 1: New appointments with precise date and time
+                                // Case 1: New appointments with precise date and time (YYYY-MM-DD and HH:MM)
                                 if (appt.appointmentDate && appt.appointmentTime) {
-                                    eventStart = `${appt.appointmentDate}T${appt.appointmentTime}:00`; //YYYY-MM-DDTHH:MM:SS
+                                    eventStart = `${appt.appointmentDate}T${appt.appointmentTime}:00`; // YYYY-MM-DDTHH:MM:SS
                                     const startDateTime = new Date(eventStart);
-                                    const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // 1-hour appointment
-                                    eventEnd = endDateTime.toISOString().slice(0, 19); //YYYY-MM-DDTHH:MM:SS
+                                    const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // Assume 1-hour appointment
+                                    eventEnd = endDateTime.toISOString().slice(0, 19); // YYYY-MM-DDTHH:MM:SS
                                     
                                     displayTimeForModal = startDateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                                     eventTitle = `Appt with ${patientFirstName}`; 
 
-                                    console.log(`Calendar Event (NEW): ID: ${appt.id}, Title: "${eventTitle}", Start: "${eventStart}", End: "${eventEnd}"`);
+                                    console.log(`Calendar: Event (NEW) ID: ${appt.id}, Title: "${eventTitle}", Start: "${eventStart}", End: "${eventEnd}"`);
 
                                 } 
                                 // Case 2: Legacy appointments with only day and time string (e.g., "Friday 1-2 PM")
@@ -2552,24 +2575,25 @@
                                         
                                         displayTimeForModal = appt.time; // Use original string for modal
                                         eventTitle = `Appt (Legacy) ${patientFirstName}`;
-                                        console.log(`Calendar Event (LEGACY): ID: ${appt.id}, Title: "${eventTitle}", Inferred Start: "${eventStart}", Inferred End: "${eventEnd}"`);
+                                        console.log(`Calendar: Event (LEGACY) ID: ${appt.id}, Title: "${eventTitle}", Inferred Start: "${eventStart}", Inferred End: "${eventEnd}"`);
                                     } else {
-                                        console.error(`Admin: Could not infer date for legacy appointment ID ${appt.id} with time: ${appt.time}. Skipping event.`);
-                                        return;
+                                        console.error(`Calendar: Could not infer date for legacy appointment ID ${appt.id} with time: ${appt.time}. Skipping event.`);
+                                        return; // Skip this event if date inference fails
                                     }
                                 } else {
-                                    console.error(`Admin: Appointment ID ${appt.id} missing valid date/time information. Skipping event.`);
-                                    return;
+                                    console.error(`Calendar: Appointment ID ${appt.id} missing valid date/time information. Skipping event.`);
+                                    return; // Skip this event if no valid date/time
                                 }
                                 
+                                // Push the valid event to the array
                                 events.push({
                                     id: appt.id,
                                     title: eventTitle,
                                     start: eventStart,
                                     end: eventEnd,
                                     allDay: false, // These are time-specific appointments
-                                    classNames: ['approved-event'], // Add a class for specific styling if needed
-                                    extendedProps: { // Custom properties to retrieve later
+                                    classNames: ['approved-event'], // Add a class for specific styling
+                                    extendedProps: { // Custom properties for the modal
                                         patientName: patientMap[appt.userId] || 'N/A',
                                         patientEmail: appt.email,
                                         patientPhone: appt.phoneNumber,
@@ -2581,18 +2605,32 @@
                                 });
                             });
                         }
-                        successCallback(events);
-                        console.log("Admin: FullCalendar events processed. Total approved events prepared:", events.length);
-                    }, {
-                        onlyOnce: false
+                        console.log("Calendar: Final events array passed to FullCalendar:", events);
+                        successCallback(events); // Call FullCalendar's success callback with the events
+                    }, (error) => {
+                        console.error("Calendar: Error fetching appointments from Firebase:", error);
+                        failureCallback(error); // Call FullCalendar's failure callback
                     });
                 },
                 // Handler for when an event is clicked on the calendar
                 eventClick: function(info) {
+                    console.log("Calendar: Event clicked:", info.event.id, info.event.title);
                     const event = info.event;
                     const props = event.extendedProps;
                     
-                    const startDateTime = new Date(event.start);
+                    // Safely get start date and format
+                    let startDateTime = null;
+                    try {
+                        startDateTime = new Date(event.start);
+                        if (isNaN(startDateTime.getTime())) { // Check for "Invalid Date"
+                            console.warn("Calendar: Invalid start date for event:", event.id, event.start);
+                            startDateTime = new Date(); // Fallback to current date
+                        }
+                    } catch (e) {
+                        console.error("Calendar: Error parsing event start date:", e);
+                        startDateTime = new Date(); // Fallback
+                    }
+
                     const formattedDate = startDateTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                     
                     document.getElementById('modalEventTitle').textContent = `Appointment with ${props.patientName}`;
@@ -2604,18 +2642,22 @@
                     document.getElementById('modalEventStatus').textContent = props.status.toUpperCase();
 
                     eventDetailsModal.classList.remove('hidden'); // Show the modal
+                    console.log("Calendar: Event details modal displayed.");
                 }
             });
 
             adminCalendarInstance.render(); // Render the calendar for the first time
+            console.log("Calendar: FullCalendar instance rendered.");
 
             closeModalBtn.onclick = function() {
                 eventDetailsModal.classList.add('hidden');
+                console.log("Calendar: Event details modal hidden via close button.");
             };
 
             window.onclick = function(event) {
                 if (event.target == eventDetailsModal) {
                     eventDetailsModal.classList.add('hidden');
+                    console.log("Calendar: Event details modal hidden via outside click.");
                 }
             };
         }
@@ -2623,6 +2665,7 @@
 
         // --- Initial Load Logic and Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM Content Loaded. Setting up event listeners.");
             // Set up main screen navigation
             document.getElementById('loginBtn').addEventListener('click', login);
             document.getElementById('showSignupBtn').addEventListener('click', showSignup);
@@ -2655,6 +2698,7 @@
             // Set up patient sidebar navigation using event delegation
             document.getElementById('patientSidebarNav').addEventListener('click', (event) => {
                 if (event.target.tagName === 'LI' && event.target.dataset.section) {
+                    console.log("Patient sidebar navigation clicked:", event.target.dataset.section);
                     showPatientSection(event.target.dataset.section);
                 }
             });
@@ -2663,6 +2707,7 @@
             document.getElementById('mentalHealthSection').addEventListener('click', (event) => {
                 if (event.target.closest('.test-card')) {
                     const testType = event.target.closest('.test-card').dataset.testType;
+                    console.log("Mental health test card clicked:", testType);
                     startTest(testType);
                 }
             });
@@ -2670,14 +2715,15 @@
             // Set up admin sidebar navigation using event delegation
             document.getElementById('adminSidebarNav').addEventListener('click', (event) => {
                 if (event.target.tagName === 'LI' && event.target.dataset.section) {
+                    console.log("Admin sidebar navigation clicked:", event.target.dataset.section);
                     showAdminSection(event.target.dataset.section);
                 }
             });
 
             // Set up admin appointment category buttons
-            document.getElementById('showPendingAppointmentsBtn').addEventListener('click', () => showAdminAppointmentCategory('pending'));
-            document.getElementById('showApprovedAppointmentsBtn').addEventListener('click', () => showAdminAppointmentCategory('approved'));
-            document.getElementById('showDeniedAppointmentsBtn').addEventListener('click', () => showAdminAppointmentCategory('denied'));
+            document.getElementById('showPendingAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing pending appointments."); showAdminAppointmentCategory('pending'); });
+            document.getElementById('showApprovedAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing approved appointments."); showAdminAppointmentCategory('approved'); });
+            document.getElementById('showDeniedAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing denied appointments."); showAdminAppointmentCategory('denied'); });
 
 
             // Set up admin patient management buttons
@@ -2686,7 +2732,7 @@
             document.getElementById('hideAddPatientFormBtn').addEventListener('click', hideAddPatientForm);
 
             // Admin Patient Detail View buttons
-            document.getElementById('backToPatientsListBtn').addEventListener('click', loadPatientsList); // Returns to list of patient buttons
+            document.getElementById('backToPatientsListBtn').addEventListener('click', () => { console.log("Admin: Back to patient list."); loadPatientsList(); });
             // Event listeners for the new separated buttons will be attached in showPatientDetails()
             // document.getElementById('viewPatientMentalHealthResultsBtn').addEventListener('click', () => loadPatientDataSection(currentPatientIdInAdminView, 'mentalHealthTests'));
             // document.getElementById('viewPatientTmsQuestionnairesBtn').addEventListener('click', () => loadPatientDataSection(currentPatientIdInAdminView, 'tmsQuestionnaires'));
