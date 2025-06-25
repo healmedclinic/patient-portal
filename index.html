@@ -139,12 +139,47 @@
             text-align: center;
             margin-right: 10px; /* Space between multiple buttons */
         }
-        .btn.upload-btn {
-            width: auto;
-            padding: 8px 15px;
-            font-size: 14px;
-            margin-top: 10px;
-            margin-bottom: 0; /* Reset default margin */
+        /* Style for patient list buttons in admin panel */
+        .btn.patient-card-btn {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); /* Admin patient card background */
+            color: white;
+            text-align: left; /* Align text to the left */
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            font-size: 1.2em;
+            font-weight: bold;
+            display: block; /* Ensure it takes full width and stacks */
+            width: 100%;
+        }
+        .btn.patient-card-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        /* New buttons for viewing specific patient data */
+        .btn.view-patient-data-btn {
+            background: #28a745; /* Green color */
+            color: white;
+            width: auto; /* Adjust to content */
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-right: 10px; /* Space between the two view buttons */
+            margin-bottom: 10px; /* Space below if they wrap */
+            display: inline-block;
+        }
+        .btn.view-patient-data-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        .patient-data-buttons-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            gap: 10px; /* Space between buttons */
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
 
         .btn:hover {
@@ -164,6 +199,39 @@
             cursor: pointer;
             font-size: 14px;
         }
+        
+        .radio-group-inline {
+            display: flex; /* Use flexbox for inline radios */
+            flex-wrap: wrap; /* Allow wrapping */
+            gap: 15px; /* Space between options */
+            margin-bottom: 10px;
+        }
+        .radio-option-inline {
+            display: inline-flex;
+            align-items: center;
+            /* margin-right: 15px; Removed due to gap */
+            /* margin-bottom: 10px; Removed due to gap */
+        }
+        .radio-option-inline input[type="radio"] {
+            margin-right: 5px;
+            width: auto; /* Override 100% width from form-group input */
+            margin-top: 0; /* Align with text */
+        }
+        .follow-up-question {
+            margin-top: 10px;
+            padding: 15px;
+            background: #e9ecef;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        .follow-up-question label {
+            font-weight: 600;
+        }
+        .follow-up-question textarea {
+            min-height: 80px;
+        }
+
 
         /* Dashboard */
         .dashboard {
@@ -308,6 +376,23 @@
             margin-top: 20px;
             margin-bottom: 15px; /* Add margin for list items */
         }
+        .tms-questionnaire-item {
+            background: linear-gradient(135deg, #f0932b 0%, #eb4d4b 100%); /* Orange/Red gradient for TMS */
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .tms-questionnaire-item ul {
+            list-style: none; /* Remove default list bullets */
+            padding-left: 0;
+            margin-top: 10px;
+        }
+        .tms-questionnaire-item li {
+            margin-bottom: 5px;
+        }
+
 
         /* Admin specific styles */
         .admin-card {
@@ -560,43 +645,60 @@
 
             .sidebar {
                 width: 100%;
-                padding: 20px 0;
+                padding: 10px 0; /* Reduced padding for more compact header on mobile */
             }
 
             .sidebar ul {
                 display: flex;
-                overflow-x: auto;
-                justify-content: space-around; /* Distribute items */
-                padding: 0 10px; /* Added horizontal padding to the list */
+                flex-wrap: wrap; /* Allow items to wrap to new line */
+                justify-content: center; /* Center items when wrapped */
+                padding: 0 5px; /* Reduced horizontal padding for the list container */
+                gap: 5px 10px; /* Vertical gap 5px, horizontal gap 10px between items */
             }
 
             .sidebar li {
                 white-space: nowrap;
-                min-width: 120px; /* Adjusted minimum width for smaller screens */
+                flex-grow: 1; /* Allow items to grow to fill space if needed, but not force minimum width */
                 text-align: center;
-                padding: 10px 15px; /* Slightly less padding on mobile list items */
+                padding: 8px 12px; /* Slightly less padding on mobile list items for compactness */
+                border-radius: 5px; /* Rounded corners for buttons */
+                margin: 0; /* Reset any default margins that might interfere with gap */
             }
 
+            /* Specific spacing adjustments for the first three items (Manage Appointments, Mental Health Tests, Health Records) */
+            #patientSidebarNav li:nth-child(1),
+            #patientSidebarNav li:nth-child(2),
+            #patientSidebarNav li:nth-child(3) {
+                margin-bottom: 10px; /* Add more space below these items if they wrap to new lines */
+            }
+
+            /* To decrease space between Profile and Forms (last two items), ensure no extra bottom margin */
+            #patientSidebarNav li:nth-child(4),
+            #patientSidebarNav li:nth-child(5) {
+                margin-bottom: 0; /* Ensure no extra bottom margin */
+            }
+
+
             .main-content {
-                padding: 20px; /* Adjusted from 40px */
+                padding: 15px; /* Further adjusted from 40px for mobile */
             }
 
             .container {
-                margin: 10px; /* Reduced overall container margin on small screens */
+                margin: 5px; /* Further reduced overall container margin on small screens */
                 border-radius: 10px; /* Slightly smaller rounded corners for mobile */
             }
 
             .login-screen {
-                padding: 30px;
+                padding: 20px;
             }
             .login-form {
-                padding: 30px;
-                border-radius: 10px; /* Match container */
+                padding: 20px;
+                border-radius: 10px;
             }
 
             .section {
-                padding: 20px; /* Ensure sections also have reduced padding */
-                border-radius: 10px; /* Match container */
+                padding: 15px;
+                border-radius: 10px;
             }
 
             /* Specifically target external link buttons for stacking on mobile */
@@ -606,6 +708,7 @@
                 margin-right: 0; /* Remove horizontal margin */
                 margin-bottom: 10px; /* Add vertical spacing */
                 padding: 12px; /* Ensure good touch target size */
+                font-size: 15px; /* Slightly larger text for buttons for better readability */
             }
             /* Adjust for the last button in a series to not have extra bottom margin */
             .section .btn.external-link-btn:last-child {
@@ -614,21 +717,31 @@
 
             .admin-appt-category-buttons {
                 flex-wrap: wrap;
-                justify-content: center; /* Center them when they wrap */
-                gap: 8px; /* Slightly less gap for compactness */
+                justify-content: center;
+                gap: 5px; /* Slightly smaller gap here as well */
             }
             .admin-appt-category-buttons .btn {
                 flex-grow: 1;
-                min-width: unset; /* Allow flexibility, don't force minimum width */
-                font-size: 13px; /* Slightly smaller text for compactness */
-                padding: 8px 12px; /* Adjust padding for touch targets */
+                min-width: unset;
+                font-size: 12px; /* Even smaller font for these buttons */
+                padding: 6px 10px; /* Adjusted padding */
+            }
+            .patient-data-buttons-container {
+                flex-direction: column; /* Stack on mobile */
+                gap: 10px; /* Vertical gap */
+            }
+            .btn.view-patient-data-btn {
+                width: 100%; /* Full width on mobile */
+                margin-right: 0; /* Remove horizontal margin */
+                font-size: 14px; /* Adjust font size */
             }
 
+
             #calendar {
-                padding: 10px;
+                padding: 5px; /* Reduced calendar padding */
             }
             .fc .fc-toolbar-title {
-                font-size: 1.2em;
+                font-size: 1em; /* Smaller title font for very small screens */
             }
         }
     </style>
@@ -799,13 +912,93 @@
                     <div id="profileInfo"></div>
                 </div>
 
-                <!-- Patient Forms Section (Updated Name and Content) -->
+                <!-- Patient Forms Section (Updated with TMS Daily Questionnaire) -->
                 <div id="formsSection" class="section hidden">
                     <h2>Forms</h2>
                     <p>Please review and complete any necessary forms below.</p>
                     <a href="https://v-gedipudi1.github.io/consent-forms/" target="_blank" class="btn external-link-btn">TMS Consent Form</a>
                     <a href="https://www.jotform.com/sign/251304457972056/invite/01jtzza5kqcb83f96f3923b7ac" target="_blank" class="btn external-link-btn">New Patient Form</a>
                     <a href="https://docs.google.com/forms/d/e/1FAIpQLScOt3ov7drpfVaJ3GPPa3GyyEG4i3qErkgpz704BUxhGItg6Q/viewform?usp=header" target="_blank" class="btn external-link-btn">Upload ID and Insurance Form</a>
+                    <button class="btn" id="showTmsQuestionnaireBtn" style="margin-top: 15px;">TMS Daily Questionnaire</button>
+                </div>
+
+                <!-- NEW: TMS Daily Questionnaire Section -->
+                <div id="tmsQuestionnaireSection" class="section hidden">
+                    <h2>TMS Daily Questionnaire</h2>
+                    <div class="form-group">
+                        <label>1. Have you had anything to eat or drink today?</label>
+                        <div class="radio-group-inline">
+                            <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
+                            <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
+                        </div>
+                        <div id="q1_followup" class="follow-up-question hidden">
+                            <label for="q1_eat_drink_details">What did you have to eat or drink?</label>
+                            <textarea id="q1_eat_drink_details"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>2. Have you been taking your medication as prescribed and at the same time?</label>
+                        <div class="radio-group-inline">
+                            <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="yes" required> Yes</label>
+                            <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="no"> No</label>
+                        </div>
+                        <div id="q2_followup" class="follow-up-question hidden">
+                            <label>2a. Any changes to your medication?</label>
+                            <div class="radio-group-inline">
+                                <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="yes" required> Yes</label>
+                                <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="no"> No</label>
+                            </div>
+                            <div id="q2a_followup" class="follow-up-question hidden">
+                                <label for="q2a_med_changes_details">Please specify changes to your medication:</label>
+                                <textarea id="q2a_med_changes_details"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="q3_sleep_hours">3. How did you sleep last night? Number of hours?</label>
+                        <input type="number" id="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>4. Any caffeine intake today?</label>
+                        <div class="radio-group-inline">
+                            <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="yes" required> Yes</label>
+                            <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="no"> No</label>
+                        </div>
+                        <div id="q4_followup" class="follow-up-question hidden">
+                            <label for="q4_caffeine_details">What caffeine drink did you have or how many?</label>
+                            <textarea id="q4_caffeine_details"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>5. Any alcohol intake today?</label>
+                        <div class="radio-group-inline">
+                            <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="yes" required> Yes</label>
+                            <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="no"> No</label>
+                        </div>
+                        <div id="q5_followup" class="follow-up-question hidden">
+                            <label for="q5_alcohol_details">How much alcohol?</label>
+                            <textarea id="q5_alcohol_details"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>6. Do you have any metal in or around your head (above the collar)?</label>
+                        <div class="radio-group-inline">
+                            <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="yes" required> Yes</label>
+                            <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="no"> No</label>
+                        </div>
+                        <div id="q6_followup" class="follow-up-question hidden">
+                            <label for="q6_metal_head_details">Please specify (e.g., dental implants, surgical clips, shrapnel, etc.):</label>
+                            <textarea id="q6_metal_head_details"></textarea>
+                        </div>
+                    </div>
+
+                    <button class="btn" id="submitTmsQuestionnaireBtn">Submit Questionnaire</button>
+                    <button class="btn btn-secondary" id="cancelTmsQuestionnaireBtn">Cancel</button>
                 </div>
 
             </div>
@@ -819,7 +1012,7 @@
                 <ul id="adminSidebarNav">
                     <li class="active" data-section="appointments">Appointment Requests</li>
                     <li data-section="patients">Patient Management</li>
-                    <li data-section="testResults">Test Results</li>
+                    <!-- Removed: <li data-section="testResults">Test Results</li> -->
                     <li data-section="calendar">Calendar</li>
                     <li data-section="doctorPortal">Doctor Portal</li>
                 </ul>
@@ -845,11 +1038,25 @@
                     <div id="adminDeniedAppointmentsList" class="hidden"></div>
                 </div>
 
-                <!-- Admin Patients Section -->
+                <!-- Admin Patients Section (Reorganized) -->
                 <div id="adminPatientsSection" class="section">
                     <h2>Patient Management</h2>
                     <button class="btn" id="showAddPatientFormBtn">Add New Patient (via Admin)</button>
-                    <div id="patientsList"></div>
+                    
+                    <!-- List of patient buttons -->
+                    <div id="patientsList" class="patient-list-container"></div>
+
+                    <!-- Patient Detail View (Initially Hidden) -->
+                    <div id="patientDetailView" class="hidden">
+                        <button class="btn btn-secondary" id="backToPatientsListBtn" style="margin-bottom: 20px;">Back to All Patients</button>
+                        <h3>Patient Details: <span id="patientDetailName"></span></h3>
+                        <div id="patientBasicInfo"></div>
+                        <div class="patient-data-buttons-container">
+                            <button class="btn view-patient-data-btn" id="viewPatientMentalHealthResultsBtn">View Mental Health Test Results</button>
+                            <button class="btn view-patient-data-btn" id="viewPatientTmsQuestionnairesBtn">View TMS Daily Questionnaires</button>
+                        </div>
+                        <div id="patientSpecificDataResults" style="margin-top: 20px;"></div>
+                    </div>
 
                     <!-- Add Patient Form -->
                     <div id="addPatientForm" class="hidden" style="margin-top: 20px; background: #f8f9fa; padding: 20px; border-radius: 10px;">
@@ -885,11 +1092,7 @@
                     </div>
                 </div>
 
-                <!-- Admin Test Results Section -->
-                <div id="adminTestResultsSection" class="section hidden">
-                    <h2>Patient Test Results</h2>
-                    <div id="adminTestResultsList"></div>
-                </div>
+                <!-- Removed Admin Test Results Section -->
 
                 <!-- New Admin Calendar Section (Updated for FullCalendar) -->
                 <div id="adminCalendarSection" class="section hidden">
@@ -954,6 +1157,7 @@
         let isAdmin = false; // Flag for admin status (set after successful Firebase admin login)
         let currentTest = null; // Stores details of the test currently being taken
         let adminCalendarInstance = null; // To hold the FullCalendar object for the admin portal
+        let currentPatientIdInAdminView = null; // To track which patient is currently being viewed by admin
 
         // --- Admin Credentials (Email must exist in Firebase Authentication) ---
         const ADMIN_EMAIL = 'admin@healmed.com'; // Use the email you created in Firebase Auth
@@ -1235,13 +1439,13 @@
             hideAllScreens();
             document.getElementById('adminDashboard').classList.remove('hidden');
             showAdminSection('appointments'); // Default to showing pending appointments when admin dashboard loads
-            loadPatientsList();
-            loadAdminTestResults();
+            loadPatientsList(); // Load patient buttons initially
         }
 
         function showPatientSection(sectionId) {
             document.querySelectorAll('#patientDashboard .section').forEach(s => s.classList.add('hidden'));
             document.getElementById('testInterface').classList.add('hidden');
+            document.getElementById('tmsQuestionnaireSection').classList.add('hidden'); // Hide TMS form if navigating away
 
             document.querySelectorAll('#patientSidebarNav li').forEach(li => li.classList.remove('active'));
             const targetListItem = document.querySelector(`#patientSidebarNav li[data-section="${sectionId}"]`);
@@ -1255,6 +1459,8 @@
         // Generic function to show a specific section within admin dashboard
         function showAdminSection(sectionId) {
             document.querySelectorAll('#adminDashboard .section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('patientDetailView').classList.add('hidden'); // Hide patient detail view
+            document.getElementById('addPatientForm').classList.add('hidden'); // Hide add patient form
 
             document.querySelectorAll('#adminSidebarNav li').forEach(li => li.classList.remove('active'));
             const targetListItem = document.querySelector(`#adminSidebarNav li[data-section="${sectionId}"]`);
@@ -1275,6 +1481,8 @@
                 loadAdminCalendar(); // Initialize/reload calendar when this section is shown
             } else if (sectionId === 'appointments') {
                  showAdminAppointmentCategory('pending'); // Default to pending on appt tab
+            } else if (sectionId === 'patients') {
+                 loadPatientsList(); // Re-load patient list of buttons
             }
         }
 
@@ -1570,6 +1778,208 @@
             });
         }
 
+        // --- TMS Daily Questionnaire Functions (Patient Side) ---
+
+        function showTmsQuestionnaire() {
+            if (!currentUser) {
+                showMessage('You must be logged in to complete a questionnaire.', true);
+                return;
+            }
+            document.getElementById('formsSection').classList.add('hidden');
+            document.getElementById('tmsQuestionnaireSection').classList.remove('hidden');
+            resetTmsForm(); // Clear any previous inputs
+            console.log("Patient: Showing TMS Daily Questionnaire.");
+        }
+
+        function cancelTmsQuestionnaire() {
+            document.getElementById('tmsQuestionnaireSection').classList.add('hidden');
+            document.getElementById('formsSection').classList.remove('hidden');
+            resetTmsForm();
+            console.log("Patient: TMS Daily Questionnaire cancelled.");
+        }
+
+        function resetTmsForm() {
+            document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+            document.getElementById('tmsQuestionnaireSection').querySelectorAll('textarea').forEach(textarea => textarea.value = '');
+            document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+            document.getElementById('tmsQuestionnaireSection').querySelectorAll('.follow-up-question').forEach(div => div.classList.add('hidden'));
+            console.log("Patient: TMS Daily Questionnaire form reset.");
+        }
+
+        function setupTmsFormListeners() {
+            // Q1: Eat/Drink
+            document.querySelectorAll('input[name="q1_eat_drink"]').forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    if (event.target.value === 'yes') {
+                        document.getElementById('q1_followup').classList.remove('hidden');
+                    } else {
+                        document.getElementById('q1_followup').classList.add('hidden');
+                        document.getElementById('q1_eat_drink_details').value = '';
+                    }
+                });
+            });
+
+            // Q2: Medication prescribed
+            document.querySelectorAll('input[name="q2_med_prescribed"]').forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    if (event.target.value === 'no') { // Q2a appears if not taking as prescribed
+                        document.getElementById('q2_followup').classList.remove('hidden');
+                    } else {
+                        document.getElementById('q2_followup').classList.add('hidden');
+                        document.querySelectorAll('input[name="q2a_med_changes"]').forEach(r => r.checked = false); // Clear Q2a radios
+                        document.getElementById('q2a_followup').classList.add('hidden'); // Hide Q2a follow-up
+                        document.getElementById('q2a_med_changes_details').value = ''; // Clear Q2a text
+                    }
+                });
+            });
+
+            // Q2a: Medication changes
+            document.querySelectorAll('input[name="q2a_med_changes"]').forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    if (event.target.value === 'yes') {
+                        document.getElementById('q2a_followup').classList.remove('hidden');
+                    } else {
+                        document.getElementById('q2a_followup').classList.add('hidden');
+                        document.getElementById('q2a_med_changes_details').value = '';
+                    }
+                });
+            });
+
+            // Q4: Caffeine
+            document.querySelectorAll('input[name="q4_caffeine"]').forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    if (event.target.value === 'yes') {
+                        document.getElementById('q4_followup').classList.remove('hidden');
+                    } else {
+                        document.getElementById('q4_followup').classList.add('hidden');
+                        document.getElementById('q4_caffeine_details').value = '';
+                    }
+                });
+            });
+
+            // Q5: Alcohol
+            document.querySelectorAll('input[name="q5_alcohol"]').forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    if (event.target.value === 'yes') {
+                        document.getElementById('q5_followup').classList.remove('hidden');
+                    } else {
+                        document.getElementById('q5_followup').classList.add('hidden');
+                        document.getElementById('q5_alcohol_details').value = '';
+                    }
+                });
+            });
+
+            // Q6: Metal in Head
+            document.querySelectorAll('input[name="q6_metal_head"]').forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    if (event.target.value === 'yes') {
+                        document.getElementById('q6_followup').classList.remove('hidden');
+                    } else {
+                        document.getElementById('q6_followup').classList.add('hidden');
+                        document.getElementById('q6_metal_head_details').value = '';
+                    }
+                });
+            });
+        }
+
+        async function submitTmsQuestionnaire() {
+            if (!currentUser) {
+                showMessage('You must be logged in to submit a questionnaire.', true);
+                return;
+            }
+
+            const answers = {};
+            let allRequiredAnswered = true;
+
+            // Q1: Have you had anything to eat or drink today?
+            const q1Answer = document.querySelector('input[name="q1_eat_drink"]:checked');
+            if (!q1Answer) { allRequiredAnswered = false; } else {
+                answers.q1_eat_drink = q1Answer.value;
+                if (q1Answer.value === 'yes') {
+                    const details = document.getElementById('q1_eat_drink_details').value.trim();
+                    if (!details) { showMessage("Please provide details for Q1.", true); return; }
+                    answers.q1_eat_drink_details = details;
+                }
+            }
+
+            // Q2: Have you been taking your medication as prescribed and at the same time?
+            const q2Answer = document.querySelector('input[name="q2_med_prescribed"]:checked');
+            if (!q2Answer) { allRequiredAnswered = false; } else {
+                answers.q2_med_prescribed = q2Answer.value;
+                if (q2Answer.value === 'no') {
+                    // Q2a: Any changes to your medication?
+                    const q2aAnswer = document.querySelector('input[name="q2a_med_changes"]:checked');
+                    if (!q2aAnswer) { showMessage("Please answer Q2a.", true); return; }
+                    answers.q2a_med_changes = q2aAnswer.value;
+                    if (q2aAnswer.value === 'yes') {
+                        const details = document.getElementById('q2a_med_changes_details').value.trim();
+                        if (!details) { showMessage("Please provide details for Q2a.", true); return; }
+                        answers.q2a_med_changes_details = details;
+                    }
+                }
+            }
+
+            // Q3: How did you sleep last night? Number of hours?
+            const q3Answer = document.getElementById('q3_sleep_hours').value;
+            if (q3Answer === '' || isNaN(q3Answer)) { showMessage("Please enter sleep hours for Q3.", true); return; }
+            answers.q3_sleep_hours = parseFloat(q3Answer);
+
+            // Q4: Any caffeine intake today?
+            const q4Answer = document.querySelector('input[name="q4_caffeine"]:checked');
+            if (!q4Answer) { allRequiredAnswered = false; } else {
+                answers.q4_caffeine = q4Answer.value;
+                if (q4Answer.value === 'yes') {
+                    const details = document.getElementById('q4_caffeine_details').value.trim();
+                    if (!details) { showMessage("Please provide details for Q4.", true); return; }
+                    answers.q4_caffeine_details = details;
+                }
+            }
+
+            // Q5: Any alcohol intake today?
+            const q5Answer = document.querySelector('input[name="q5_alcohol"]:checked');
+            if (!q5Answer) { allRequiredAnswered = false; } else {
+                answers.q5_alcohol = q5Answer.value;
+                if (q5Answer.value === 'yes') {
+                    const details = document.getElementById('q5_alcohol_details').value.trim();
+                    if (!details) { showMessage("Please provide details for Q5.", true); return; }
+                    answers.q5_alcohol_details = details;
+                }
+            }
+
+            // Q6: Do you have any metal in or around your head (above the collar)?
+            const q6Answer = document.querySelector('input[name="q6_metal_head"]:checked');
+            if (!q6Answer) { allRequiredAnswered = false; } else {
+                answers.q6_metal_head = q6Answer.value;
+                if (q6Answer.value === 'yes') {
+                    const details = document.getElementById('q6_metal_head_details').value.trim();
+                    if (!details) { showMessage("Please provide details for Q6.", true); return; }
+                    answers.q6_metal_head_details = details;
+                }
+            }
+            
+            if (!allRequiredAnswered) {
+                showMessage("Please answer all required questions before submitting.", true);
+                return;
+            }
+
+            try {
+                const newTmsRef = push(ref(database, 'tmsQuestionnaires/' + currentUser.uid));
+                await set(newTmsRef, {
+                    userId: currentUser.uid,
+                    fullName: (await get(ref(database, 'patients/' + currentUser.uid))).val().fullName, // Get patient name for admin view
+                    answers: answers,
+                    submittedAt: new Date().toISOString()
+                });
+                console.log("Patient: TMS Questionnaire submitted successfully. Path:", newTmsRef.toString());
+                showMessage('TMS Daily Questionnaire submitted successfully!');
+                cancelTmsQuestionnaire();
+            } catch (error) {
+                console.error("Patient: Error submitting TMS Questionnaire:", error);
+                showMessage(`Error submitting TMS Questionnaire: ${error.message}`, true);
+            }
+        }
+
+
         // --- Admin-Specific Functionality ---
 
         // Load Pending Appointment Requests for Admin
@@ -1770,11 +2180,14 @@
                 return;
             }
             document.getElementById('addPatientForm').classList.remove('hidden');
+            document.getElementById('patientsList').classList.add('hidden'); // Hide patient list when adding
+            document.getElementById('patientDetailView').classList.add('hidden'); // Hide detail view
             console.log("Admin: Showing add patient form.");
         }
 
         function hideAddPatientForm() {
             document.getElementById('addPatientForm').classList.add('hidden');
+            document.getElementById('patientsList').classList.remove('hidden'); // Show patient list again
             document.getElementById('newPatientName').value = '';
             document.getElementById('newPatientEmail').value = '';
             document.getElementById('newPatientPassword').value = '';
@@ -1820,20 +2233,26 @@
                 console.log("Admin: Saved patient data to Realtime Database for UID:", userId);
                 showMessage(`Patient ${name} added successfully! Temporary password: ${password}`);
                 hideAddPatientForm();
+                loadPatientsList(); // Reload patient list to show the new patient
             } catch (error) {
                 console.error("Admin: Error adding patient via admin portal:", error);
                 showMessage(`Error adding patient: ${error.message}`, true);
             }
         }
 
-        // Load All Patients for Admin
+        // Load All Patients for Admin (Now displays buttons)
         function loadPatientsList() {
             const patientsListDiv = document.getElementById('patientsList');
             if (!currentUser || !isAdmin) {
                 patientsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
-            console.log("Admin: Loading all patients.");
+            console.log("Admin: Loading list of patient buttons.");
+            
+            document.getElementById('patientsList').classList.remove('hidden');
+            document.getElementById('patientDetailView').classList.add('hidden'); // Hide detail view
+            document.getElementById('addPatientForm').classList.add('hidden'); // Hide add patient form
+
             onValue(ref(database, 'patients'), (snapshot) => {
                 patientsListDiv.innerHTML = '';
                 let hasPatients = false;
@@ -1842,84 +2261,168 @@
 
                 if (rawSnapshotData) {
                     const patientsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                    patientsArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    
+                    // Filter out "Jane Doe" and "user testing"
+                    const filteredPatients = patientsArray.filter(patient => 
+                        patient.fullName !== "Jane Doe" && patient.fullName !== "user testing"
+                    );
 
-                    patientsArray.forEach((patient) => {
+                    filteredPatients.sort((a, b) => a.fullName.localeCompare(b.fullName)); // Sort alphabetically by name
+
+                    if (filteredPatients.length > 0) {
                         hasPatients = true;
-                        patientsListDiv.innerHTML += `
-                            <div class="admin-card" style="background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);">
-                                <h4>${patient.fullName}</h4>
-                                <p><strong>Email:</strong> ${patient.email}</p>
-                                <p><strong>Phone:</strong> ${patient.phoneNumber}</p>
-                                <p><strong>Gender:</strong> ${patient.gender}</p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Firebase ID: ${patient.id}</p>
-                            </div>
-                        `;
-                    });
+                        filteredPatients.forEach((patient) => {
+                            patientsListDiv.innerHTML += `
+                                <button class="btn patient-card-btn" data-patient-id="${patient.id}">
+                                    ${patient.fullName}
+                                </button>
+                            `;
+                        });
+                    }
                 }
                 if (!hasPatients) {
-                    patientsListDiv.innerHTML = '<p>No patients registered.</p>';
+                    patientsListDiv.innerHTML = '<p>No patients registered (excluding demo users).</p>';
                 }
-                console.log("Admin: Patients loaded. Total displayed elements:", patientsListDiv.children.length);
+                console.log("Admin: Patient buttons loaded. Total displayed elements:", patientsListDiv.children.length);
+
+                // Attach event listeners to the new patient buttons
+                document.querySelectorAll('#patientsList .patient-card-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const patientId = event.target.dataset.patientId;
+                        showPatientDetails(patientId);
+                    });
+                });
+
             }, {
                 onlyOnce: false
             });
         }
 
-        // Load All Test Results for Admin
-        function loadAdminTestResults() {
-            const adminTestResultsListDiv = document.getElementById('adminTestResultsList');
+        // Show details for a specific patient
+        async function showPatientDetails(patientId) {
             if (!currentUser || !isAdmin) {
-                adminTestResultsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
+                showMessage('Unauthorized action.', true);
                 return;
             }
-            console.log("Admin: Loading all test results.");
-            onValue(ref(database, 'testResults'), async (snapshot) => {
-                adminTestResultsListDiv.innerHTML = '';
-                let hasResults = false;
-                const results = [];
-                const rawSnapshotData = snapshot.val();
-                console.log("Admin: Raw test results snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
+            currentPatientIdInAdminView = patientId; // Store the patientId being viewed
+            console.log("Admin: Showing details for patient ID:", patientId);
 
-                if (rawSnapshotData) {
-                    snapshot.forEach((childSnapshot) => {
-                        results.push(childSnapshot.val());
-                    });
+            document.getElementById('patientsList').classList.add('hidden');
+            document.getElementById('addPatientForm').classList.add('hidden');
+            document.getElementById('patientDetailView').classList.remove('hidden');
+            document.getElementById('patientSpecificDataResults').innerHTML = ''; // Clear previous results here
+
+            try {
+                const patientSnapshot = await get(ref(database, 'patients/' + patientId));
+                const patientData = patientSnapshot.val();
+
+                if (patientData) {
+                    document.getElementById('patientDetailName').textContent = patientData.fullName;
+                    document.getElementById('patientBasicInfo').innerHTML = `
+                        <p><strong>Name:</strong> ${patientData.fullName}</p>
+                        <p><strong>Email:</strong> ${patientData.email}</p>
+                        <p><strong>Phone:</strong> ${patientData.phoneNumber}</p>
+                        <p><strong>Gender:</strong> ${patientData.gender}</p>
+                        <p><strong>Account Created:</strong> ${new Date(patientData.createdAt).toLocaleString()}</p>
+                        <p><strong>Firebase UID:</strong> ${patientId}</p>
+                    `;
+                    console.log("Admin: Patient details loaded for:", patientData.fullName);
+
+                    // Add event listeners for the new buttons for this specific patient
+                    document.getElementById('viewPatientMentalHealthResultsBtn').onclick = () => loadPatientDataSection(patientId, 'mentalHealthTests');
+                    document.getElementById('viewPatientTmsQuestionnairesBtn').onclick = () => loadPatientDataSection(patientId, 'tmsQuestionnaires');
+
+                } else {
+                    document.getElementById('patientDetailView').innerHTML = '<p>Patient not found.</p>';
+                    console.error("Admin: Patient data not found for ID:", patientId);
                 }
+            } catch (error) {
+                console.error("Admin: Error fetching patient details:", error);
+                showMessage(`Error fetching patient details: ${error.message}`, true);
+            }
+        }
 
-                if (results.length > 0) {
-                    const patientPromises = results.map(result => get(ref(database, 'patients/' + result.userId)));
-                    const patientSnapshots = await Promise.all(patientPromises);
-                    const patientMap = {};
-                    patientSnapshots.forEach(snap => {
-                        if (snap.exists()) {
-                            patientMap[snap.key] = snap.val().fullName || 'Unknown Patient';
+        // Load specific patient data section (Mental Health Tests or TMS Questionnaires)
+        async function loadPatientDataSection(patientId, dataType) {
+            if (!currentUser || !isAdmin || !patientId) {
+                showMessage('Unauthorized action or no patient selected.', true);
+                return;
+            }
+            console.log(`Admin: Loading ${dataType} for specific patient ID:`, patientId);
+            const resultsContainer = document.getElementById('patientSpecificDataResults');
+            resultsContainer.innerHTML = '<h4>Loading Results...</h4>'; // Clear and show loading
+
+            let contentHtml = '';
+            let hasResults = false;
+
+            if (dataType === 'mentalHealthTests') {
+                const testResultsSnapshot = await get(ref(database, 'testResults'));
+                const testResults = [];
+                if (testResultsSnapshot.exists()) {
+                    testResultsSnapshot.forEach(child => {
+                        const result = child.val();
+                        if (result.userId === patientId) {
+                            testResults.push(result);
                         }
                     });
-
-                    results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-                    results.forEach(result => {
-                        hasResults = true;
-                        const patientName = patientMap[result.userId] || 'N/A';
-                        console.log("Admin: Processing individual test result for", patientName, ":", result);
-                        adminTestResultsListDiv.innerHTML += `
-                            <div class="test-result-item admin-card" style="background: linear-gradient(135deg, #00b894 0%, #00a085 100%);">
-                                <h4>${result.testType} for ${patientName}</h4>
+                }
+                
+                testResults.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                if (testResults.length > 0) {
+                    hasResults = true;
+                    contentHtml += '<h3 style="margin-bottom: 15px;">Mental Health Test Results:</h3>';
+                    testResults.forEach(result => {
+                        contentHtml += `
+                            <div class="test-result-item" style="background: linear-gradient(135deg, #00b894 0%, #00a085 100%); margin-bottom: 15px;">
+                                <h4>${result.testType}</h4>
                                 <p><strong>Score:</strong> ${result.score}</p>
                                 <p><strong>Breakdown:</strong> ${result.breakdown}</p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Taken on: ${new Date(result.createdAt).toLocaleString()}</p>
                             </div>
                         `;
                     });
+                } else {
+                    contentHtml += '<p>No mental health test results found for this patient.</p>';
                 }
-                if (!hasResults) {
-                    adminTestResultsListDiv.innerHTML = '<p>No test results found.</p>';
+            } else if (dataType === 'tmsQuestionnaires') {
+                const tmsQuestionnairesSnapshot = await get(ref(database, `tmsQuestionnaires/${patientId}`));
+                const tmsQuestionnaires = [];
+                if (tmsQuestionnairesSnapshot.exists()) {
+                    tmsQuestionnairesSnapshot.forEach(child => {
+                        tmsQuestionnaires.push(child.val());
+                    });
                 }
-                console.log("Admin: Test results loaded. Total displayed elements:", adminTestResultsListDiv.children.length);
-            }, {
-                onlyOnce: false
-            });
+
+                tmsQuestionnaires.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+                if (tmsQuestionnaires.length > 0) {
+                    hasResults = true;
+                    contentHtml += '<h3 style="margin-bottom: 15px;">TMS Daily Questionnaires:</h3>';
+                    tmsQuestionnaires.forEach((q, index) => {
+                        contentHtml += `
+                            <div class="tms-questionnaire-item" style="margin-bottom: 15px;">
+                                <h4>Questionnaire Submitted on: ${new Date(q.submittedAt).toLocaleString()}</h4>
+                                <ul>
+                                    <li><strong>Q1. Eat/Drink:</strong> ${q.answers.q1_eat_drink} ${q.answers.q1_eat_drink === 'yes' ? `(Details: ${q.answers.q1_eat_drink_details})` : ''}</li>
+                                    <li><strong>Q2. Meds Prescribed:</strong> ${q.answers.q2_med_prescribed}</li>
+                                    ${q.answers.q2_med_prescribed === 'no' ? `<li><strong>Q2a. Med Changes:</strong> ${q.answers.q2a_med_changes} ${q.answers.q2a_med_changes === 'yes' ? `(Details: ${q.answers.q2a_med_changes_details})` : ''}</li>` : ''}
+                                    <li><strong>Q3. Sleep Hours:</strong> ${q.answers.q3_sleep_hours} hours</li>
+                                    <li><strong>Q4. Caffeine:</strong> ${q.answers.q4_caffeine} ${q.answers.q4_caffeine === 'yes' ? `(Details: ${q.answers.q4_caffeine_details})` : ''}</li>
+                                    <li><strong>Q5. Alcohol:</strong> ${q.answers.q5_alcohol} ${q.answers.q5_alcohol === 'yes' ? `(Details: ${q.answers.q5_alcohol_details})` : ''}</li>
+                                    <li><strong>Q6. Metal in Head:</strong> ${q.answers.q6_metal_head} ${q.answers.q6_metal_head === 'yes' ? `(Details: ${q.answers.q6_metal_head_details})` : ''}</li>
+                                </ul>
+                            </div>
+                        `;
+                    });
+                } else {
+                    contentHtml += '<p>No TMS daily questionnaires found for this patient.</p>';
+                }
+            } else {
+                contentHtml = '<p>Invalid data type requested.</p>';
+                console.error("Admin: Invalid dataType provided to loadPatientDataSection:", dataType);
+            }
+
+            resultsContainer.innerHTML = contentHtml;
+            console.log(`Admin: ${dataType} loaded for patient ID:`, patientId);
         }
 
         // Helper to parse old string format (e.g., "Thursday 1-2 PM") to a Date object
@@ -2142,6 +2645,13 @@
             document.getElementById('submitTestBtn').addEventListener('click', submitTest);
             document.getElementById('cancelTestBtn').addEventListener('click', cancelTest);
 
+            // Set up patient TMS Questionnaire buttons and event handlers
+            document.getElementById('showTmsQuestionnaireBtn').addEventListener('click', showTmsQuestionnaire);
+            document.getElementById('submitTmsQuestionnaireBtn').addEventListener('click', submitTmsQuestionnaire);
+            document.getElementById('cancelTmsQuestionnaireBtn').addEventListener('click', cancelTmsQuestionnaire);
+            setupTmsFormListeners(); // Initialize listeners for conditional follow-ups
+
+
             // Set up patient sidebar navigation using event delegation
             document.getElementById('patientSidebarNav').addEventListener('click', (event) => {
                 if (event.target.tagName === 'LI' && event.target.dataset.section) {
@@ -2174,6 +2684,13 @@
             document.getElementById('showAddPatientFormBtn').addEventListener('click', showAddPatientForm);
             document.getElementById('addPatientBtn').addEventListener('click', addPatient);
             document.getElementById('hideAddPatientFormBtn').addEventListener('click', hideAddPatientForm);
+
+            // Admin Patient Detail View buttons
+            document.getElementById('backToPatientsListBtn').addEventListener('click', loadPatientsList); // Returns to list of patient buttons
+            // Event listeners for the new separated buttons will be attached in showPatientDetails()
+            // document.getElementById('viewPatientMentalHealthResultsBtn').addEventListener('click', () => loadPatientDataSection(currentPatientIdInAdminView, 'mentalHealthTests'));
+            // document.getElementById('viewPatientTmsQuestionnairesBtn').addEventListener('click', () => loadPatientDataSection(currentPatientIdInAdminView, 'tmsQuestionnaires'));
+
 
             // Check Firebase Auth state on page load
             onAuthStateChanged(auth, (user) => {
