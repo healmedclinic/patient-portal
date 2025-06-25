@@ -170,9 +170,15 @@
             margin-bottom: 10px; /* Space below if they wrap */
             display: inline-block;
         }
+        .btn.view-patient-data-btn.booked-appointments {
+            background: linear-gradient(135deg, #ff8c00 0%, #ff5722 100%); /* Orange for booked appointments */
+        }
         .btn.view-patient-data-btn:hover {
             background: #218838;
             transform: translateY(-2px);
+        }
+        .btn.view-patient-data-btn.booked-appointments:hover {
+            background: #e66a00;
         }
         .patient-data-buttons-container {
             display: flex;
@@ -296,6 +302,9 @@
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 15px;
+        }
+        .appointment-card.booked-appt-card { /* New style for booked appointments */
+            background: linear-gradient(135deg, #ff8c00 0%, #ff5722 100%);
         }
 
         .appointment-status {
@@ -617,25 +626,26 @@
         }
 
         /* Admin Appointment Category Buttons */
-        .admin-appt-category-buttons {
+        /* Removed as per new instruction */
+        /* .admin-appt-category-buttons {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
             justify-content: center;
         }
         .admin-appt-category-buttons .btn {
-            width: auto; /* Allow buttons to size based on content */
+            width: auto;
             padding: 10px 20px;
             font-size: 14px;
             border-radius: 5px;
-            background: #e9ecef; /* Neutral background */
+            background: #e9ecef;
             color: #333;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .admin-appt-category-buttons .btn.active-category {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Active style */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-        }
+        } */
 
 
         @media (max-width: 768px) {
@@ -715,17 +725,18 @@
                 margin-bottom: 0;
             }
 
-            .admin-appt-category-buttons {
+            /* Removed this section as per new instruction */
+            /* .admin-appt-category-buttons {
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 5px; /* Slightly smaller gap here as well */
+                gap: 5px;
             }
             .admin-appt-category-buttons .btn {
                 flex-grow: 1;
                 min-width: unset;
-                font-size: 12px; /* Even smaller font for these buttons */
-                padding: 6px 10px; /* Adjusted padding */
-            }
+                font-size: 12px;
+                padding: 6px 10px;
+            } */
             .patient-data-buttons-container {
                 flex-direction: column; /* Stack on mobile */
                 gap: 10px; /* Vertical gap */
@@ -749,7 +760,7 @@
 <body>
     <div class="header-branding">
         <h1>HealMed Clinic</h1>
-        <p>Let's heal minds!</p>
+        <p>Let's heal minds</p>
     </div>
     <div class="container">
         <!-- Login Screen -->
@@ -1020,22 +1031,23 @@
             <div class="main-content">
                 <!-- Admin Appointments Section (Reorganized) -->
                 <div id="adminAppointmentsSection" class="section">
-                    <div class="admin-appt-category-buttons">
+                    <!-- Removed Admin Appt Category Buttons -->
+                    <!-- <div class="admin-appt-category-buttons">
                         <button class="btn active-category" data-category="pending" id="showPendingAppointmentsBtn">Pending</button>
                         <button class="btn" data-category="approved" id="showApprovedAppointmentsBtn">Approved</button>
                         <button class="btn" data-category="denied" id="showDeniedAppointmentsBtn">Denied</button>
-                    </div>
+                    </div> -->
                     
-                    <h2 id="adminAppointmentsTitle">Appointment Requests (Pending)</h2>
+                    <h2 id="adminAppointmentsTitle">Appointment Requests</h2>
                     
-                    <!-- Pending Appointments List (Default View) -->
+                    <!-- Pending Appointments List (Default View for this section) -->
                     <div id="adminPendingAppointmentsList"></div> 
                     
-                    <!-- Approved Appointments List (Initially Hidden) -->
-                    <div id="adminApprovedAppointmentsList" class="hidden"></div>
+                    <!-- Approved Appointments List (No longer explicitly shown here) -->
+                    <!-- <div id="adminApprovedAppointmentsList" class="hidden"></div> -->
 
-                    <!-- Denied Appointments List (Initially Hidden) -->
-                    <div id="adminDeniedAppointmentsList" class="hidden"></div>
+                    <!-- Denied Appointments List (No longer explicitly shown here) -->
+                    <!-- <div id="adminDeniedAppointmentsList" class="hidden"></div> -->
                 </div>
 
                 <!-- Admin Patients Section (Reorganized) -->
@@ -1054,6 +1066,7 @@
                         <div class="patient-data-buttons-container">
                             <button class="btn view-patient-data-btn" id="viewPatientMentalHealthResultsBtn">View Mental Health Test Results</button>
                             <button class="btn view-patient-data-btn" id="viewPatientTmsQuestionnairesBtn">View TMS Daily Questionnaires</button>
+                            <button class="btn view-patient-data-btn booked-appointments" id="viewPatientBookedAppointmentsBtn">View Booked Appointments</button>
                         </div>
                         <div id="patientSpecificDataResults" style="margin-top: 20px;"></div>
                     </div>
@@ -1438,7 +1451,8 @@
         function showAdminDashboard() {
             hideAllScreens();
             document.getElementById('adminDashboard').classList.remove('hidden');
-            showAdminSection('appointments'); // Default to showing pending appointments when admin dashboard loads
+            // When admin dashboard loads, default to pending appointments
+            showAdminSection('appointments'); // This will call loadAdminAppointments()
             loadPatientsList(); // Load patient buttons initially
         }
 
@@ -1480,46 +1494,15 @@
             if (sectionId === 'calendar') {
                 loadAdminCalendar(); // Initialize/reload calendar when this section is shown
             } else if (sectionId === 'appointments') {
-                 showAdminAppointmentCategory('pending'); // Default to pending on appt tab
+                 // No categories, just load pending directly
+                 loadAdminAppointments();
+                 document.getElementById('adminAppointmentsTitle').textContent = "Appointment Requests";
             } else if (sectionId === 'patients') {
                  loadPatientsList(); // Re-load patient list of buttons
             }
         }
+        // Removed showAdminAppointmentCategory as per instruction
 
-        // Helper to manage visibility of different appointment lists in admin portal
-        function showAdminAppointmentCategory(category) {
-            document.getElementById('adminPendingAppointmentsList').classList.add('hidden');
-            document.getElementById('adminApprovedAppointmentsList').classList.add('hidden');
-            document.getElementById('adminDeniedAppointmentsList').classList.add('hidden');
-
-            document.querySelectorAll('.admin-appt-category-buttons .btn').forEach(btn => {
-                btn.classList.remove('active-category');
-            });
-
-            let titleText = "Appointment Requests";
-            switch (category) {
-                case 'pending':
-                    document.getElementById('adminPendingAppointmentsList').classList.remove('hidden');
-                    document.getElementById('showPendingAppointmentsBtn').classList.add('active-category');
-                    loadAdminAppointments(); // Load pending appointments
-                    titleText = "Appointment Requests (Pending)";
-                    break;
-                case 'approved':
-                    document.getElementById('adminApprovedAppointmentsList').classList.remove('hidden');
-                    document.getElementById('showApprovedAppointmentsBtn').classList.add('active-category');
-                    loadAdminApprovedAppointments(); // Load approved appointments
-                    titleText = "Approved Appointments (Historical)";
-                    break;
-                case 'denied':
-                    document.getElementById('adminDeniedAppointmentsList').classList.add('hidden');
-                    document.getElementById('showDeniedAppointmentsBtn').classList.add('active-category');
-                    loadAdminDeniedAppointments(); // Load denied appointments
-                    titleText = "Denied Appointments (Historical)";
-                    break;
-            }
-            document.getElementById('adminAppointmentsTitle').textContent = titleText;
-            console.log(`Admin: Showing ${category} appointments.`);
-        }
 
         // --- Patient-Specific Functionality ---
 
@@ -1982,7 +1965,7 @@
 
         // --- Admin-Specific Functionality ---
 
-        // Load Pending Appointment Requests for Admin
+        // Load Pending Appointment Requests for Admin (This will be the main view for Admin Appointments section)
         function loadAdminAppointments() {
             const adminPendingAppointmentsListDiv = document.getElementById('adminPendingAppointmentsList');
             if (!currentUser || !isAdmin) {
@@ -1991,10 +1974,9 @@
             }
             console.log("Admin: Loading pending appointment requests.");
             onValue(ref(database, 'appointments'), (snapshot) => {
-                adminPendingAppointmentsListDiv.innerHTML = '';
-                let hasAppointments = false;
+                adminPendingAppointmentsListDiv.innerHTML = ''; // Clear previous content
+                let hasPendingAppointments = false;
                 const rawSnapshotData = snapshot.val();
-                console.log("Admin: Raw appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
 
                 if (rawSnapshotData) {
                     const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
@@ -2002,8 +1984,7 @@
                     pendingAppointments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
                     pendingAppointments.forEach((appt) => {
-                        console.log("Admin: Processing individual pending appointment:", appt.id, appt);
-                        hasAppointments = true;
+                        hasPendingAppointments = true;
                         const statusClass = `status-${appt.status}`;
                         const displayDateTime = appt.appointmentDate && appt.appointmentTime
                             ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
@@ -2026,10 +2007,11 @@
                         `;
                     });
                 }
-                if (!hasAppointments) {
+                if (!hasPendingAppointments) {
                     adminPendingAppointmentsListDiv.innerHTML = '<p>No pending appointment requests found.</p>';
                 }
                 console.log("Admin: Pending appointments loaded. Total displayed elements:", adminPendingAppointmentsListDiv.children.length);
+                // Re-attach event listeners after content is updated
                 document.querySelectorAll('#adminPendingAppointmentsList .btn-approve').forEach(button => {
                     button.onclick = (e) => approveAppointment(e.target.dataset.id);
                 });
@@ -2041,103 +2023,7 @@
             });
         }
 
-        // Load Approved Appointment Requests for Admin
-        function loadAdminApprovedAppointments() {
-            const adminApprovedAppointmentsListDiv = document.getElementById('adminApprovedAppointmentsList');
-            if (!currentUser || !isAdmin) {
-                adminApprovedAppointmentsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
-                return;
-            }
-            console.log("Admin: Loading approved appointment requests.");
-            onValue(ref(database, 'appointments'), (snapshot) => {
-                adminApprovedAppointmentsListDiv.innerHTML = '';
-                let hasAppointments = false;
-                const rawSnapshotData = snapshot.val();
-
-                if (rawSnapshotData) {
-                    const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                    const approvedAppointments = appointmentsArray.filter(appt => appt.status === 'approved');
-                    approvedAppointments.sort((a, b) => {
-                        const dateA = appt.appointmentDate && appt.appointmentTime ? new Date(`${appt.appointmentDate}T${appt.appointmentTime}`) : new Date(appt.createdAt);
-                        const dateB = appt.appointmentDate && appt.appointmentTime ? new Date(`${appt.appointmentDate}T${appt.appointmentTime}`) : new Date(appt.createdAt);
-                        return dateB - dateA;
-                    });
-
-                    approvedAppointments.forEach((appt) => {
-                        hasAppointments = true;
-                        const statusClass = `status-${appt.status}`;
-                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
-                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
-                            : appt.time || 'N/A';
-                        adminApprovedAppointmentsListDiv.innerHTML += `
-                            <div class="appointment-card admin-card approved-status">
-                                <h4>Appointment for ${appt.fullName}</h4>
-                                <p><strong>Email:</strong> ${appt.email}</p>
-                                <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
-                                <p><strong>Date & Time:</strong> ${displayDateTime}</p>
-                                <p><strong>Reason:</strong> ${appt.reason}</p>
-                                <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${appt.id}</p>
-                            </div>
-                        `;
-                    });
-                }
-                if (!hasAppointments) {
-                    adminApprovedAppointmentsListDiv.innerHTML = '<p>No approved appointment requests found.</p>';
-                }
-                console.log("Admin: Approved appointments loaded. Total displayed elements:", adminApprovedAppointmentsListDiv.children.length);
-            }, {
-                onlyOnce: false
-            });
-        }
-
-        // Load Denied Appointment Requests for Admin
-        function loadAdminDeniedAppointments() {
-            const adminDeniedAppointmentsListDiv = document.getElementById('adminDeniedAppointmentsList');
-            if (!currentUser || !isAdmin) {
-                adminDeniedAppointmentsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
-                return;
-            }
-            console.log("Admin: Loading denied appointment requests.");
-            onValue(ref(database, 'appointments'), (snapshot) => {
-                adminDeniedAppointmentsListDiv.innerHTML = '';
-                let hasAppointments = false;
-                const rawSnapshotData = snapshot.val();
-
-                if (rawSnapshotData) {
-                    const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                    const deniedAppointments = appointmentsArray.filter(appt => appt.status === 'denied');
-                    deniedAppointments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-                    deniedAppointments.forEach((appt) => {
-                        hasAppointments = true;
-                        const statusClass = `status-${appt.status}`;
-                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
-                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
-                            : appt.time || 'N/A';
-                        adminDeniedAppointmentsListDiv.innerHTML += `
-                            <div class="appointment-card admin-card denied-status">
-                                <h4>Appointment for ${appt.fullName}</h4>
-                                <p><strong>Email:</strong> ${appt.email}</p>
-                                <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
-                                <p><strong>Date & Time:</strong> ${displayDateTime}</p>
-                                <p><strong>Reason:</strong> ${appt.reason}</p>
-                                <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${appt.id}</p>
-                            </div>
-                        `;
-                    });
-                }
-                if (!hasAppointments) {
-                    adminDeniedAppointmentsListDiv.innerHTML = '<p>No denied appointment requests found.</p>';
-                }
-                console.log("Admin: Denied appointments loaded. Total displayed elements:", adminDeniedAppointmentsListDiv.children.length);
-            }, {
-                onlyOnce: false
-            });
-        }
+        // Removed loadAdminApprovedAppointments and loadAdminDeniedAppointments as per instruction
 
         // Approve Appointment
         async function approveAppointment(apptId) {
@@ -2155,6 +2041,7 @@
                      adminCalendarInstance.refetchEvents();
                      console.log("Admin: Calendar events refetched after approval.");
                 }
+                // The onValue listener in loadAdminAppointments will automatically remove it from pending.
             } catch (error) {
                 console.error("Admin: Error approving appointment:", error);
                 showMessage(`Error approving appointment: ${error.message}`, true);
@@ -2177,6 +2064,7 @@
                     adminCalendarInstance.refetchEvents();
                     console.log("Admin: Calendar events refetched after denial.");
                 }
+                // The onValue listener in loadAdminAppointments will automatically remove it from pending.
             } catch (error) {
                 console.error("Admin: Error denying appointment:", error);
                 showMessage(`Error denying appointment: ${error.message}`, true);
@@ -2341,6 +2229,7 @@
                     // Add event listeners for the new buttons for this specific patient
                     document.getElementById('viewPatientMentalHealthResultsBtn').onclick = () => loadPatientDataSection(patientId, 'mentalHealthTests');
                     document.getElementById('viewPatientTmsQuestionnairesBtn').onclick = () => loadPatientDataSection(patientId, 'tmsQuestionnaires');
+                    document.getElementById('viewPatientBookedAppointmentsBtn').onclick = () => loadPatientDataSection(patientId, 'bookedAppointments');
 
                 } else {
                     document.getElementById('patientDetailView').innerHTML = '<p>Patient not found.</p>';
@@ -2352,7 +2241,7 @@
             }
         }
 
-        // Load specific patient data section (Mental Health Tests or TMS Questionnaires)
+        // Load specific patient data section (Mental Health Tests or TMS Questionnaires or Booked Appointments)
         async function loadPatientDataSection(patientId, dataType) {
             if (!currentUser || !isAdmin || !patientId) {
                 showMessage('Unauthorized action or no patient selected.', true);
@@ -2426,6 +2315,43 @@
                 } else {
                     contentHtml = '<p>No TMS daily questionnaires found for this patient.</p>';
                 }
+            } else if (dataType === 'bookedAppointments') {
+                const appointmentsSnapshot = await get(ref(database, 'appointments'));
+                const bookedAppointments = [];
+                if (appointmentsSnapshot.exists()) {
+                    appointmentsSnapshot.forEach(child => {
+                        const appt = child.val();
+                        if (appt.userId === patientId && appt.status === 'approved') {
+                            bookedAppointments.push(appt);
+                        }
+                    });
+                }
+                
+                bookedAppointments.sort((a, b) => {
+                    const dateA = new Date(`${a.appointmentDate}T${a.appointmentTime}`);
+                    const dateB = new Date(`${b.appointmentDate}T${b.appointmentTime}`);
+                    return dateB - dateA; // Sort by most recent first
+                });
+
+                if (bookedAppointments.length > 0) {
+                    hasResults = true;
+                    contentHtml += '<h3 style="margin-bottom: 15px;">Booked Appointments:</h3>';
+                    bookedAppointments.forEach(appt => {
+                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
+                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
+                            : appt.time || 'N/A';
+                        contentHtml += `
+                            <div class="appointment-card booked-appt-card" style="margin-bottom: 15px;">
+                                <h4>Appointment on ${displayDateTime}</h4>
+                                <p><strong>Reason:</strong> ${appt.reason}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Approved on: ${new Date(appt.createdAt).toLocaleString()}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    contentHtml = '<p>No booked appointments found for this patient.</p>';
+                }
+
             } else {
                 contentHtml = '<p>Invalid data type requested.</p>';
                 console.error("Admin: Invalid dataType provided to loadPatientDataSection:", dataType);
@@ -2502,16 +2428,20 @@
 
             adminCalendarInstance = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
+                initialDate: '2025-06-01', // Set initial date to June 2025 for consistent testing
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 // Crucial for enabling interaction with the calendar navigation buttons
-                // By default, this is true. Explicitly setting it to ensure it's not accidentally false.
                 navLinks: true, 
                 editable: false, // Prevents dragging/resizing events unless needed
                 selectable: false, // Prevents date range selection unless needed
+                // Added for better debugging and to ensure render
+                datesSet: function(dateInfo) {
+                    console.log("Calendar: Current date range set:", dateInfo.startStr, "to", dateInfo.endStr);
+                },
 
                 // Customize event display to include a green circle
                 eventContent: function(arg) {
@@ -2522,7 +2452,7 @@
                     return { html: `<span>${arg.event.title}</span>` };
                 },
                 events: async function(fetchInfo, successCallback, failureCallback) {
-                    console.log("Calendar: events callback fired. Fetching approved appointments from Firebase.");
+                    console.log("Calendar: events callback fired. Fetching approved appointments from Firebase for range:", fetchInfo.startStr, "to", fetchInfo.endStr);
                     onValue(ref(database, 'appointments'), async (snapshot) => {
                         const rawSnapshotData = snapshot.val();
                         console.log("Calendar: Raw appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
@@ -2554,10 +2484,10 @@
 
                                 // Case 1: New appointments with precise date and time (YYYY-MM-DD and HH:MM)
                                 if (appt.appointmentDate && appt.appointmentTime) {
-                                    eventStart = `${appt.appointmentDate}T${appt.appointmentTime}:00`; // YYYY-MM-DDTHH:MM:SS
+                                    eventStart = `${appt.appointmentDate}T${appt.appointmentTime}:00`; //YYYY-MM-DDTHH:MM:SS
                                     const startDateTime = new Date(eventStart);
                                     const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // Assume 1-hour appointment
-                                    eventEnd = endDateTime.toISOString().slice(0, 19); // YYYY-MM-DDTHH:MM:SS
+                                    eventEnd = endDateTime.toISOString().slice(0, 19); //YYYY-MM-DDTHH:MM:SS
                                     
                                     displayTimeForModal = startDateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                                     eventTitle = `Appt with ${patientFirstName}`; 
@@ -2720,10 +2650,10 @@
                 }
             });
 
-            // Set up admin appointment category buttons
-            document.getElementById('showPendingAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing pending appointments."); showAdminAppointmentCategory('pending'); });
-            document.getElementById('showApprovedAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing approved appointments."); showAdminAppointmentCategory('approved'); });
-            document.getElementById('showDeniedAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing denied appointments."); showAdminAppointmentCategory('denied'); });
+            // Removed category button event listeners
+            // document.getElementById('showPendingAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing pending appointments."); showAdminAppointmentCategory('pending'); });
+            // document.getElementById('showApprovedAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing approved appointments."); showAdminAppointmentCategory('approved'); });
+            // document.getElementById('showDeniedAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing denied appointments."); showAdminAppointmentCategory('denied'); });
 
 
             // Set up admin patient management buttons
@@ -2736,7 +2666,7 @@
             // Event listeners for the new separated buttons will be attached in showPatientDetails()
             // document.getElementById('viewPatientMentalHealthResultsBtn').addEventListener('click', () => loadPatientDataSection(currentPatientIdInAdminView, 'mentalHealthTests'));
             // document.getElementById('viewPatientTmsQuestionnairesBtn').addEventListener('click', () => loadPatientDataSection(currentPatientIdInAdminView, 'tmsQuestionnaires'));
-
+            // The "bookedAppointments" button listener is now added directly in showPatientDetails()
 
             // Check Firebase Auth state on page load
             onAuthStateChanged(auth, (user) => {
