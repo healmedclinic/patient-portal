@@ -137,6 +137,14 @@
             display: inline-block; /* Allows text to wrap without full width */
             text-decoration: none; /* Remove underline for anchor tag */
             text-align: center;
+            margin-right: 10px; /* Space between multiple buttons */
+        }
+        .btn.upload-btn {
+            width: auto;
+            padding: 8px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 0; /* Reset default margin */
         }
 
         .btn:hover {
@@ -314,6 +322,29 @@
         }
         .admin-card.denied-status {
              background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); /* Red for denied */
+        }
+        .admin-card .document-image {
+            max-width: 100px; /* Small preview size */
+            max-height: 100px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 2px solid rgba(255,255,255,0.6);
+            cursor: zoom-in; /* Indicate it's clickable for full view */
+            transition: transform 0.2s;
+        }
+        .admin-card .document-image:hover {
+            transform: scale(1.05);
+        }
+        .admin-card .document-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(255,255,255,0.5);
+        }
+        .admin-card .document-item {
+            margin-bottom: 10px;
         }
 
 
@@ -654,7 +685,8 @@
                     <li data-section="mentalHealth">Mental Health Tests</li>
                     <li data-section="healthRecords">Health Records</li>
                     <li data-section="profile">Profile</li>
-                    <li data-section="consentForms">Consent Forms</li> <!-- New Patient Section -->
+                    <li data-section="forms">Forms</li> <!-- Updated Patient Section Name -->
+                    <!-- Removed Document Uploads sidebar item -->
                 </ul>
             </div>
             <div class="main-content">
@@ -734,12 +766,17 @@
                     <div id="profileInfo"></div>
                 </div>
 
-                <!-- Patient Consent Forms Section -->
-                <div id="consentFormsSection" class="section hidden">
-                    <h2>Consent Forms</h2>
-                    <p>Please review and complete any necessary consent forms below.</p>
+                <!-- Patient Forms Section (Updated Name and Content) -->
+                <div id="formsSection" class="section hidden">
+                    <h2>Forms</h2>
+                    <p>Please review and complete any necessary forms below.</p>
                     <a href="https://v-gedipudi1.github.io/consent-forms/" target="_blank" class="btn external-link-btn">TMS Consent Form</a>
+                    <a href="https://www.jotform.com/sign/251304457972056/invite/01jtzza5kqcb83f96f3923b7ac" target="_blank" class="btn external-link-btn">New Patient Form</a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScOt3ov7drpfVaJ3GPPa3GyyEG4i3qErkgpz704BUxhGItg6Q/viewform?usp=header" target="_blank" class="btn external-link-btn">Upload ID and Insurance Form</a>
                 </div>
+
+                <!-- Removed NEW: Document Uploads Section -->
+
             </div>
         </div>
 
@@ -753,7 +790,7 @@
                     <li data-section="patients">Patient Management</li>
                     <li data-section="testResults">Test Results</li>
                     <li data-section="calendar">Calendar</li>
-                    <li data-section="doctorPortal">Doctor Portal</li> <!-- Admin Sidebar Link for Doctor Portal -->
+                    <li data-section="doctorPortal">Doctor Portal</li>
                 </ul>
             </div>
             <div class="main-content">
@@ -778,7 +815,7 @@
                 </div>
 
                 <!-- Admin Patients Section -->
-                <div id="adminPatientsSection" class="section hidden">
+                <div id="adminPatientsSection" class="section">
                     <h2>Patient Management</h2>
                     <button class="btn" id="showAddPatientFormBtn">Add New Patient (via Admin)</button>
                     <div id="patientsList"></div>
@@ -829,11 +866,11 @@
                     <div id="calendar"></div> <!-- FullCalendar will render here -->
                 </div>
 
-                <!-- Admin Doctor Portal Section (FIXED ID) -->
+                <!-- Admin Doctor Portal Section -->
                 <div id="adminDoctorPortalSection" class="section hidden">
                     <h2>Doctor Portal</h2>
                     <p>Access the specialized doctor's interface here.</p>
-                    <a href="https://v-gedipudi1.github.io/consent-forms/doctor_portal.html" target="_blank" class="btn external-link-btn">Access Doctor Portal</a> <!-- Doctor Portal Button -->
+                    <a href="https://v-gedipudi1.github.io/consent-forms/doctor_portal.html" target="_blank" class="btn external-link-btn">Access Doctor Portal</a>
                 </div>
             </div>
         </div>
@@ -852,6 +889,8 @@
             <p><strong>Status:</strong> <span id="modalEventStatus"></span></p>
         </div>
     </div>
+
+    <!-- Removed Modal for full size image view -->
 
 
     <!-- FullCalendar JavaScript (Must be loaded AFTER the DOM elements) -->
@@ -874,12 +913,14 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
         import { getDatabase, ref, set, push, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        // Removed Firebase Storage imports
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
 
         // --- Initialize Firebase Services ---
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const database = getDatabase(app);
+        // Removed storage initialization
         const analytics = getAnalytics(app);
 
         // --- Global State Variables ---
@@ -963,7 +1004,7 @@
                         }
                     }
                     return 'N/A';
-                }
+                        }
             },
             adhd: {
                 title: 'ADHD Screening',
@@ -1195,9 +1236,6 @@
                 targetListItem.classList.add('active');
             }
 
-            // This is the crucial part for showing the section
-            // The sectionId is 'doctorPortal' but the div ID is 'adminDoctorPortalSection'
-            // Construct the ID correctly: admin + capitalized sectionId + Section
             const targetSectionId = `admin${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)}Section`;
             const targetSectionElement = document.getElementById(targetSectionId);
             
@@ -1239,7 +1277,7 @@
                     titleText = "Approved Appointments (Historical)";
                     break;
                 case 'denied':
-                    document.getElementById('adminDeniedAppointmentsList').classList.remove('hidden');
+                    document.getElementById('adminDeniedAppointmentsList').classList.add('hidden');
                     document.getElementById('showDeniedAppointmentsBtn').classList.add('active-category');
                     loadAdminDeniedAppointments(); // Load denied appointments
                     titleText = "Denied Appointments (Historical)";
@@ -1762,14 +1800,14 @@
             }
         }
 
-        // Load All Patients for Admin
+        // Load All Patients for Admin (Reverted to no document images as they are external now)
         function loadPatientsList() {
             const patientsListDiv = document.getElementById('patientsList');
             if (!currentUser || !isAdmin) {
                 patientsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
-            console.log("Admin: Loading all patients.");
+            console.log("Admin: Loading all patients (without document images).");
             onValue(ref(database, 'patients'), (snapshot) => {
                 patientsListDiv.innerHTML = '';
                 let hasPatients = false;
@@ -2078,6 +2116,7 @@
             document.getElementById('submitTestBtn').addEventListener('click', submitTest);
             document.getElementById('cancelTestBtn').addEventListener('click', cancelTest);
 
+            // Removed patient document upload buttons and their listeners
 
             // Set up patient sidebar navigation using event delegation
             document.getElementById('patientSidebarNav').addEventListener('click', (event) => {
@@ -2111,6 +2150,8 @@
             document.getElementById('showAddPatientFormBtn').addEventListener('click', showAddPatientForm);
             document.getElementById('addPatientBtn').addEventListener('click', addPatient);
             document.getElementById('hideAddPatientFormBtn').addEventListener('click', hideAddPatientForm);
+
+            // Removed Image viewer modal close button and its window listener
 
 
             // Check Firebase Auth state on page load
