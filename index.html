@@ -2385,7 +2385,8 @@
             if (ampm === 'pm' && hour < 12) hour += 12;
             if (ampm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
 
-            let resultDate = new Date(now);
+            // Start with today's date components, then set the target hour and minute
+            let resultDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             resultDate.setHours(hour, 0, 0, 0); // Set desired time for today
 
             let currentDayIndex = resultDate.getDay();
@@ -2397,8 +2398,8 @@
             }
 
             resultDate.setDate(resultDate.getDate() + dayDifference);
-            console.log("Calendar: Parsed legacy time string to Date object:", resultDate.toISOString());
-            return resultDate;
+            console.log("Calendar: Parsed legacy time string to Date object (local timezone):", resultDate.toLocaleString());
+            return resultDate; // Return the Date object
         }
 
 
@@ -2428,25 +2429,25 @@
 
             adminCalendarInstance = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                initialDate: '2025-06-01', // Set initial date to June 2025 for consistent testing
+                // Removed initialDate to let it default to today's date for better navigation interaction
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
-                // Crucial for enabling interaction with the calendar navigation buttons
                 navLinks: true, 
-                editable: false, // Prevents dragging/resizing events unless needed
-                selectable: false, // Prevents date range selection unless needed
-                // Added for better debugging and to ensure render
+                editable: false, 
+                selectable: false, 
+                dayMaxEvents: true, 
                 datesSet: function(dateInfo) {
                     console.log("Calendar: Current date range set:", dateInfo.startStr, "to", dateInfo.endStr);
                 },
 
-                // Customize event display to include a green circle
                 eventContent: function(arg) {
-                    // console.log("Calendar: Rendering event content for:", arg.event.title, "with classNames:", arg.event.classNames);
-                    if (arg.event.classNames.includes('approved-event')) {
+                    // Robust check to ensure classNames is always an array
+                    const classNames = Array.isArray(arg.event.classNames) ? arg.event.classNames : [];
+                    
+                    if (classNames.includes('approved-event')) {
                         return { html: `<div class="event-circle"></div><span>${arg.event.title}</span>` };
                     }
                     return { html: `<span>${arg.event.title}</span>` };
@@ -2463,7 +2464,6 @@
                             const approvedAppointments = appointmentsArray.filter(appt => appt.status === 'approved');
                             console.log("Calendar: Filtered approved appointments:", approvedAppointments);
 
-                            // Fetch patient names for event titles
                             const patientPromises = approvedAppointments.map(appt => get(ref(database, 'patients/' + appt.userId)));
                             const patientSnapshots = await Promise.all(patientPromises);
                             const patientMap = {};
@@ -2484,28 +2484,46 @@
 
                                 // Case 1: New appointments with precise date and time (YYYY-MM-DD and HH:MM)
                                 if (appt.appointmentDate && appt.appointmentTime) {
-                                    eventStart = `${appt.appointmentDate}T${appt.appointmentTime}:00`; //YYYY-MM-DDTHH:MM:SS
-                                    const startDateTime = new Date(eventStart);
-                                    const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // Assume 1-hour appointment
-                                    eventEnd = endDateTime.toISOString().slice(0, 19); //YYYY-MM-DDTHH:MM:SS
+                                    // Construct Date object in local time
+                                    const year = parseInt(appt.appointmentDate.substring(0, 4));
+                                    const month = parseInt(appt.appointmentDate.substring(5, 7)) - 1; // Month is 0-indexed
+                                    const day = parseInt(appt.appointmentDate.substring(8, 10));
+                                    const hour = parseInt(appt.appointmentTime.substring(0, 2));
+                                    const minute = parseInt(appt.appointmentTime.substring(3, 5));
+
+                                    const startDateTime = new Date(year, month, day, hour, minute, 0, 0);
+                                    
+                                    // Calculate end time by adding 1 hour to the local time
+                                    const endDateTime = new Date(startDateTime); // Clone start time
+                                    endDateTime.setHours(startDateTime.getHours() + 1);
+
+                                    // Pass Date objects directly to FullCalendar
+                                    eventStart = startDateTime;
+                                    eventEnd = endDateTime;
+                                    
+                                    // Updated Debugging Log
+                                    console.log(`Calendar: Debugging NEW event times for ID ${appt.id}. ` + 
+                                                `Original Firebase: ${appt.appointmentDate} ${appt.appointmentTime}, ` +
+                                                `Start (local Date object): ${eventStart.toLocaleString()}, ` +
+                                                `End (local Date object, +1hr): ${eventEnd.toLocaleString()}`);
                                     
                                     displayTimeForModal = startDateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                                     eventTitle = `Appt with ${patientFirstName}`; 
 
-                                    console.log(`Calendar: Event (NEW) ID: ${appt.id}, Title: "${eventTitle}", Start: "${eventStart}", End: "${eventEnd}"`);
+                                    console.log(`Calendar: Event (NEW) ID: ${appt.id}, Title: "${eventTitle}", Start: "${eventStart.toISOString()}", End: "${eventEnd.toISOString()}"`);
 
                                 } 
                                 // Case 2: Legacy appointments with only day and time string (e.g., "Friday 1-2 PM")
                                 else if (appt.time) {
-                                    const inferredDate = getNextOccurringDateTime(appt.time);
+                                    const inferredDate = getNextOccurringDateTime(appt.time); // This returns a Date object
                                     if (inferredDate) {
-                                        eventStart = inferredDate.toISOString().slice(0, 19);
-                                        const endDateTime = new Date(inferredDate.getTime() + 60 * 60 * 1000); // Assume 1-hour appt
-                                        eventEnd = endDateTime.toISOString().slice(0, 19);
+                                        eventStart = inferredDate;
+                                        const endDateTime = new Date(inferredDate.getTime() + 60 * 60 * 1000); // Add 1 hour to the timestamp
+                                        eventEnd = endDateTime;
                                         
                                         displayTimeForModal = appt.time; // Use original string for modal
                                         eventTitle = `Appt (Legacy) ${patientFirstName}`;
-                                        console.log(`Calendar: Event (LEGACY) ID: ${appt.id}, Title: "${eventTitle}", Inferred Start: "${eventStart}", Inferred End: "${eventEnd}"`);
+                                        console.log(`Calendar: Event (LEGACY) ID: ${appt.id}, Title: "${eventTitle}", Inferred Start: "${eventStart.toLocaleString()}", Inferred End: "${eventEnd.toLocaleString()}"`);
                                     } else {
                                         console.error(`Calendar: Could not infer date for legacy appointment ID ${appt.id} with time: ${appt.time}. Skipping event.`);
                                         return; // Skip this event if date inference fails
@@ -2515,49 +2533,42 @@
                                     return; // Skip this event if no valid date/time
                                 }
                                 
-                                // Push the valid event to the array
                                 events.push({
                                     id: appt.id,
                                     title: eventTitle,
-                                    start: eventStart,
-                                    end: eventEnd,
-                                    allDay: false, // These are time-specific appointments
-                                    classNames: ['approved-event'], // Add a class for specific styling
-                                    extendedProps: { // Custom properties for the modal
+                                    start: eventStart, // Now passing Date object directly
+                                    end: eventEnd,     // Now passing Date object directly
+                                    allDay: false, 
+                                    classNames: ['approved-event'], 
+                                    extendedProps: { 
                                         patientName: patientMap[appt.userId] || 'N/A',
                                         patientEmail: appt.email,
                                         patientPhone: appt.phoneNumber,
                                         reason: appt.reason,
                                         status: appt.status,
-                                        displayTime: displayTimeForModal, // Store the formatted/original time for the modal
-                                        originalApptDate: appt.appointmentDate // Store original date for debugging/formatting
+                                        displayTime: displayTimeForModal, 
+                                        originalApptDate: appt.appointmentDate 
                                     }
                                 });
                             });
                         }
                         console.log("Calendar: Final events array passed to FullCalendar:", events);
-                        successCallback(events); // Call FullCalendar's success callback with the events
+                        successCallback(events); 
                     }, (error) => {
                         console.error("Calendar: Error fetching appointments from Firebase:", error);
-                        failureCallback(error); // Call FullCalendar's failure callback
+                        failureCallback(error); 
                     });
                 },
-                // Handler for when an event is clicked on the calendar
                 eventClick: function(info) {
                     console.log("Calendar: Event clicked:", info.event.id, info.event.title);
                     const event = info.event;
                     const props = event.extendedProps;
                     
-                    // Safely get start date and format
                     let startDateTime = null;
-                    try {
-                        startDateTime = new Date(event.start);
-                        if (isNaN(startDateTime.getTime())) { // Check for "Invalid Date"
-                            console.warn("Calendar: Invalid start date for event:", event.id, event.start);
-                            startDateTime = new Date(); // Fallback to current date
-                        }
-                    } catch (e) {
-                        console.error("Calendar: Error parsing event start date:", e);
+                    if (event.start instanceof Date && !isNaN(event.start.getTime())) {
+                        startDateTime = event.start;
+                    } else {
+                        console.warn("Calendar: Event start date is not a valid Date object for event:", event.id, event.start);
                         startDateTime = new Date(); // Fallback
                     }
 
@@ -2571,12 +2582,12 @@
                     document.getElementById('modalEventReason').textContent = props.reason;
                     document.getElementById('modalEventStatus').textContent = props.status.toUpperCase();
 
-                    eventDetailsModal.classList.remove('hidden'); // Show the modal
+                    eventDetailsModal.classList.remove('hidden'); 
                     console.log("Calendar: Event details modal displayed.");
                 }
             });
 
-            adminCalendarInstance.render(); // Render the calendar for the first time
+            adminCalendarInstance.render(); 
             console.log("Calendar: FullCalendar instance rendered.");
 
             closeModalBtn.onclick = function() {
