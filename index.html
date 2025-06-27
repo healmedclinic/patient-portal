@@ -65,26 +65,78 @@
         }
 
 
-        /* Login Screen */
-        .login-screen {
-            padding: 60px;
-            text-align: center;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100%; /* Take full height of its parent (container) */
+        /* Login Screen - NEW FLEXBOX LAYOUT */
+        .login-screen-wrapper {
             display: flex;
-            align-items: center;
+            flex-direction: row; /* Default to row for larger screens */
             justify-content: center;
-            flex-direction: column;
+            align-items: flex-start; /* Align items to the top if they have different heights */
+            width: 100%;
+            padding: 20px;
+            gap: 30px; /* Space between the two columns */
+            flex-grow: 1; /* Allow it to grow and fill space */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* Background for the whole area */
         }
 
-        .login-form {
-            max-width: 400px;
-            margin: 0 auto;
+        /* Specific styling for the login form and public access box */
+        .login-form-container, .public-access-container {
             background: white;
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            flex-shrink: 0; /* Prevent shrinking */
         }
+
+        .login-form-container {
+            width: 450px; /* Fixed width for login form, adjust as needed */
+            max-width: 100%; /* Ensure it doesn't overflow on very small screens */
+        }
+
+        .public-access-container {
+            width: 450px; /* Fixed width for public access, adjust as needed */
+            max-width: 100%; /* Ensure it doesn't overflow on very small screens */
+            display: flex;
+            flex-direction: column;
+        }
+        .public-access-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .public-access-buttons {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            gap: 15px; /* Spacing between buttons */
+            margin-bottom: 20px; /* Space below buttons before info boxes */
+        }
+
+        .public-access-buttons .btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); /* Green for public access */
+            padding: 15px;
+            font-size: 1.1em;
+            width: 100%; /* Ensure full width within its container */
+            margin-bottom: 0; /* Override default btn margin */
+            text-decoration: none !important; /* NEW: Remove underline */
+            text-align: center; /* NEW: Center text */
+        }
+        .public-access-buttons .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .info-box {
+            background: #e9ecef;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 0.95em;
+            color: #333;
+            line-height: 1.5;
+            margin-top: 15px; /* Space between info boxes */
+        }
+
 
         .login-form h2 {
             margin-bottom: 30px;
@@ -92,9 +144,14 @@
             font-size: 28px;
         }
 
+        /* NEW: Centering buttons in login/signup forms */
+        .login-form {
+            text-align: center; /* Center all block/inline-block children */
+        }
+
         .form-group {
             margin-bottom: 20px;
-            text-align: left;
+            text-align: left; /* Keep labels/inputs left-aligned within their group */
         }
 
         .form-group label {
@@ -129,21 +186,23 @@
             cursor: pointer;
             transition: transform 0.2s;
             margin-bottom: 10px;
+            text-decoration: none !important; /* NEW: Remove underline */
+            text-align: center; /* NEW: Center text */
         }
         .btn.external-link-btn { /* Style for external link buttons */
             width: auto;
             padding: 10px 25px;
             margin-top: 15px;
             display: inline-block; /* Allows text to wrap without full width */
-            text-decoration: none; /* Remove underline for anchor tag */
-            text-align: center;
+            text-decoration: none !important; /* NEW: Remove underline */
+            text-align: center; /* NEW: Center text */
             margin-right: 10px; /* Space between multiple buttons */
         }
         /* Style for patient list buttons in admin panel */
         .btn.patient-card-btn {
             background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); /* Admin patient card background */
             color: white;
-            text-align: left; /* Align text to the left */
+            text-align: left; /* Keep left-aligned for more content */
             padding: 15px 20px;
             margin-bottom: 15px;
             border-radius: 10px;
@@ -152,6 +211,7 @@
             font-weight: bold;
             display: block; /* Ensure it takes full width and stacks */
             width: 100%;
+            text-decoration: none !important; /* NEW: Remove underline */
         }
         .btn.patient-card-btn:hover {
             transform: translateY(-3px);
@@ -160,18 +220,20 @@
 
         /* New buttons for viewing specific patient data */
         .btn.view-patient-data-btn {
-            background: #28a745; /* Green color */
+            background: #28a745;
             color: white;
-            width: auto; /* Adjust to content */
+            width: auto;
             padding: 10px 20px;
             border-radius: 8px;
             font-size: 15px;
-            margin-right: 10px; /* Space between the two view buttons */
-            margin-bottom: 10px; /* Space below if they wrap */
+            margin-right: 10px;
+            margin-bottom: 10px;
             display: inline-block;
+            text-decoration: none !important; /* NEW: Remove underline */
+            text-align: center; /* NEW: Center text */
         }
         .btn.view-patient-data-btn.booked-appointments {
-            background: linear-gradient(135deg, #ff8c00 0%, #ff5722 100%); /* Orange for booked appointments */
+            background: linear-gradient(135deg, #ff8c00 0%, #ff5722 100%);
         }
         .btn.view-patient-data-btn:hover {
             background: #218838;
@@ -182,8 +244,8 @@
         }
         .patient-data-buttons-container {
             display: flex;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
-            gap: 10px; /* Space between buttons */
+            flex-wrap: wrap;
+            gap: 10px;
             margin-top: 20px;
             margin-bottom: 20px;
         }
@@ -195,33 +257,35 @@
         .btn-secondary {
             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             color: #333;
+            text-decoration: none !important; /* NEW: Remove underline */
+            text-align: center; /* NEW: Center text */
         }
 
         .link-btn {
             background: none;
             color: #667eea;
-            text-decoration: underline;
+            text-decoration: none !important; /* NEW: Remove underline */
             border: none;
             cursor: pointer;
             font-size: 14px;
+            padding: 0;
+            display: inline-block; /* Essential for text-align to work on parent */
         }
         
         .radio-group-inline {
-            display: flex; /* Use flexbox for inline radios */
-            flex-wrap: wrap; /* Allow wrapping */
-            gap: 15px; /* Space between options */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
             margin-bottom: 10px;
         }
         .radio-option-inline {
             display: inline-flex;
             align-items: center;
-            /* margin-right: 15px; Removed due to gap */
-            /* margin-bottom: 10px; Removed due to gap */
         }
         .radio-option-inline input[type="radio"] {
             margin-right: 5px;
-            width: auto; /* Override 100% width from form-group input */
-            margin-top: 0; /* Align with text */
+            width: auto;
+            margin-top: 0;
         }
         .follow-up-question {
             margin-top: 10px;
@@ -242,8 +306,8 @@
         /* Dashboard */
         .dashboard {
             display: flex;
-            min-height: 100%; /* Take full height of its parent (container) */
-            position: relative; /* For logout button positioning */
+            min-height: 100%;
+            position: relative;
         }
 
         .sidebar {
@@ -251,7 +315,7 @@
             background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
             color: white;
             padding: 30px 0;
-            flex-shrink: 0; /* Prevent sidebar from shrinking */
+            flex-shrink: 0;
         }
 
         .sidebar h3 {
@@ -268,6 +332,7 @@
             padding: 15px 30px;
             cursor: pointer;
             transition: background-color 0.3s;
+            text-align: center; /* NEW: Center sidebar items text */
         }
 
         .sidebar li:hover, .sidebar li.active {
@@ -278,7 +343,7 @@
             flex: 1;
             padding: 40px;
             background: #f8f9fa;
-            overflow-y: auto; /* Allow scrolling for main content */
+            overflow-y: auto;
         }
 
         .section {
@@ -286,7 +351,7 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            margin-bottom: 20px; /* Add margin between sections */
+            margin-bottom: 20px;
         }
 
         .section h2 {
@@ -303,7 +368,7 @@
             border-radius: 10px;
             margin-bottom: 15px;
         }
-        .appointment-card.booked-appt-card { /* New style for booked appointments */
+        .appointment-card.booked-appt-card {
             background: linear-gradient(135deg, #ff8c00 0%, #ff5722 100%);
         }
 
@@ -337,6 +402,8 @@
             margin-bottom: 15px;
             cursor: pointer;
             transition: transform 0.2s;
+            text-decoration: none !important; /* NEW: Remove underline */
+            text-align: center; /* NEW: Center text */
         }
 
         .test-card:hover {
@@ -348,7 +415,7 @@
             padding: 20px;
             background: #f8f9fa;
             border-radius: 10px;
-            color: #333; /* Ensure text is readable */
+            color: #333;
         }
 
         .question h4 {
@@ -377,16 +444,16 @@
             background: #e9ecef;
         }
 
-        .test-result-item { /* Changed from test-result to avoid conflict */
+        .test-result-item {
             background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
             color: white;
             padding: 20px;
             border-radius: 10px;
             margin-top: 20px;
-            margin-bottom: 15px; /* Add margin for list items */
+            margin-bottom: 15px;
         }
         .tms-questionnaire-item {
-            background: linear-gradient(135deg, #f0932b 0%, #eb4d4b 100%); /* Orange/Red gradient for TMS */
+            background: linear-gradient(135deg, #f0932b 0%, #eb4d4b 100%);
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -394,7 +461,7 @@
             margin-bottom: 15px;
         }
         .tms-questionnaire-item ul {
-            list-style: none; /* Remove default list bullets */
+            list-style: none;
             padding-left: 0;
             margin-top: 10px;
         }
@@ -412,18 +479,18 @@
             margin-bottom: 15px;
         }
         .admin-card.approved-status {
-             background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); /* Green for approved */
+             background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
         }
         .admin-card.denied-status {
-             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); /* Red for denied */
+             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
         }
         .admin-card .document-image {
-            max-width: 100px; /* Small preview size */
+            max-width: 100px;
             max-height: 100px;
             border-radius: 8px;
             margin-top: 10px;
             border: 2px solid rgba(255,255,255,0.6);
-            cursor: zoom-in; /* Indicate it's clickable for full view */
+            cursor: zoom-in;
             transition: transform 0.2s;
         }
         .admin-card .document-image:hover {
@@ -456,6 +523,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: transform 0.2s;
+            text-align: center; /* NEW: Center text */
         }
         .btn-approve:hover {
             transform: translateY(-2px);
@@ -469,6 +537,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: transform 0.2s;
+            text-align: center; /* NEW: Center text */
         }
         .btn-deny:hover {
             transform: translateY(-2px);
@@ -485,7 +554,8 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            z-index: 100; /* Ensure it's above other content */
+            z-index: 100;
+            text-align: center; /* NEW: Center text */
         }
 
         .calendar-entry {
@@ -509,7 +579,7 @@
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            min-height: 500px; /* Ensure calendar has some initial height */
+            min-height: 500px;
         }
 
         .fc .fc-toolbar-title {
@@ -524,6 +594,8 @@
             border-radius: 5px;
             padding: 8px 15px;
             transition: background-color 0.2s;
+            text-decoration: none !important; /* NEW: Remove underline */
+            text-align: center; /* NEW: Center text */
         }
         .fc .fc-button-primary:hover {
             background-color: #5a6de0;
@@ -538,27 +610,29 @@
         .fc-event-main-frame {
             display: flex;
             align-items: center;
-            gap: 5px; /* Space between circle and text */
+            gap: 5px;
         }
         .event-circle {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background-color: #27ae60; /* Green color for approved */
-            flex-shrink: 0; /* Prevent it from shrinking */
+            background-color: #27ae60;
+            flex-shrink: 0;
         }
         /* Default FullCalendar event background */
         .fc-event {
-            background-color: #0984e3 !important; /* Main appointment color */
+            background-color: #0984e3 !important;
             border-color: #0984e3 !important;
             border-radius: 5px !important;
             padding: 3px 5px !important;
             font-size: 0.85em !important;
-            cursor: pointer; /* Indicate clickable event */
+            cursor: pointer;
+            text-decoration: none !important; /* NEW: Remove underline */
+            text-align: center; /* NEW: Center text */
         }
         /* Specific styling for the green dot events (if you want to override default background) */
         .fc-event.approved-event {
-            background-color: #27ae60 !important; /* Make the event itself green */
+            background-color: #27ae60 !important;
             border-color: #27ae60 !important;
         }
 
@@ -573,14 +647,14 @@
 
         /* Modal for event details */
         .modal {
-            position: fixed; /* Stay in place */
-            z-index: 1000; /* Sit on top */
+            position: fixed;
+            z-index: 1000;
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -625,27 +699,147 @@
             color: #555;
         }
 
-        /* Admin Appointment Category Buttons */
-        /* Removed as per new instruction */
-        /* .admin-appt-category-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-        .admin-appt-category-buttons .btn {
-            width: auto;
-            padding: 10px 20px;
-            font-size: 14px;
-            border-radius: 5px;
-            background: #e9ecef;
-            color: #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .admin-appt-category-buttons .btn.active-category {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        /* Admin TMS Submissions specific styles */
+        .tms-submission-card, .public-test-submission-card { /* Combined style for similar cards */
+            background: linear-gradient(135deg, #FFC107 0%, #FF9800 100%);
             color: white;
-        } */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        .public-test-submission-card {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); /* Blue for public tests */
+        }
+        .tms-submission-card h4, .public-test-submission-card h4 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        .tms-submission-card p, .public-test-submission-card p {
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+        .tms-submission-card .btn-view-details, .public-test-submission-card .btn-view-details {
+            background: #2c3e50;
+            color: white;
+            width: auto;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+            text-decoration: none !important;
+        }
+        .tms-submission-card .btn-view-details:hover, .public-test-submission-card .btn-view-details:hover {
+            background: #34495e;
+            transform: translateY(-2px);
+        }
+
+        /* Public Mental Health Test Selection Screen */
+        .public-test-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        .public-test-selection h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 2em;
+            text-align: center;
+        }
+        .public-test-selection .test-card {
+            width: 80%;
+            max-width: 400px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 25px;
+            font-size: 1.1em;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none !important;
+        }
+        .public-test-selection .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .public-test-selection .test-card h3 {
+            margin-bottom: 10px;
+        }
+        .public-test-selection .btn-back {
+            margin-top: 30px;
+            width: auto;
+            padding: 10px 30px;
+            background: #6c757d;
+            color: white;
+            text-align: center;
+            text-decoration: none !important;
+        }
+        .public-test-selection .btn-back:hover {
+            background: #5a6268;
+        }
+
+        /* Public Test Interface (reusing #testInterface, but styling differently for clarity) */
+        #testInterface.public-test-interface {
+            background: #f8f9fa;
+            border-left: none;
+            box-shadow: none;
+            padding: 20px;
+        }
+        #testInterface.public-test-interface .question {
+            background: white;
+            border: 1px solid #e1e5e9;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        #testInterface.public-test-interface .btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            text-align: center;
+        }
+        #testInterface.public-test-interface .btn-secondary {
+            background: #6c757d;
+            text-align: center;
+        }
+
+        /* Public Test Result Display */
+        #publicTestResultDisplay {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+        #publicTestResultDisplay h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        #publicTestResultDisplay p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        #publicTestResultDisplay .btn {
+            margin-top: 25px;
+            width: auto;
+            padding: 10px 30px;
+            background: #007bff;
+            color: white;
+            text-align: center;
+            text-decoration: none !important;
+        }
+        #publicTestResultDisplay .btn-secondary {
+            background: #6c757d;
+            text-align: center;
+            text-decoration: none !important;
+        }
 
 
         @media (max-width: 768px) {
@@ -655,55 +849,63 @@
 
             .sidebar {
                 width: 100%;
-                padding: 10px 0; /* Reduced padding for more compact header on mobile */
+                padding: 10px 0;
             }
 
             .sidebar ul {
                 display: flex;
-                flex-wrap: wrap; /* Allow items to wrap to new line */
-                justify-content: center; /* Center items when wrapped */
-                padding: 0 5px; /* Reduced horizontal padding for the list container */
-                gap: 5px 10px; /* Vertical gap 5px, horizontal gap 10px between items */
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 0 5px;
+                gap: 5px 10px;
             }
 
             .sidebar li {
                 white-space: nowrap;
-                flex-grow: 1; /* Allow items to grow to fill space if needed, but not force minimum width */
+                flex-grow: 1;
                 text-align: center;
-                padding: 8px 12px; /* Slightly less padding on mobile list items for compactness */
-                border-radius: 5px; /* Rounded corners for buttons */
-                margin: 0; /* Reset any default margins that might interfere with gap */
+                padding: 8px 12px;
+                border-radius: 5px;
+                margin: 0;
             }
 
             /* Specific spacing adjustments for the first three items (Manage Appointments, Mental Health Tests, Health Records) */
             #patientSidebarNav li:nth-child(1),
             #patientSidebarNav li:nth-child(2),
             #patientSidebarNav li:nth-child(3) {
-                margin-bottom: 10px; /* Add more space below these items if they wrap to new lines */
+                margin-bottom: 10px;
             }
 
             /* To decrease space between Profile and Forms (last two items), ensure no extra bottom margin */
             #patientSidebarNav li:nth-child(4),
             #patientSidebarNav li:nth-child(5) {
-                margin-bottom: 0; /* Ensure no extra bottom margin */
+                margin-bottom: 0;
             }
 
 
             .main-content {
-                padding: 15px; /* Further adjusted from 40px for mobile */
+                padding: 15px;
             }
 
             .container {
-                margin: 5px; /* Further reduced overall container margin on small screens */
-                border-radius: 10px; /* Slightly smaller rounded corners for mobile */
+                margin: 5px;
+                border-radius: 10px;
             }
 
-            .login-screen {
-                padding: 20px;
+            /* Mobile specific for login screen */
+            .login-screen-wrapper {
+                flex-direction: column;
+                gap: 20px;
+                padding: 10px;
             }
-            .login-form {
+            .login-form-container, .public-access-container {
+                width: 100%;
                 padding: 20px;
                 border-radius: 10px;
+            }
+            .public-access-buttons .btn {
+                padding: 12px;
+                font-size: 1em;
             }
 
             .section {
@@ -713,46 +915,38 @@
 
             /* Specifically target external link buttons for stacking on mobile */
             .btn.external-link-btn {
-                display: block; /* Make them stack vertically */
-                width: 100%; /* Take full width */
-                margin-right: 0; /* Remove horizontal margin */
-                margin-bottom: 10px; /* Add vertical spacing */
-                padding: 12px; /* Ensure good touch target size */
-                font-size: 15px; /* Slightly larger text for buttons for better readability */
+                display: block;
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+                padding: 12px;
+                font-size: 15px;
             }
             /* Adjust for the last button in a series to not have extra bottom margin */
             .section .btn.external-link-btn:last-child {
                 margin-bottom: 0;
             }
 
-            /* Removed this section as per new instruction */
-            /* .admin-appt-category-buttons {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 5px;
-            }
-            .admin-appt-category-buttons .btn {
-                flex-grow: 1;
-                min-width: unset;
-                font-size: 12px;
-                padding: 6px 10px;
-            } */
             .patient-data-buttons-container {
-                flex-direction: column; /* Stack on mobile */
-                gap: 10px; /* Vertical gap */
+                flex-direction: column;
+                gap: 10px;
             }
             .btn.view-patient-data-btn {
-                width: 100%; /* Full width on mobile */
-                margin-right: 0; /* Remove horizontal margin */
-                font-size: 14px; /* Adjust font size */
+                width: 100%;
+                margin-right: 0;
+                font-size: 14px;
             }
 
 
             #calendar {
-                padding: 5px; /* Reduced calendar padding */
+                padding: 5px;
             }
             .fc .fc-toolbar-title {
-                font-size: 1em; /* Smaller title font for very small screens */
+                font-size: 1em;
+            }
+
+            .public-test-selection .test-card {
+                width: 100%;
             }
         }
     </style>
@@ -763,75 +957,123 @@
         <p>Let's heal minds</p>
     </div>
     <div class="container">
-        <!-- Login Screen -->
-        <div id="loginScreen" class="login-screen">
-            <div class="login-form">
-                <h2>Patient Portal Login</h2>
-                <div class="form-group">
-                    <label for="loginEmail">Email:</label>
-                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+        <!-- Login Screen and Public Access Container -->
+        <div id="welcomeScreenWrapper" class="login-screen-wrapper">
+            <!-- Left Side: Login/Signup Forms -->
+            <div id="loginFormsContainer" class="login-form-container">
+                <!-- Login Screen -->
+                <div id="loginScreen">
+                    <div class="login-form">
+                        <h2>Patient Portal Login</h2>
+                        <div class="form-group">
+                            <label for="loginEmail">Email:</label>
+                            <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password:</label>
+                            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        </div>
+                        <button class="btn" id="loginBtn">Login</button>
+                        <button class="btn btn-secondary" id="showSignupBtn">Create Account</button>
+                        <button class="link-btn" id="showAdminLoginBtn">Staff Login</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password:</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+
+                <!-- Signup Screen -->
+                <div id="signupScreen" class="hidden">
+                    <div class="login-form">
+                        <h2>Create Account</h2>
+                        <div class="form-group">
+                            <label for="signupName">Full Name:</label>
+                            <input type="text" id="signupName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupEmail">Email:</label>
+                            <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPassword">Password:</label>
+                            <input type="password" id="signupPassword" placeholder="Create a password" required>
+                        </div>
+                         <div class="form-group">
+                            <label for="signupDob">Date of Birth:</label>
+                            <input type="date" id="signupDob" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPhone">Phone Number:</label>
+                            <input type="tel" id="signupPhone" placeholder="Enter your phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupGender">Gender:</label>
+                            <select id="signupGender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        <button class="btn" id="signupBtn">Create Account</button>
+                        <button class="link-btn" id="backToLoginBtn">Back to Login</button>
+                    </div>
                 </div>
-                <button class="btn" id="loginBtn">Login</button>
-                <button class="btn btn-secondary" id="showSignupBtn">Create Account</button>
-                <button class="link-btn" id="showAdminLoginBtn">Staff Login</button>
+
+                <!-- Admin Login Screen -->
+                <div id="adminLoginScreen" class="hidden">
+                    <div class="login-form">
+                        <h2>Staff Login</h2>
+                        <div class="form-group">
+                            <label for="adminEmail">Email:</label>
+                            <input type="email" id="adminEmail" placeholder="Enter admin email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminPassword">Password:</label>
+                            <input type="password" id="adminPassword" placeholder="Enter password" required>
+                        </div>
+                        <button class="btn" id="adminLoginBtn">Login</button>
+                        <button class="link-btn" id="backToPatientLoginBtn">Back to Patient Login</button>
+                    </div>
+                </div>
+            </div> <!-- End loginFormsContainer -->
+
+            <!-- Right Side: Public Access Buttons -->
+            <div class="public-access-container">
+                <h2>Quick Access</h2>
+                <div class="public-access-buttons">
+                    <button class="btn" id="publicTmsQuestionnaireBtn">TMS Daily Questionnaire</button>
+                    <button class="btn" id="publicMentalHealthTestsBtn">Mental Health Tests</button>
+                    <!-- MOVED: New Patient Form now in Quick Access -->
+                    <a href="https://www.jotform.com/sign/251304457972056/invite/01jtzza5kqcb83f96f3923b7ac" target="_blank" class="btn">New Patient Form</a>
+                    <a href="https://v-gedipudi1.github.io/consent-forms/" target="_blank" class="btn">TMS Consent Form</a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScOt3ov7drpfVaJ3GPPa3GyyEG4i3qErkgpz704BUxhGItg6Q/viewform?usp=header" target="_blank" class="btn">Upload ID and Insurance Form</a>
+                </div>
+                <div class="info-box">
+                    <p><strong>First-time patient?</strong> To book an appointment, please create an account first and then navigate to the "Manage Appointments" tab.</p>
+                </div>
+                <div class="info-box" style="margin-top: 10px;">
+                    <p><strong>Want to track your mental health progress?</strong> Create an account to securely view your mental health test results, past TMS questionnaires, and manage your appointments.</p>
+                </div>
             </div>
+        </div> <!-- End welcomeScreenWrapper -->
+
+        <!-- NEW: Public Mental Health Test Selection Screen (initially hidden) -->
+        <div id="publicMentalHealthTestsSection" class="section public-test-selection hidden">
+            <h2>Select a Mental Health Test</h2>
+            <div class="test-card" data-test-type="depression">
+                <h3>Depression Screening (PHQ-9)</h3>
+                <p>Take a self-assessment to screen for depression symptoms</p>
+            </div>
+            <div class="test-card" data-test-type="anxiety">
+                <h3>Anxiety Screening (GAD-7)</h3>
+                <p>Take a self-assessment to screen for anxiety symptoms</p>
+            </div>
+            <div class="test-card" data-test-type="adhd">
+                <h3>ADHD Screening</h3>
+                <p>Take a self-assessment to screen for ADHD symptoms</p>
+            </div>
+            <button class="btn btn-back" id="backToPublicAccessBtn">Back to Main Screen</button>
         </div>
 
-        <!-- Signup Screen -->
-        <div id="signupScreen" class="login-screen hidden">
-            <div class="login-form">
-                <h2>Create Account</h2>
-                <div class="form-group">
-                    <label for="signupName">Full Name:</label>
-                    <input type="text" id="signupName" placeholder="Enter your full name" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupEmail">Email:</label>
-                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupPassword">Password:</label>
-                    <input type="password" id="signupPassword" placeholder="Create a password" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupPhone">Phone Number:</label>
-                    <input type="tel" id="signupPhone" placeholder="Enter your phone number" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupGender">Gender:</label>
-                    <select id="signupGender" required>
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                        <option value="prefer-not-to-say">Prefer not to say</option>
-                    </select>
-                </div>
-                <button class="btn" id="signupBtn">Create Account</button>
-                <button class="link-btn" id="backToLoginBtn">Back to Login</button>
-            </div>
-        </div>
-
-        <!-- Admin Login Screen -->
-        <div id="adminLoginScreen" class="login-screen hidden">
-            <div class="login-form">
-                <h2>Staff Login</h2>
-                <div class="form-group">
-                    <label for="adminEmail">Email:</label>
-                    <input type="email" id="adminEmail" placeholder="Enter admin email" required>
-                </div>
-                <div class="form-group">
-                    <label for="adminPassword">Password:</label>
-                    <input type="password" id="adminPassword" placeholder="Enter password" required>
-                </div>
-                <button class="btn" id="adminLoginBtn">Login</button>
-                <button class="link-btn" id="backToPatientLoginBtn">Back to Patient Login</button>
-            </div>
-        </div>
 
         <!-- Patient Dashboard -->
         <div id="patientDashboard" class="dashboard hidden">
@@ -853,9 +1095,13 @@
                     <div id="appointmentsList"></div>
                     <button class="btn" id="showBookingFormBtn">Book New Appointment</button>
 
-                    <!-- Booking Form (Updated to include date picker) -->
+                    <!-- Booking Form (Updated to include date picker and DOB) -->
                     <div id="bookingForm" class="hidden" style="margin-top: 20px; background: #f8f9fa; padding: 20px; border-radius: 10px;">
                         <h3>Book New Appointment</h3>
+                        <div class="form-group">
+                            <label for="bookApptDob">Your Date of Birth:</label>
+                            <input type="date" id="bookApptDob" required>
+                        </div>
                         <div class="form-group">
                             <label for="appointmentDate">Preferred Date:</label>
                             <input type="date" id="appointmentDate" required>
@@ -902,12 +1148,14 @@
                     <div id="testResultsList"></div>
                 </div>
 
-                <!-- Test Taking Interface -->
+                <!-- Test Taking Interface (Shared for both logged-in and public tests) -->
                 <div id="testInterface" class="section hidden">
                     <h2 id="testTitle"></h2>
                     <div id="testQuestions"></div>
                     <button class="btn" id="submitTestBtn">Submit Test</button>
                     <button class="btn btn-secondary" id="cancelTestBtn">Cancel</button>
+                    <!-- Public test result display will appear here -->
+                    <div id="publicTestResultDisplay" class="hidden"></div>
                 </div>
 
                 <!-- Health Records Section -->
@@ -927,15 +1175,28 @@
                 <div id="formsSection" class="section hidden">
                     <h2>Forms</h2>
                     <p>Please review and complete any necessary forms below.</p>
-                    <a href="https://v-gedipudi1.github.io/consent-forms/" target="_blank" class="btn external-link-btn">TMS Consent Form</a>
-                    <a href="https://www.jotform.com/sign/251304457972056/invite/01jtzza5kqcb83f96f3923b7ac" target="_blank" class="btn external-link-btn">New Patient Form</a>
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScOt3ov7drpfVaJ3GPPa3GyyEG4i3qErkgpz704BUxhGItg6Q/viewform?usp=header" target="_blank" class="btn external-link-btn">Upload ID and Insurance Form</a>
-                    <button class="btn" id="showTmsQuestionnaireBtn" style="margin-top: 15px;">TMS Daily Questionnaire</button>
+                    <button class="btn" id="showTmsQuestionnaireBtnLoggedIn" style="margin-top: 15px;">TMS Daily Questionnaire (Logged In)</button>
+                    <!-- REMOVED: New Patient Form was here -->
                 </div>
 
-                <!-- NEW: TMS Daily Questionnaire Section -->
+                <!-- NEW: TMS Daily Questionnaire Section (for both public & logged-in users) -->
                 <div id="tmsQuestionnaireSection" class="section hidden">
                     <h2>TMS Daily Questionnaire</h2>
+                    <p>Please fill out the following information and questions.</p>
+                    <div class="form-group">
+                        <label for="tmsFullName">Full Name:</label>
+                        <input type="text" id="tmsFullName" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tmsEmail">Email:</label>
+                        <input type="email" id="tmsEmail" placeholder="Your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tmsPhone">Phone Number:</label>
+                        <input type="tel" id="tmsPhone" placeholder="Your phone number" required>
+                    </div>
+                    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
+
                     <div class="form-group">
                         <label>1. Have you had anything to eat or drink today?</label>
                         <div class="radio-group-inline">
@@ -1023,34 +1284,20 @@
                 <ul id="adminSidebarNav">
                     <li class="active" data-section="appointments">Appointment Requests</li>
                     <li data-section="patients">Patient Management</li>
-                    <!-- Removed: <li data-section="testResults">Test Results</li> -->
+                    <li data-section="tmsSubmissions">View All TMS Submissions</li>
+                    <li data-section="publicTestResults">Public Test Results</li> <!-- NEW ADMIN SIDEBAR ITEM -->
                     <li data-section="calendar">Calendar</li>
                     <li data-section="doctorPortal">Doctor Portal</li>
                 </ul>
             </div>
             <div class="main-content">
-                <!-- Admin Appointments Section (Reorganized) -->
+                <!-- Admin Appointments Section -->
                 <div id="adminAppointmentsSection" class="section">
-                    <!-- Removed Admin Appt Category Buttons -->
-                    <!-- <div class="admin-appt-category-buttons">
-                        <button class="btn active-category" data-category="pending" id="showPendingAppointmentsBtn">Pending</button>
-                        <button class="btn" data-category="approved" id="showApprovedAppointmentsBtn">Approved</button>
-                        <button class="btn" data-category="denied" id="showDeniedAppointmentsBtn">Denied</button>
-                    </div> -->
-                    
                     <h2 id="adminAppointmentsTitle">Appointment Requests</h2>
-                    
-                    <!-- Pending Appointments List (Default View for this section) -->
                     <div id="adminPendingAppointmentsList"></div> 
-                    
-                    <!-- Approved Appointments List (No longer explicitly shown here) -->
-                    <!-- <div id="adminApprovedAppointmentsList" class="hidden"></div> -->
-
-                    <!-- Denied Appointments List (No longer explicitly shown here) -->
-                    <!-- <div id="adminDeniedAppointmentsList" class="hidden"></div> -->
                 </div>
 
-                <!-- Admin Patients Section (Reorganized) -->
+                <!-- Admin Patients Section -->
                 <div id="adminPatientsSection" class="section">
                     <h2>Patient Management</h2>
                     <button class="btn" id="showAddPatientFormBtn">Add New Patient (via Admin)</button>
@@ -1087,6 +1334,10 @@
                             <input type="password" id="newPatientPassword" required>
                         </div>
                         <div class="form-group">
+                            <label for="newPatientDob">Date of Birth:</label>
+                            <input type="date" id="newPatientDob" required>
+                        </div>
+                        <div class="form-group">
                             <label for="newPatientPhone">Phone:</label>
                             <input type="tel" id="newPatientPhone" required>
                         </div>
@@ -1105,9 +1356,23 @@
                     </div>
                 </div>
 
-                <!-- Removed Admin Test Results Section -->
+                <!-- New Admin TMS Submissions Section -->
+                <div id="adminTmsSubmissionsSection" class="section hidden">
+                    <h2>All TMS Daily Questionnaires</h2>
+                    <div id="tmsSubmissionsList">
+                        <p>Loading TMS submissions...</p>
+                    </div>
+                </div>
 
-                <!-- New Admin Calendar Section (Updated for FullCalendar) -->
+                <!-- NEW ADMIN PUBLIC TEST RESULTS SECTION -->
+                <div id="adminPublicTestResultsSection" class="section hidden">
+                    <h2>All Public Mental Health Test Results</h2>
+                    <div id="publicTestResultsList">
+                        <p>Loading public test results...</p>
+                    </div>
+                </div>
+
+                <!-- Admin Calendar Section (Updated for FullCalendar) -->
                 <div id="adminCalendarSection" class="section hidden">
                     <h2>Approved Appointments Calendar</h2>
                     <div id="calendar"></div> <!-- FullCalendar will render here -->
@@ -1132,10 +1397,38 @@
             <p><strong>Email:</strong> <span id="modalPatientEmail"></span></p>
             <p><strong>Phone:</strong> <span id="modalPatientPhone"></span></p>
             <p><strong>Date & Time:</strong> <span id="modalEventDateTime"></span></p>
+            <p><strong>Date of Birth:</strong> <span id="modalEventDob"></span></p>
             <p><strong>Reason:</strong> <span id="modalEventReason"></span></p>
             <p><strong>Status:</strong> <span id="modalEventStatus"></span></p>
         </div>
     </div>
+
+    <!-- Modal for displaying full TMS questionnaire details (Admin side) -->
+    <div id="tmsDetailModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeTmsModalBtn">&times;</span>
+            <h3 id="tmsModalTitle">TMS Questionnaire from <span id="tmsModalPatientName"></span></h3>
+            <p><strong>Email:</strong> <span id="tmsModalPatientEmail"></span></p>
+            <p><strong>Phone:</strong> <span id="tmsModalPatientPhone"></span></p>
+            <p><strong>Submitted On:</strong> <span id="tmsModalSubmittedAt"></span></p>
+            <hr>
+            <div id="tmsModalAnswers"></div>
+        </div>
+    </div>
+
+    <!-- NEW: Modal for displaying full Public Test submission details (Admin side) -->
+    <div id="publicTestDetailModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closePublicTestModalBtn">&times;</span>
+            <h3 id="publicTestModalTitle">Public Mental Health Test Submission (<span id="publicTestModalType"></span>)</h3>
+            <p><strong>Score:</strong> <span id="publicTestModalScore"></span></p>
+            <p><strong>Breakdown:</strong> <span id="publicTestModalBreakdown"></span></p>
+            <p><strong>Submitted On:</strong> <span id="publicTestModalSubmittedAt"></span></p>
+            <hr>
+            <div id="publicTestModalAnswers"></div>
+        </div>
+    </div>
+
 
     <!-- FullCalendar JavaScript (Must be loaded AFTER the DOM elements) -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
@@ -1171,6 +1464,7 @@
         let currentTest = null; // Stores details of the test currently being taken
         let adminCalendarInstance = null; // To hold the FullCalendar object for the admin portal
         let currentPatientIdInAdminView = null; // To track which patient is currently being viewed by admin
+        let isPublicTestMode = false; // NEW: Flag to indicate if currently taking a public test
 
         // --- Admin Credentials (Email must exist in Firebase Authentication) ---
         const ADMIN_EMAIL = 'admin@healmed.com'; // Use the email you created in Firebase Auth
@@ -1199,14 +1493,14 @@
                 ],
                 scoring: {
                     ranges: [
-                        { min: 0, max: 4, level: 'Minimal', description: 'Minimal depression symptoms' },
-                        { min: 5, max: 9, level: 'Mild', description: 'Mild depression symptoms' },
-                        { min: 10, max: 14, level: 'Moderate', description: 'Moderate depression symptoms' },
-                        { min: 15, max: 19, level: 'Moderately Severe', description: 'Moderately severe depression symptoms' },
-                        { min: 20, max: 27, level: 'Severe', description: 'Severe depression symptoms' }
+                        { min: 0, max: 4, level: 'Minimal', description: 'Minimal depression symptoms. No treatment is warranted at this time.' },
+                        { min: 5, max: 9, level: 'Mild', description: 'Mild depression symptoms. Watchful waiting; repeat PHQ-9 at follow-up.' },
+                        { min: 10, max: 14, level: 'Moderate', description: 'Moderate depression symptoms. Treatment plan, considering counseling, follow-up and/or pharmacotherapy.' },
+                        { min: 15, max: 19, level: 'Moderately Severe', description: 'Moderately severe depression symptoms. Active treatment with pharmacotherapy and/or psychotherapy.' },
+                        { min: 20, max: 27, level: 'Severe', description: 'Severe depression symptoms. Immediate initiation of pharmacotherapy and, if severe impairment or poor response to therapy, expedited referral to a mental health specialist for psychotherapy and/or collaborative management.' }
                     ]
                 },
-                 getBreakdown: (score) => {
+                getBreakdown: (score) => {
                     for (const range of testQuestions.depression.scoring.ranges) {
                         if (score >= range.min && score <= range.max) {
                             return range.description;
@@ -1234,10 +1528,10 @@
                 ],
                 scoring: {
                     ranges: [
-                        { min: 0, max: 4, level: 'Minimal', description: 'Minimal anxiety symptoms' },
-                        { min: 5, max: 9, level: 'Mild', description: 'Mild anxiety symptoms' },
-                        { min: 10, max: 14, level: 'Moderate', description: 'Moderate anxiety symptoms' },
-                        { min: 15, max: 21, level: 'Severe', description: 'Severe anxiety symptoms' }
+                        { min: 0, max: 4, level: 'Minimal', description: 'Minimal anxiety symptoms. No follow-up is warranted at this time.' },
+                        { min: 5, max: 9, level: 'Mild', description: 'Mild anxiety symptoms. It is recommended to monitor symptoms and follow-up as indicated.' },
+                        { min: 10, max: 14, level: 'Moderate', description: 'Moderate anxiety symptoms. Likely to be diagnosed with an anxiety or related disorder. Symptoms are clinically significant and warrant further assessment and/or referral to a mental health professional.' },
+                        { min: 15, max: 21, level: 'Severe', description: 'Severe anxiety symptoms. Symptoms likely warrant active treatment. Likely to be diagnosed with an anxiety or related disorder. Further assessment and/or referral to a mental health professional is recommended.' }
                     ]
                 },
                 getBreakdown: (score) => {
@@ -1247,17 +1541,31 @@
                         }
                     }
                     return 'N/A';
-                        }
+                }
             },
             adhd: {
-                title: 'ADHD Screening',
+                title: 'ADHD Screening (ASRS-v1.1)',
                 questions: [
-                    'How often do you have trouble wrapping up the final details of a project, once the challenging parts have been done?',
-                    'How often do you have difficulty getting things in order when you have to do a task that requires organization?',
-                    'How often do you have problems remembering appointments or obligations?',
-                    'When you have a task that requires a lot of thought, how often do you avoid or delay getting started?',
-                    'How often do you fidget or squirm with your hands or feet when you have to sit down for a long time?',
-                    'How often do you feel overly active and compelled to do things, like you were driven by a motor?'
+                    // Part A (Highly predictive, questions 1-6)
+                    'How often do you have trouble wrapping up the final details of a project, once the challenging parts have been done?', // 1
+                    'How often do you have difficulty getting things in order when you have to do a task that requires organization?', // 2
+                    'How often do you have problems remembering appointments or obligations?', // 3
+                    'When you have a task that requires a lot of thought, how often do you avoid or delay getting started?', // 4
+                    'How often do you fidget or squirm with your hands or feet when you have to sit down for a long time?', // 5
+                    'How often do you feel overly active and compelled to do things, like you were driven by a motor?', // 6
+                    // Part B (Additional symptoms, questions 7-18)
+                    'How often do you make careless mistakes when you have to work on a boring or difficult project?', // 7
+                    'How often do you have difficulty keeping your attention when you are doing boring or repetitive work?', // 8
+                    'How often do you have difficulty concentrating on what people say to you, even when they are speaking to you directly?', // 9
+                    'How often do you misplace or have difficulty finding things at home or at work?', // 10
+                    'How often are you distracted by activity or noise around you?', // 11
+                    'How often do you leave your seat in meetings or other situations in which you are expected to remain seated?', // 12
+                    'How often do you feel restless or fidgety?', // 13
+                    'How often do you have difficulty unwinding and relaxing when you have time to yourself?', // 14
+                    'How often do you find yourself talking too much when you are in social situations?', // 15
+                    'When you\'re in a conversation, how often do you find yourself finishing the sentences of the people you are talking to, before they can finish them themselves?', // 16
+                    'How often do you have difficulty waiting your turn in situations when turn taking is required?', // 17
+                    'How often do you interrupt others when they are busy?' // 18
                 ],
                 options: [
                     { text: 'Never', value: 0 },
@@ -1266,20 +1574,46 @@
                     { text: 'Often', value: 3 },
                     { text: 'Very Often', value: 4 }
                 ],
+                // ASRS specific scoring logic
                 scoring: {
-                    ranges: [
-                        { min: 0, max: 8, level: 'Low', description: 'Low likelihood of ADHD symptoms' },
-                        { min: 9, max: 13, level: 'Moderate', description: 'Moderate likelihood of ADHD symptoms' },
-                        { min: 14, max: 24, level: 'High', description: 'High likelihood of ADHD symptoms' }
+                    // This is not a simple total score range, but a specific rule for Part A
+                    // And then general total score ranges for severity.
+                    partA_questions_indices: [0, 1, 2, 3, 4, 5], // Indices of questions in Part A (first 6)
+                    partA_high_risk_threshold_count: 4, // 4 or more answers in 'Often' or 'Very Often' in Part A
+                    partA_high_risk_values: [3, 4], // Values for 'Often' and 'Very Often'
+
+                    total_score_ranges: [
+                        { min: 0, max: 30, level: 'Low Likelihood', description: 'Your responses suggest a low likelihood of ADHD symptoms. If concerns persist, consider consulting a healthcare professional.' },
+                        { min: 31, max: 39, level: 'Mild to Moderate Likelihood', description: 'Your responses suggest a mild to moderate likelihood of ADHD symptoms. Further assessment by a healthcare professional is recommended for a definitive diagnosis.' },
+                        { min: 40, max: 49, level: 'High Likelihood', description: 'Your responses suggest a high likelihood of ADHD symptoms. It is strongly recommended to seek further evaluation from a mental health specialist.' },
+                        { min: 50, max: 72, level: 'Very High Likelihood', description: 'Your responses suggest a very high likelihood of ADHD symptoms, consistent with a clinical diagnosis. Immediate consultation with a mental health specialist is highly recommended for comprehensive assessment and support.' }
                     ]
                 },
-                getBreakdown: (score) => {
-                    for (const range of testQuestions.adhd.scoring.ranges) {
+                getBreakdown: (score, answersArray) => {
+                    let partA_high_risk_count = 0;
+                    testQuestions.adhd.scoring.partA_questions_indices.forEach(index => {
+                        const answerValue = answersArray[index].score; // Score of the selected option for this question
+                        if (testQuestions.adhd.scoring.partA_high_risk_values.includes(answerValue)) {
+                            partA_high_risk_count++;
+                        }
+                    });
+
+                    let initialScreeningResult = '';
+                    if (partA_high_risk_count >= testQuestions.adhd.scoring.partA_high_risk_threshold_count) {
+                        initialScreeningResult = 'Symptoms highly consistent with ADHD in adults based on Part A. Further investigation is warranted. ';
+                    } else {
+                        initialScreeningResult = 'Part A results do not strongly indicate ADHD on their own. ';
+                    }
+
+                    let totalScoreEvaluation = '';
+                    for (const range of testQuestions.adhd.scoring.total_score_ranges) {
                         if (score >= range.min && score <= range.max) {
-                            return range.description;
+                            totalScoreEvaluation = range.description;
+                            break;
                         }
                     }
-                    return 'N/A';
+
+                    return `${initialScreeningResult} Overall, based on your total score: ${totalScoreEvaluation}`;
                 }
             }
         };
@@ -1294,12 +1628,12 @@
             }
         }
 
+        // Modified to hide the new wrapper AND public test section
         function hideAllScreens() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('signupScreen').classList.add('hidden');
-            document.getElementById('adminLoginScreen').classList.add('hidden');
+            document.getElementById('welcomeScreenWrapper').classList.add('hidden'); 
             document.getElementById('patientDashboard').classList.add('hidden');
             document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // NEW: Hide public test selection
         }
 
         // --- Authentication Functions (Firebase Integrated) ---
@@ -1321,7 +1655,8 @@
                 console.log("Patient login successful for UID:", currentUser.uid);
                 showMessage('Patient login successful!');
                 showPatientDashboard();
-            } catch (error) {
+            }
+            catch (error) {
                 console.error("Login failed:", error);
                 showMessage(`Login failed: ${error.message}`, true);
             }
@@ -1370,10 +1705,11 @@
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
+            const dob = document.getElementById('signupDob').value; // Get Date of Birth
             const phone = document.getElementById('signupPhone').value;
             const gender = document.getElementById('signupGender').value;
 
-            if (!name || !email || !password || !phone || !gender) {
+            if (!name || !email || !password || !dob || !phone || !gender) {
                 showMessage('Please fill in all fields', true);
                 return;
             }
@@ -1392,13 +1728,15 @@
                     fullName: name,
                     email: email,
                     phoneNumber: phone,
+                    dob: dob, // Save Date of Birth
                     gender: gender,
                     createdAt: new Date().toISOString()
                 });
                 console.log("Patient data saved to Realtime Database for UID:", userId);
 
                 showMessage('Account created successfully! Please login.');
-                showLogin();
+                showLoginScreenLayout(); // Show the full login layout
+                showLogin(); // Then ensure the login form itself is visible
             } catch (error) {
                 console.error("Firebase Auth Error during signup:", error);
                 showMessage(`Error creating account: ${error.message}`, true);
@@ -1418,22 +1756,37 @@
             currentUser = null;
             console.log("Local state cleared. User logged out.");
             showMessage('Logged out successfully.');
-            showLogin();
+            showLoginScreenLayout(); // Show the full login layout
+            showLogin(); // Then ensure the login form itself is visible
         }
 
         // --- UI Navigation Functions ---
+
+        // NEW: Function to show the entire two-column login screen layout
+        function showLoginScreenLayout() {
+            document.getElementById('welcomeScreenWrapper').classList.remove('hidden');
+            document.getElementById('patientDashboard').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // Ensure public test selection is hidden
+            document.getElementById('tmsQuestionnaireSection').classList.add('hidden'); // Ensure TMS questionnaire is hidden
+            document.getElementById('testInterface').classList.add('hidden'); // Ensure test interface is hidden
+        }
+
         function showLogin() {
-            hideAllScreens();
             document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('signupScreen').classList.add('hidden');
+            document.getElementById('adminLoginScreen').classList.add('hidden');
         }
 
         function showSignup() {
-            hideAllScreens();
+            document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('signupScreen').classList.remove('hidden');
+            document.getElementById('adminLoginScreen').classList.add('hidden');
         }
 
         function showAdminLogin() {
-            hideAllScreens();
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('signupScreen').classList.add('hidden');
             document.getElementById('adminLoginScreen').classList.remove('hidden');
             document.getElementById('adminEmail').value = '';
             document.getElementById('adminPassword').value = '';
@@ -1451,8 +1804,7 @@
         function showAdminDashboard() {
             hideAllScreens();
             document.getElementById('adminDashboard').classList.remove('hidden');
-            // When admin dashboard loads, default to pending appointments
-            showAdminSection('appointments'); // This will call loadAdminAppointments()
+            showAdminSection('appointments'); // Default to pending appointments
             loadPatientsList(); // Load patient buttons initially
         }
 
@@ -1470,11 +1822,10 @@
             document.getElementById(`${sectionId}Section`).classList.remove('hidden');
         }
 
-        // Generic function to show a specific section within admin dashboard
         function showAdminSection(sectionId) {
             document.querySelectorAll('#adminDashboard .section').forEach(s => s.classList.add('hidden'));
-            document.getElementById('patientDetailView').classList.add('hidden'); // Hide patient detail view
-            document.getElementById('addPatientForm').classList.add('hidden'); // Hide add patient form
+            document.getElementById('patientDetailView').classList.add('hidden'); 
+            document.getElementById('addPatientForm').classList.add('hidden'); 
 
             document.querySelectorAll('#adminSidebarNav li').forEach(li => li.classList.remove('active'));
             const targetListItem = document.querySelector(`#adminSidebarNav li[data-section="${sectionId}"]`);
@@ -1492,17 +1843,18 @@
             }
 
             if (sectionId === 'calendar') {
-                loadAdminCalendar(); // Initialize/reload calendar when this section is shown
+                loadAdminCalendar(); 
             } else if (sectionId === 'appointments') {
-                 // No categories, just load pending directly
                  loadAdminAppointments();
                  document.getElementById('adminAppointmentsTitle').textContent = "Appointment Requests";
             } else if (sectionId === 'patients') {
-                 loadPatientsList(); // Re-load patient list of buttons
+                 loadPatientsList(); 
+            } else if (sectionId === 'tmsSubmissions') { // NEW: Load all TMS submissions for admin
+                loadAdminTmsSubmissions();
+            } else if (sectionId === 'publicTestResults') { // NEW: Load all public test results for admin
+                loadAdminPublicTestResults();
             }
         }
-        // Removed showAdminAppointmentCategory as per instruction
-
 
         // --- Patient-Specific Functionality ---
 
@@ -1518,6 +1870,7 @@
                         <p><strong>Name:</strong> ${patientData.fullName}</p>
                         <p><strong>Email:</strong> ${patientData.email}</p>
                         <p><strong>Phone:</strong> ${patientData.phoneNumber}</p>
+                        <p><strong>Date of Birth:</strong> ${patientData.dob || 'N/A'}</p>
                         <p><strong>Gender:</strong> ${patientData.gender}</p>
                         <p><strong>Account Created:</strong> ${new Date(patientData.createdAt).toLocaleString()}</p>
                     `;
@@ -1536,29 +1889,40 @@
             document.getElementById('bookingForm').classList.remove('hidden');
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('appointmentDate').min = today;
+            // Pre-fill DOB if available from patient profile
+            if (currentUser) {
+                get(ref(database, 'patients/' + currentUser.uid)).then(snapshot => {
+                    const patientData = snapshot.val();
+                    if (patientData && patientData.dob) {
+                        document.getElementById('bookApptDob').value = patientData.dob;
+                    }
+                }).catch(error => console.error("Error fetching patient DOB for pre-fill:", error));
+            }
             console.log("Patient: Showing booking form.");
         }
 
         function hideBookingForm() {
             document.getElementById('bookingForm').classList.add('hidden');
+            document.getElementById('bookApptDob').value = '';
             document.getElementById('appointmentDate').value = '';
             document.getElementById('appointmentTime').value = '';
             document.getElementById('appointmentReason').value = '';
             console.log("Patient: Hiding booking form.");
         }
 
-        // Book New Appointment (Updated to save date)
+        // Book New Appointment (Updated to save date and DOB, with duplicate check)
         async function bookAppointment() {
-            const date = document.getElementById('appointmentDate').value; //YYYY-MM-DD
-            const time = document.getElementById('appointmentTime').value; // HH:MM (e.g., "09:00")
+            const dob = document.getElementById('bookApptDob').value;
+            const date = document.getElementById('appointmentDate').value; 
+            const time = document.getElementById('appointmentTime').value; 
             const reason = document.getElementById('appointmentReason').value;
 
-            if (!date || !time || !reason) {
-                showMessage('Please select a date and time, and enter a reason for your visit', true);
+            if (!dob || !date || !time || !reason) {
+                showMessage('Please fill in all appointment details including your Date of Birth, preferred date, time, and reason for visit.', true);
                 return;
             }
             if (!currentUser) {
-                showMessage('You must be logged in to book an appointment.', true);
+                showMessage('You must be logged in to book an appointment. Please create an account or login.', true);
                 return;
             }
 
@@ -1573,14 +1937,39 @@
                     return;
                 }
 
+                // --- DUPLICATE APPOINTMENT CHECK (based on fullName, DOB, date, time) ---
+                const appointmentsRef = ref(database, 'appointments');
+                const existingAppointmentsSnapshot = await get(appointmentsRef);
+                const existingAppointments = existingAppointmentsSnapshot.val();
+                
+                if (existingAppointments) {
+                    const apptArray = Object.values(existingAppointments);
+
+                    // Check for existing pending or approved appointments for THIS user's full name AND DOB for the same date/time
+                    const duplicateCheck = apptArray.some(appt => 
+                        appt.fullName === patientData.fullName && // Match full name
+                        appt.dob === dob && // Match DOB
+                        appt.appointmentDate === date &&
+                        appt.appointmentTime === time &&
+                        (appt.status === 'pending' || appt.status.trim() === 'approved') // Use trim for approved status
+                    );
+
+                    if (duplicateCheck) {
+                        showMessage('An appointment request with this name and date of birth already exists for this exact date and time. Please check your existing appointments.', true);
+                        return; // Prevent booking
+                    }
+                }
+                // --- END DUPLICATE APPOINTMENT CHECK ---
+
                 const newAppointmentRef = push(ref(database, 'appointments'));
                 await set(newAppointmentRef, {
                     userId: currentUser.uid,
                     fullName: patientData.fullName,
                     email: patientData.email,
                     phoneNumber: patientData.phoneNumber,
-                    appointmentDate: date, // Specific date (YYYY-MM-DD)
-                    appointmentTime: time, // Specific time (HH:MM)
+                    dob: dob, // Save DOB with appointment
+                    appointmentDate: date, 
+                    appointmentTime: time, 
                     reason: reason,
                     status: 'pending',
                     createdAt: new Date().toISOString()
@@ -1594,7 +1983,7 @@
             }
         }
 
-        // Load Patient's Appointments (Updated to show date)
+        // Load Patient's Appointments (Updated to show date and DOB)
         function loadAppointments() {
             const appointmentsListDiv = document.getElementById('appointmentsList');
             if (!currentUser) {
@@ -1620,6 +2009,7 @@
                             <div class="appointment-card">
                                 <h4>Appointment Request</h4>
                                 <p><strong>Date & Time:</strong> ${displayDateTime}</p>
+                                <p><strong>Date of Birth:</strong> ${appt.dob || 'N/A'}</p>
                                 <p><strong>Reason:</strong> ${appt.reason}</p>
                                 <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
@@ -1637,13 +2027,14 @@
             });
         }
 
-        // Start a Mental Health Test
+        // Start a Mental Health Test (for logged-in users, saves results)
         function startTest(testType) {
-            if (!currentUser) {
+            if (!currentUser) { // Should not happen if button disabled, but good guard
                 showMessage('You must be logged in to take a test.', true);
                 return;
             }
-            console.log("Patient: Starting test:", testType);
+            isPublicTestMode = false; // Ensure we're in logged-in mode
+            console.log("Patient: Starting logged-in test:", testType);
             currentTest = testQuestions[testType];
             if (!currentTest) {
                 console.error("Patient: Test type not found in testQuestions object:", testType);
@@ -1652,14 +2043,23 @@
             }
             const testQuestionsDiv = document.getElementById('testQuestions');
             testQuestionsDiv.innerHTML = '';
+            document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Hide any previous public results
 
             document.getElementById('testTitle').textContent = currentTest.title;
 
 
             currentTest.questions.forEach((questionText, index) => {
+                let questionPrefix = '';
+                if (testType === 'depression' || testType === 'anxiety') {
+                    questionPrefix = 'Over the last 2 weeks, how often have you been bothered by: ';
+                } else if (testType === 'adhd') {
+                    // ADHD questions have their own natural phrasing
+                    questionPrefix = ''; // No additional prefix needed for ASRS
+                }
+
                 const questionHtml = `
                     <div class="question">
-                        <h4>${index + 1}. ${currentTest.title.includes('PHQ-9') || currentTest.title.includes('GAD-7') ? 'Over the last 2 weeks, how often have you been bothered by: ' : ''}${questionText}?</h4>
+                        <h4>${index + 1}. ${questionPrefix}${questionText}?</h4>
                         <div class="radio-group">
                             ${currentTest.options.map((option, optIndex) => `
                                 <label class="radio-option">
@@ -1675,10 +2075,13 @@
 
             document.getElementById('mentalHealthSection').classList.add('hidden');
             document.getElementById('testInterface').classList.remove('hidden');
+            document.getElementById('testInterface').classList.remove('public-test-interface'); // Ensure correct styling
+            document.getElementById('submitTestBtn').onclick = submitTest; // Re-assign logged-in submit handler
+            document.getElementById('cancelTestBtn').onclick = cancelTest; // Re-assign logged-in cancel handler
             console.log("Patient: Test interface displayed for:", testType);
         }
 
-        // Submit Mental Health Test
+        // Submit Mental Health Test (for logged-in users, saves results)
         async function submitTest() {
             let score = 0;
             const totalQuestions = currentTest.questions.length;
@@ -1695,8 +2098,9 @@
                 answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
             }
 
-            const breakdown = currentTest.getBreakdown(score);
-            console.log("Patient: Test submitted. Calculated Score:", score, "Breakdown:", breakdown);
+            // Pass the full answers array for ADHD to allow specific Part A calculation
+            const breakdown = currentTest.getBreakdown(score, answers); 
+            console.log("Patient: Logged-in test submitted. Calculated Score:", score, "Breakdown:", breakdown);
 
             try {
                 const newTestResultRef = push(ref(database, 'testResults'));
@@ -1709,22 +2113,23 @@
                     createdAt: new Date().toISOString()
                 });
                 console.log("Patient: Test results saved to Firebase. Path:", newTestResultRef.toString());
-                showMessage('Test submitted successfully!');
-                cancelTest();
+                showMessage('Test submitted successfully! Your results have been saved to your health records.');
+                cancelTest(); // Return to logged-in mental health section
                 loadTestResults();
             } catch (error) {
-                console.error("Patient: Error submitting test:", error);
+                console.error("Patient: Error submitting logged-in test:", error);
                 showMessage(`Error submitting test: ${error.message}`, true);
             }
         }
 
-        // Cancel Test
+        // Cancel Test (for logged-in users)
         function cancelTest() {
-            console.log("Patient: Test cancelled.");
+            console.log("Patient: Logged-in test cancelled.");
             currentTest = null;
             document.getElementById('testInterface').classList.add('hidden');
             document.getElementById('mentalHealthSection').classList.remove('hidden');
             document.getElementById('testQuestions').innerHTML = '';
+            document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Ensure hidden
         }
 
         // Load Patient's Past Test Results
@@ -1761,27 +2166,209 @@
             });
         }
 
-        // --- TMS Daily Questionnaire Functions (Patient Side) ---
 
-        function showTmsQuestionnaire() {
-            if (!currentUser) {
-                showMessage('You must be logged in to complete a questionnaire.', true);
-                return;
-            }
-            document.getElementById('formsSection').classList.add('hidden');
-            document.getElementById('tmsQuestionnaireSection').classList.remove('hidden');
-            resetTmsForm(); // Clear any previous inputs
-            console.log("Patient: Showing TMS Daily Questionnaire.");
+        // --- Public Mental Health Test Functions ---
+
+        // Show the selection screen for public mental health tests
+        function showPublicMentalHealthTestSelection() {
+            hideAllScreens(); // Hide login/main dashboard
+            document.getElementById('publicMentalHealthTestsSection').classList.remove('hidden');
+            console.log("Public: Showing mental health test selection.");
         }
 
+        // Start a Public Mental Health Test (does not save results)
+        function startPublicTest(testType) {
+            console.log("DEBUG: Entered startPublicTest for type:", testType);
+            isPublicTestMode = true; // Set flag for public mode
+            currentTest = testQuestions[testType];
+            if (!currentTest) {
+                console.error("Public: Test type not found in testQuestions object:", testType);
+                showMessage("Selected test not found. Please try again.", true);
+                return;
+            }
+            console.log("DEBUG: currentTest found:", currentTest.title);
+
+            const testQuestionsDiv = document.getElementById('testQuestions');
+            testQuestionsDiv.innerHTML = '';
+            document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Hide previous results
+
+            document.getElementById('testTitle').textContent = currentTest.title;
+            console.log("DEBUG: testTitle set to:", currentTest.title);
+
+            // Ensure submit/cancel buttons are visible when starting a new test
+            document.getElementById('submitTestBtn').classList.remove('hidden');
+            document.getElementById('cancelTestBtn').classList.remove('hidden');
+            console.log("DEBUG: Submit and Cancel buttons should be visible.");
+
+
+            let questionsHtml = '';
+            currentTest.questions.forEach((questionText, index) => {
+                let questionPrefix = '';
+                if (testType === 'depression' || testType === 'anxiety') {
+                    questionPrefix = 'Over the last 2 weeks, how often have you been bothered by: ';
+                } else if (testType === 'adhd') {
+                     questionPrefix = ''; // No additional prefix needed for ASRS
+                }
+
+                const questionHtml = `
+                    <div class="question">
+                        <h4>${index + 1}. ${questionPrefix}${questionText}?</h4>
+                        <div class="radio-group">
+                            ${currentTest.options.map((option, optIndex) => `
+                                <label class="radio-option">
+                                    <input type="radio" name="q${index}" value="${option.value}" id="q${index}_${optIndex}" required>
+                                    ${option.text}
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                questionsHtml += questionHtml; // Append to a temporary string
+            });
+            testQuestionsDiv.innerHTML = questionsHtml; // Set innerHTML once
+            console.log("DEBUG: testQuestionsDiv innerHTML set. Number of questions:", currentTest.questions.length);
+
+
+            document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // Hide selection screen
+            document.getElementById('testInterface').classList.remove('hidden'); // Show test interface
+            document.getElementById('testInterface').classList.add('public-test-interface'); // Add public-specific styling
+            
+            // Assign public submit and cancel handlers
+            document.getElementById('submitTestBtn').onclick = submitPublicTest;
+            document.getElementById('cancelTestBtn').onclick = cancelPublicTest;
+
+            console.log("DEBUG: Test interface displayed for:", testType);
+        }
+
+        // Submit Public Mental Health Test (displays results, DOES save to Firebase for Admin)
+        async function submitPublicTest() {
+            let score = 0;
+            const totalQuestions = currentTest.questions.length;
+            const answers = [];
+
+            for (let i = 0; i < totalQuestions; i++) {
+                const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!selectedOption) {
+                    showMessage(`Please answer question ${i + 1} before submitting.`, true);
+                    return;
+                }
+                const value = parseInt(selectedOption.value);
+                score += value;
+                answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
+            }
+
+            const breakdown = currentTest.getBreakdown(score, answers); // Pass answers for ADHD specific logic
+            console.log("Public: Test submitted. Calculated Score:", score, "Breakdown:", breakdown);
+
+            try {
+                // NEW: Save public test results to Firebase
+                const newPublicTestResultRef = push(ref(database, 'publicMentalHealthTestSubmissions'));
+                await set(newPublicTestResultRef, {
+                    testType: currentTest.title,
+                    score: score,
+                    breakdown: breakdown,
+                    answers: answers,
+                    submittedAt: new Date().toISOString()
+                });
+                console.log("Public: Test results saved to Firebase for admin review. Path:", newPublicTestResultRef.toString());
+                showMessage('Test submitted successfully! Your results are available for review by our staff.');
+            } catch (error) {
+                console.error("Public: Error submitting and saving public test:", error);
+                showMessage(`Error submitting test: ${error.message}`, true);
+            }
+
+            const resultDisplayDiv = document.getElementById('publicTestResultDisplay');
+            resultDisplayDiv.innerHTML = `
+                <h3>Your Test Results for ${currentTest.title}</h3>
+                <p><strong>Score:</strong> ${score}</p>
+                <p><strong>Result:</strong> ${breakdown}</p>
+                <p style="margin-top: 15px; font-size: 0.9em;">These results have been recorded for staff review. For a professional evaluation or to track your progress, please create an account.</p>
+                <button class="btn" id="publicTestBackToSelectionBtn">Back to Test Selection</button>
+                <button class="btn btn-secondary" id="publicTestGoToMainBtn">Go to Main Screen</button>
+            `;
+            resultDisplayDiv.classList.remove('hidden');
+            document.getElementById('testQuestions').innerHTML = ''; // Clear questions
+            document.getElementById('submitTestBtn').classList.add('hidden'); // Hide submit
+            document.getElementById('cancelTestBtn').classList.add('hidden'); // Hide cancel
+
+            document.getElementById('publicTestBackToSelectionBtn').onclick = () => {
+                resultDisplayDiv.classList.add('hidden');
+                document.getElementById('testInterface').classList.add('hidden');
+                document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
+                document.getElementById('cancelTestBtn').classList.remove('hidden');
+                showPublicMentalHealthTestSelection(); // Go back to public test selection
+            };
+
+            document.getElementById('publicTestGoToMainBtn').onclick = () => {
+                resultDisplayDiv.classList.add('hidden');
+                document.getElementById('testInterface').classList.add('hidden');
+                document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
+                document.getElementById('cancelTestBtn').classList.remove('hidden');
+                showLoginScreenLayout(); // Go back to main login/public access screen
+                showLogin();
+            };
+            console.log("Public: Test results displayed on screen.");
+        }
+
+        // Cancel Public Mental Health Test
+        function cancelPublicTest() {
+            console.log("Public: Test cancelled.");
+            currentTest = null;
+            document.getElementById('testInterface').classList.add('hidden');
+            document.getElementById('testInterface').classList.remove('public-test-interface');
+            document.getElementById('testQuestions').innerHTML = '';
+            document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Ensure hidden
+            showPublicMentalHealthTestSelection(); // Return to public test selection
+        }
+
+
+        // --- TMS Daily Questionnaire Functions (Patient Side / Public Access) ---
+
+        // Called from public button OR logged-in button
+        function showTmsQuestionnaire(isLoggedInCall = false) {
+            // Reset contact info fields for fresh start
+            document.getElementById('tmsFullName').value = '';
+            document.getElementById('tmsEmail').value = '';
+            document.getElementById('tmsPhone').value = '';
+
+            // Pre-fill if logged in
+            if (isLoggedInCall && currentUser) {
+                get(ref(database, 'patients/' + currentUser.uid)).then(snapshot => {
+                    const patientData = snapshot.val();
+                    if (patientData) {
+                        document.getElementById('tmsFullName').value = patientData.fullName || '';
+                        document.getElementById('tmsEmail').value = patientData.email || '';
+                        document.getElementById('tmsPhone').value = patientData.phoneNumber || '';
+                    }
+                }).catch(error => console.error("Error pre-filling TMS form:", error));
+            }
+
+            hideAllScreens(); // Hide login/main dashboard
+            document.getElementById('tmsQuestionnaireSection').classList.remove('hidden');
+            resetTmsForm(); // Clear any previous inputs for questions (but keep contact info from above pre-fill)
+            console.log("Patient: Showing TMS Daily Questionnaire. Logged-in call:", isLoggedInCall);
+        }
+
+        // Called from public button OR logged-in button
         function cancelTmsQuestionnaire() {
             document.getElementById('tmsQuestionnaireSection').classList.add('hidden');
-            document.getElementById('formsSection').classList.remove('hidden');
-            resetTmsForm();
+            
+            // Depending on where it was launched from, show the correct previous screen
+            if (currentUser) { // If a user is logged in, they came from the patient dashboard
+                showPatientSection('forms'); // Back to patient dashboard forms
+            } else { // Otherwise, they came from the public access screen
+                showLoginScreenLayout(); // Back to the login/public access page
+                showLogin(); // Ensure login form is visible
+            }
+            resetTmsForm(); // Clear all fields
             console.log("Patient: TMS Daily Questionnaire cancelled.");
         }
 
         function resetTmsForm() {
+            // Reset contact info fields (if not pre-filled by logged-in user logic)
+            // No need to clear tmsFullName, tmsEmail, tmsPhone here, as showTmsQuestionnaire does it.
+
+            // Reset questionnaire fields
             document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
             document.getElementById('tmsQuestionnaireSection').querySelectorAll('textarea').forEach(textarea => textarea.value = '');
             document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="number"]').forEach(input => input.value = '');
@@ -1866,8 +2453,12 @@
         }
 
         async function submitTmsQuestionnaire() {
-            if (!currentUser) {
-                showMessage('You must be logged in to submit a questionnaire.', true);
+            const tmsFullName = document.getElementById('tmsFullName').value.trim();
+            const tmsEmail = document.getElementById('tmsEmail').value.trim();
+            const tmsPhone = document.getElementById('tmsPhone').value.trim();
+
+            if (!tmsFullName || !tmsEmail || !tmsPhone) {
+                showMessage('Please provide your Full Name, Email, and Phone Number at the top of the questionnaire.', true);
                 return;
             }
 
@@ -1946,13 +2537,29 @@
             }
 
             try {
-                const newTmsRef = push(ref(database, 'tmsQuestionnaires/' + currentUser.uid));
-                await set(newTmsRef, {
-                    userId: currentUser.uid,
-                    fullName: (await get(ref(database, 'patients/' + currentUser.uid))).val().fullName, // Get patient name for admin view
+                let tmsRefPath;
+                let tmsData = {
+                    fullName: tmsFullName,
+                    email: tmsEmail,
+                    phoneNumber: tmsPhone,
                     answers: answers,
                     submittedAt: new Date().toISOString()
-                });
+                };
+
+                if (currentUser) {
+                    // If logged in, save under user's specific path
+                    tmsRefPath = `tmsQuestionnaires/${currentUser.uid}`;
+                    tmsData.userId = currentUser.uid; // Add userId to data
+                    // If currentUser exists, their name/email/phone from profile is more authoritative
+                    // But for the form, we'll use what they typed if it differs.
+                } else {
+                    // If not logged in, save to a public path
+                    tmsRefPath = `publicTmsQuestionnaires`;
+                }
+
+                const newTmsRef = push(ref(database, tmsRefPath));
+                await set(newTmsRef, tmsData);
+                
                 console.log("Patient: TMS Questionnaire submitted successfully. Path:", newTmsRef.toString());
                 showMessage('TMS Daily Questionnaire submitted successfully!');
                 cancelTmsQuestionnaire();
@@ -1980,7 +2587,8 @@
 
                 if (rawSnapshotData) {
                     const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                    const pendingAppointments = appointmentsArray.filter(appt => appt.status === 'pending');
+                    // CRITICAL FIX: Ensure status is trimmed and explicitly 'pending'
+                    const pendingAppointments = appointmentsArray.filter(appt => appt.status && appt.status.trim() === 'pending'); 
                     pendingAppointments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
                     pendingAppointments.forEach((appt) => {
@@ -1988,12 +2596,13 @@
                         const statusClass = `status-${appt.status}`;
                         const displayDateTime = appt.appointmentDate && appt.appointmentTime
                             ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
-                            : appt.time || 'N/A';
+                            : appt.time || 'N/A'; // Fallback for old data without specific date/time
                         adminPendingAppointmentsListDiv.innerHTML += `
                             <div class="appointment-card admin-card">
                                 <h4>Appointment Request from ${appt.fullName}</h4>
                                 <p><strong>Email:</strong> ${appt.email}</p>
                                 <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
+                                <p><strong>Date of Birth:</strong> ${appt.dob || 'N/A'}</p>
                                 <p><strong>Requested Date & Time:</strong> ${displayDateTime}</p>
                                 <p><strong>Reason:</strong> ${appt.reason}</p>
                                 <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
@@ -2023,8 +2632,6 @@
             });
         }
 
-        // Removed loadAdminApprovedAppointments and loadAdminDeniedAppointments as per instruction
-
         // Approve Appointment
         async function approveAppointment(apptId) {
             if (!currentUser || !isAdmin) {
@@ -2036,12 +2643,10 @@
                 await update(ref(database, 'appointments/' + apptId), { status: 'approved' });
                 console.log("Admin: Appointment approved:", apptId);
                 showMessage('Appointment approved successfully!');
-                // Re-render calendar after approval to immediately show the new event
                 if (adminCalendarInstance) {
                      adminCalendarInstance.refetchEvents();
                      console.log("Admin: Calendar events refetched after approval.");
                 }
-                // The onValue listener in loadAdminAppointments will automatically remove it from pending.
             } catch (error) {
                 console.error("Admin: Error approving appointment:", error);
                 showMessage(`Error approving appointment: ${error.message}`, true);
@@ -2059,12 +2664,10 @@
                 await update(ref(database, 'appointments/' + apptId), { status: 'denied' });
                 console.log("Admin: Appointment denied:", apptId);
                 showMessage('Appointment denied.');
-                // Re-render calendar after denial to remove the event if it was somehow on calendar
                 if (adminCalendarInstance) {
                     adminCalendarInstance.refetchEvents();
                     console.log("Admin: Calendar events refetched after denial.");
                 }
-                // The onValue listener in loadAdminAppointments will automatically remove it from pending.
             } catch (error) {
                 console.error("Admin: Error denying appointment:", error);
                 showMessage(`Error denying appointment: ${error.message}`, true);
@@ -2078,19 +2681,21 @@
                 return;
             }
             document.getElementById('addPatientForm').classList.remove('hidden');
-            document.getElementById('patientsList').classList.add('hidden'); // Hide patient list when adding
-            document.getElementById('patientDetailView').classList.add('hidden'); // Hide detail view
+            document.getElementById('patientsList').classList.add('hidden'); 
+            document.getElementById('patientDetailView').classList.add('hidden'); 
+            // Clear the form fields
+            document.getElementById('newPatientName').value = '';
+            document.getElementById('newPatientEmail').value = '';
+            document.getElementById('newPatientPassword').value = '';
+            document.getElementById('newPatientDob').value = '';
+            document.getElementById('newPatientPhone').value = '';
+            document.getElementById('newPatientGender').value = '';
             console.log("Admin: Showing add patient form.");
         }
 
         function hideAddPatientForm() {
             document.getElementById('addPatientForm').classList.add('hidden');
-            document.getElementById('patientsList').classList.remove('hidden'); // Show patient list again
-            document.getElementById('newPatientName').value = '';
-            document.getElementById('newPatientEmail').value = '';
-            document.getElementById('newPatientPassword').value = '';
-            document.getElementById('newPatientPhone').value = '';
-            document.getElementById('newPatientGender').value = '';
+            document.getElementById('patientsList').classList.remove('hidden'); 
             console.log("Admin: Hiding add patient form.");
         }
 
@@ -2103,10 +2708,11 @@
             const name = document.getElementById('newPatientName').value;
             const email = document.getElementById('newPatientEmail').value;
             const password = document.getElementById('newPatientPassword').value;
+            const dob = document.getElementById('newPatientDob').value; // Get DOB
             const phone = document.getElementById('newPatientPhone').value;
             const gender = document.getElementById('newPatientGender').value;
 
-            if (!name || !email || !password || !phone || !gender) {
+            if (!name || !email || !password || !dob || !phone || !gender) { // Include dob in validation
                 showMessage('Please fill in all fields for the new patient', true);
                 return;
             }
@@ -2125,6 +2731,7 @@
                     fullName: name,
                     email: email,
                     phoneNumber: phone,
+                    dob: dob, // Save DOB
                     gender: gender,
                     createdAt: new Date().toISOString()
                 });
@@ -2148,8 +2755,8 @@
             console.log("Admin: Loading list of patient buttons.");
             
             document.getElementById('patientsList').classList.remove('hidden');
-            document.getElementById('patientDetailView').classList.add('hidden'); // Hide detail view
-            document.getElementById('addPatientForm').classList.add('hidden'); // Hide add patient form
+            document.getElementById('patientDetailView').classList.add('hidden'); 
+            document.getElementById('addPatientForm').classList.add('hidden'); 
 
             onValue(ref(database, 'patients'), (snapshot) => {
                 patientsListDiv.innerHTML = '';
@@ -2172,7 +2779,7 @@
                         filteredPatients.forEach((patient) => {
                             patientsListDiv.innerHTML += `
                                 <button class="btn patient-card-btn" data-patient-id="${patient.id}">
-                                    ${patient.fullName}
+                                    ${patient.fullName} (${patient.email})
                                 </button>
                             `;
                         });
@@ -2220,6 +2827,7 @@
                         <p><strong>Name:</strong> ${patientData.fullName}</p>
                         <p><strong>Email:</strong> ${patientData.email}</p>
                         <p><strong>Phone:</strong> ${patientData.phoneNumber}</p>
+                        <p><strong>Date of Birth:</strong> ${patientData.dob || 'N/A'}</p>
                         <p><strong>Gender:</strong> ${patientData.gender}</p>
                         <p><strong>Account Created:</strong> ${new Date(patientData.createdAt).toLocaleString()}</p>
                         <p><strong>Firebase UID:</strong> ${patientId}</p>
@@ -2284,6 +2892,7 @@
                     contentHtml = '<p>No mental health test results found for this patient.</p>';
                 }
             } else if (dataType === 'tmsQuestionnaires') {
+                // For a specific patient, fetch only their logged-in TMS questionnaires
                 const tmsQuestionnairesSnapshot = await get(ref(database, `tmsQuestionnaires/${patientId}`));
                 const tmsQuestionnaires = [];
                 if (tmsQuestionnairesSnapshot.exists()) {
@@ -2295,12 +2904,15 @@
                 tmsQuestionnaires.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
                 if (tmsQuestionnaires.length > 0) {
                     hasResults = true;
-                    contentHtml += '<h3 style="margin-bottom: 15px;">TMS Daily Questionnaires:</h3>';
+                    contentHtml += '<h3 style="margin-bottom: 15px;">TMS Daily Questionnaires (Logged In):</h3>';
                     tmsQuestionnaires.forEach((q, index) => {
                         contentHtml += `
                             <div class="tms-questionnaire-item" style="margin-bottom: 15px;">
                                 <h4>Questionnaire Submitted on: ${new Date(q.submittedAt).toLocaleString()}</h4>
                                 <ul>
+                                    <li><strong>Full Name:</strong> ${q.fullName || 'N/A'}</li>
+                                    <li><strong>Email:</strong> ${q.email || 'N/A'}</li>
+                                    <li><strong>Phone:</strong> ${q.phoneNumber || 'N/A'}</li>
                                     <li><strong>Q1. Eat/Drink:</strong> ${q.answers.q1_eat_drink} ${q.answers.q1_eat_drink === 'yes' ? `(Details: ${q.answers.q1_eat_drink_details})` : ''}</li>
                                     <li><strong>Q2. Meds Prescribed:</strong> ${q.answers.q2_med_prescribed}</li>
                                     ${q.answers.q2_med_prescribed === 'no' ? `<li><strong>Q2a. Med Changes:</strong> ${q.answers.q2a_med_changes} ${q.answers.q2a_med_changes === 'yes' ? `(Details: ${q.answers.q2a_med_changes_details})` : ''}</li>` : ''}
@@ -2313,7 +2925,7 @@
                         `;
                     });
                 } else {
-                    contentHtml = '<p>No TMS daily questionnaires found for this patient.</p>';
+                    contentHtml = '<p>No TMS daily questionnaires found for this specific logged-in patient.</p>';
                 }
             } else if (dataType === 'bookedAppointments') {
                 const appointmentsSnapshot = await get(ref(database, 'appointments'));
@@ -2321,7 +2933,7 @@
                 if (appointmentsSnapshot.exists()) {
                     appointmentsSnapshot.forEach(child => {
                         const appt = child.val();
-                        if (appt.userId === patientId && appt.status === 'approved') {
+                        if (appt.userId === patientId && appt.status && appt.status.trim() === 'approved') { 
                             bookedAppointments.push(appt);
                         }
                     });
@@ -2330,7 +2942,7 @@
                 bookedAppointments.sort((a, b) => {
                     const dateA = new Date(`${a.appointmentDate}T${a.appointmentTime}`);
                     const dateB = new Date(`${b.appointmentDate}T${b.appointmentTime}`);
-                    return dateB - dateA; // Sort by most recent first
+                    return dateB - dateA; 
                 });
 
                 if (bookedAppointments.length > 0) {
@@ -2343,6 +2955,7 @@
                         contentHtml += `
                             <div class="appointment-card booked-appt-card" style="margin-bottom: 15px;">
                                 <h4>Appointment on ${displayDateTime}</h4>
+                                <p><strong>Date of Birth:</strong> ${appt.dob || 'N/A'}</p>
                                 <p><strong>Reason:</strong> ${appt.reason}</p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Approved on: ${new Date(appt.createdAt).toLocaleString()}</p>
                             </div>
@@ -2361,8 +2974,239 @@
             console.log(`Admin: ${dataType} loaded for patient ID:`, patientId);
         }
 
+        // NEW: Load all TMS Submissions for Admin Portal
+        async function loadAdminTmsSubmissions() {
+            const tmsSubmissionsListDiv = document.getElementById('tmsSubmissionsList');
+            if (!currentUser || !isAdmin) {
+                tmsSubmissionsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
+                return;
+            }
+            console.log("Admin: Loading all TMS submissions.");
+            tmsSubmissionsListDiv.innerHTML = '<p>Loading TMS submissions...</p>'; // Show loading
+
+            let allTmsSubmissions = [];
+
+            // 1. Fetch from logged-in users' paths
+            try {
+                const patientsSnapshot = await get(ref(database, 'patients'));
+                if (patientsSnapshot.exists()) {
+                    for (const userId in patientsSnapshot.val()) {
+                        const userTmsSnapshot = await get(ref(database, `tmsQuestionnaires/${userId}`));
+                        if (userTmsSnapshot.exists()) {
+                            userTmsSnapshot.forEach(childSnapshot => {
+                                const submission = childSnapshot.val();
+                                allTmsSubmissions.push({ id: childSnapshot.key, fromUser: userId, ...submission });
+                            });
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Admin: Error fetching logged-in TMS submissions:", error);
+            }
+
+            // 2. Fetch from public submissions path
+            try {
+                const publicTmsSnapshot = await get(ref(database, 'publicTmsQuestionnaires'));
+                if (publicTmsSnapshot.exists()) {
+                    publicTmsSnapshot.forEach(childSnapshot => {
+                        const submission = childSnapshot.val();
+                        allTmsSubmissions.push({ id: childSnapshot.key, fromUser: 'public', ...submission });
+                    });
+                }
+            } catch (error) {
+                console.error("Admin: Error fetching public TMS submissions:", error);
+            }
+
+            allTmsSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Sort by most recent
+
+            tmsSubmissionsListDiv.innerHTML = ''; // Clear loading message
+
+            if (allTmsSubmissions.length > 0) {
+                allTmsSubmissions.forEach(submission => {
+                    const submittedByInfo = submission.fromUser === 'public' 
+                        ? `<strong>Public Submission</strong>` 
+                        : `<strong>Logged-in User</strong>`; // User ID already in button data-user-id
+
+                    tmsSubmissionsListDiv.innerHTML += `
+                        <div class="tms-submission-card" data-submission-id="${submission.id}" data-submission-type="${submission.fromUser === 'public' ? 'public' : 'user'}" data-user-id="${submission.userId || ''}">
+                            <h4>TMS Questionnaire from ${submission.fullName || 'Anonymous'} (${submittedByInfo})</h4>
+                            <p><strong>Email:</strong> ${submission.email || 'N/A'}</p>
+                            <p><strong>Phone:</strong> ${submission.phoneNumber || 'N/A'}</p>
+                            <p><strong>Submitted On:</strong> ${new Date(submission.submittedAt).toLocaleString()}</p>
+                            <button class="btn btn-view-details" data-submission-id="${submission.id}" data-submission-path="${submission.fromUser === 'public' ? 'publicTmsQuestionnaires' : `tmsQuestionnaires/${submission.fromUser}`}">View Details</button>
+                        </div>
+                    `;
+                });
+
+                // Attach event listeners for "View Details" buttons
+                document.querySelectorAll('.tms-submission-card .btn-view-details').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const submissionId = event.target.dataset.submissionId;
+                        const submissionPath = event.target.dataset.submissionPath; // e.g., "publicTmsQuestionnaires" or "tmsQuestionnaires/UID"
+                        viewTmsSubmissionDetails(submissionId, submissionPath);
+                    });
+                });
+
+            } else {
+                tmsSubmissionsListDiv.innerHTML = '<p>No TMS Daily Questionnaires found.</p>';
+            }
+            console.log("Admin: TMS submissions loaded. Total:", allTmsSubmissions.length);
+        }
+
+        // NEW: Function to display full TMS submission details in a modal
+        async function viewTmsSubmissionDetails(submissionId, submissionPath) {
+            console.log("Admin: Viewing TMS submission details for ID:", submissionId, "Path:", submissionPath);
+            try {
+                const submissionSnapshot = await get(ref(database, `${submissionPath}/${submissionId}`));
+                const submission = submissionSnapshot.val();
+
+                if (submission) {
+                    document.getElementById('tmsModalPatientName').textContent = submission.fullName || 'Anonymous';
+                    document.getElementById('tmsModalPatientEmail').textContent = submission.email || 'N/A';
+                    document.getElementById('tmsModalPatientPhone').textContent = submission.phoneNumber || 'N/A';
+                    document.getElementById('tmsModalSubmittedAt').textContent = new Date(submission.submittedAt).toLocaleString();
+                    
+                    const answersDiv = document.getElementById('tmsModalAnswers');
+                    answersDiv.innerHTML = '<h4>Questionnaire Answers:</h4>';
+                    // Reconstruct answers in desired order
+                    const orderedAnswerKeys = [
+                        'q1_eat_drink', 'q1_eat_drink_details',
+                        'q2_med_prescribed', 'q2a_med_changes', 'q2a_med_changes_details',
+                        'q3_sleep_hours',
+                        'q4_caffeine', 'q4_caffeine_details',
+                        'q5_alcohol', 'q5_alcohol_details',
+                        'q6_metal_head', 'q6_metal_head_details'
+                    ];
+
+                    orderedAnswerKeys.forEach(key => {
+                        if (submission.answers.hasOwnProperty(key) && submission.answers[key] !== undefined && submission.answers[key] !== null && submission.answers[key] !== '') {
+                            let readableQuestion = '';
+                            let answerValue = submission.answers[key];
+
+                            switch(key) {
+                                case 'q1_eat_drink': readableQuestion = '1. Had anything to eat/drink:'; break;
+                                case 'q1_eat_drink_details': readableQuestion = 'Details (Q1):'; break;
+                                case 'q2_med_prescribed': readableQuestion = '2. Meds as prescribed:'; break;
+                                case 'q2a_med_changes': readableQuestion = '2a. Med Changes:'; break;
+                                case 'q2a_med_changes_details': readableQuestion = 'Details (Q2a):'; break;
+                                case 'q3_sleep_hours': readableQuestion = '3. Sleep hours:'; break;
+                                case 'q4_caffeine': readableQuestion = '4. Caffeine intake:'; break;
+                                case 'q4_caffeine_details': readableQuestion = 'Details (Q4):'; break;
+                                case 'q5_alcohol': readableQuestion = '5. Alcohol intake:'; break;
+                                case 'q5_alcohol_details': readableQuestion = 'Details (Q5):'; break;
+                                case 'q6_metal_head': readableQuestion = '6. Metal in head:'; break;
+                                case 'q6_metal_head_details': readableQuestion = 'Details (Q6):'; break;
+                                default: readableQuestion = key.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').replace(/^q\d+\s*/, '').trim() + ':';
+                            }
+                            answersDiv.innerHTML += `<p><strong>${readableQuestion}</strong> ${answerValue}</p>`;
+                        }
+                    });
+
+                    document.getElementById('tmsDetailModal').classList.remove('hidden');
+                    console.log("Admin: TMS submission details modal displayed for:", submission.fullName);
+                } else {
+                    showMessage('TMS submission details not found.', true);
+                    console.error("Admin: TMS submission not found for ID:", submissionId, "Path:", submissionPath);
+                }
+            } catch (error) {
+                console.error("Admin: Error fetching TMS submission details:", error);
+                showMessage(`Error fetching TMS submission details: ${error.message}`, true);
+            }
+        }
+
+        // NEW: Load all Public Mental Health Test Submissions for Admin Portal
+        async function loadAdminPublicTestResults() {
+            const publicTestResultsListDiv = document.getElementById('publicTestResultsList');
+            if (!currentUser || !isAdmin) {
+                publicTestResultsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
+                return;
+            }
+            console.log("Admin: Loading all public mental health test submissions.");
+            publicTestResultsListDiv.innerHTML = '<p>Loading public test results...</p>'; // Show loading
+
+            try {
+                const publicTestsSnapshot = await get(ref(database, 'publicMentalHealthTestSubmissions'));
+                const publicTestSubmissions = [];
+                if (publicTestsSnapshot.exists()) {
+                    publicTestsSnapshot.forEach(childSnapshot => {
+                        const submission = childSnapshot.val();
+                        publicTestSubmissions.push({ id: childSnapshot.key, ...submission });
+                    });
+                }
+
+                publicTestSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Sort by most recent
+
+                publicTestResultsListDiv.innerHTML = ''; // Clear loading message
+
+                if (publicTestSubmissions.length > 0) {
+                    publicTestSubmissions.forEach(submission => {
+                        publicTestResultsListDiv.innerHTML += `
+                            <div class="public-test-submission-card" data-submission-id="${submission.id}">
+                                <h4>${submission.testType} - Submitted on: ${new Date(submission.submittedAt).toLocaleString()}</h4>
+                                <p><strong>Score:</strong> ${submission.score}</p>
+                                <p><strong>Breakdown:</strong> ${submission.breakdown}</p>
+                                <button class="btn btn-view-details" data-submission-id="${submission.id}">View Details</button>
+                            </div>
+                        `;
+                    });
+
+                    // Attach event listeners for "View Details" buttons
+                    document.querySelectorAll('#publicTestResultsList .btn-view-details').forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const submissionId = event.target.dataset.submissionId;
+                            viewPublicTestSubmissionDetails(submissionId);
+                        });
+                    });
+
+                } else {
+                    publicTestResultsListDiv.innerHTML = '<p>No public mental health test results found.</p>';
+                }
+                console.log("Admin: Public test submissions loaded. Total:", publicTestSubmissions.length);
+
+            } catch (error) {
+                console.error("Admin: Error fetching public mental health test submissions:", error);
+                publicTestResultsListDiv.innerHTML = '<p>Error loading public test results.</p>';
+                showMessage(`Error loading public test results: ${error.message}`, true);
+            }
+        }
+
+        // NEW: Function to display full Public Test submission details in a modal
+        async function viewPublicTestSubmissionDetails(submissionId) {
+            console.log("Admin: Viewing public test submission details for ID:", submissionId);
+            try {
+                const submissionSnapshot = await get(ref(database, `publicMentalHealthTestSubmissions/${submissionId}`));
+                const submission = submissionSnapshot.val();
+
+                if (submission) {
+                    document.getElementById('publicTestModalType').textContent = submission.testType;
+                    document.getElementById('publicTestModalScore').textContent = submission.score;
+                    document.getElementById('publicTestModalBreakdown').textContent = submission.breakdown;
+                    document.getElementById('publicTestModalSubmittedAt').textContent = new Date(submission.submittedAt).toLocaleString();
+                    
+                    const answersDiv = document.getElementById('publicTestModalAnswers');
+                    answersDiv.innerHTML = '<h4>Questionnaire Answers:</h4>';
+                    if (submission.answers && Array.isArray(submission.answers)) {
+                        submission.answers.forEach((ans, index) => {
+                            answersDiv.innerHTML += `<p><strong>${index + 1}. ${ans.question}:</strong> ${ans.answer} (Score: ${ans.score})</p>`;
+                        });
+                    } else {
+                        answersDiv.innerHTML += '<p>No detailed answers available.</p>';
+                    }
+
+                    document.getElementById('publicTestDetailModal').classList.remove('hidden');
+                    console.log("Admin: Public test submission details modal displayed for:", submission.testType);
+                } else {
+                    showMessage('Public test submission details not found.', true);
+                    console.error("Admin: Public test submission not found for ID:", submissionId);
+                }
+            } catch (error) {
+                console.error("Admin: Error fetching public test submission details:", error);
+                showMessage(`Error fetching public test submission details: ${error.message}`, true);
+            }
+        }
+
+
         // Helper to parse old string format (e.g., "Thursday 1-2 PM") to a Date object
-        // This function will find the NEXT upcoming occurrence of the specified day/time from TODAY.
         function getNextOccurringDateTime(dayTimeString) {
             console.log("Calendar: Attempting to parse legacy time string:", dayTimeString);
             const now = new Date();
@@ -2383,7 +3227,7 @@
             const ampm = timePartMatch[2] ? timePartMatch[2].toLowerCase() : '';
 
             if (ampm === 'pm' && hour < 12) hour += 12;
-            if (ampm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
+            if (amppm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
 
             // Start with today's date components, then set the target hour and minute
             let resultDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -2392,8 +3236,7 @@
             let currentDayIndex = resultDate.getDay();
             let dayDifference = targetDayIndex - currentDayIndex;
 
-            // If target day is earlier in the week, or it's today and time has passed, jump to next week.
-            if (dayDifference < 0 || (dayDifference === 0 && resultDate < now)) {
+            if (dayDifference < 0 || (dayDifference === 0 && resultDate.getTime() < now.getTime())) {
                 dayDifference += 7;
             }
 
@@ -2429,7 +3272,6 @@
 
             adminCalendarInstance = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                // Removed initialDate to let it default to today's date for better navigation interaction
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
@@ -2461,8 +3303,9 @@
                         const events = [];
                         if (rawSnapshotData) {
                             const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                            const approvedAppointments = appointmentsArray.filter(appt => appt.status === 'approved');
-                            console.log("Calendar: Filtered approved appointments:", approvedAppointments);
+                            // CRITICAL FIX: Ensure status is trimmed and explicitly 'approved'
+                            const approvedAppointments = appointmentsArray.filter(appt => appt.status && appt.status.trim() === 'approved');
+                            console.log("Calendar: Filtered approved appointments (after trim):", approvedAppointments);
 
                             const patientPromises = approvedAppointments.map(appt => get(ref(database, 'patients/' + appt.userId)));
                             const patientSnapshots = await Promise.all(patientPromises);
@@ -2494,56 +3337,55 @@
                                     const startDateTime = new Date(year, month, day, hour, minute, 0, 0);
                                     
                                     // Calculate end time by adding 1 hour to the local time
-                                    const endDateTime = new Date(startDateTime); // Clone start time
+                                    const endDateTime = new Date(startDateTime); 
                                     endDateTime.setHours(startDateTime.getHours() + 1);
 
-                                    // Pass Date objects directly to FullCalendar
                                     eventStart = startDateTime;
                                     eventEnd = endDateTime;
                                     
-                                    // Updated Debugging Log
                                     console.log(`Calendar: Debugging NEW event times for ID ${appt.id}. ` + 
                                                 `Original Firebase: ${appt.appointmentDate} ${appt.appointmentTime}, ` +
                                                 `Start (local Date object): ${eventStart.toLocaleString()}, ` +
-                                                `End (local Date object, +1hr): ${eventEnd.toLocaleString()}`);
+                                                `End (local Date object, +1hr): ${endDateTime.toLocaleString()}`);
                                     
                                     displayTimeForModal = startDateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                                     eventTitle = `Appt with ${patientFirstName}`; 
 
-                                    console.log(`Calendar: Event (NEW) ID: ${appt.id}, Title: "${eventTitle}", Start: "${eventStart.toISOString()}", End: "${eventEnd.toISOString()}"`);
+                                    console.log(`Calendar: Event (NEW) ID: ${appt.id}, Title: "${eventTitle}", Start (Date object): "${eventStart}", End (Date object): "${eventEnd}"`);
 
                                 } 
                                 // Case 2: Legacy appointments with only day and time string (e.g., "Friday 1-2 PM")
                                 else if (appt.time) {
-                                    const inferredDate = getNextOccurringDateTime(appt.time); // This returns a Date object
+                                    const inferredDate = getNextOccurringDateTime(appt.time); 
                                     if (inferredDate) {
                                         eventStart = inferredDate;
-                                        const endDateTime = new Date(inferredDate.getTime() + 60 * 60 * 1000); // Add 1 hour to the timestamp
+                                        const endDateTime = new Date(inferredDate.getTime() + 60 * 60 * 1000); 
                                         eventEnd = endDateTime;
                                         
-                                        displayTimeForModal = appt.time; // Use original string for modal
+                                        displayTimeForModal = appt.time; 
                                         eventTitle = `Appt (Legacy) ${patientFirstName}`;
-                                        console.log(`Calendar: Event (LEGACY) ID: ${appt.id}, Title: "${eventTitle}", Inferred Start: "${eventStart.toLocaleString()}", Inferred End: "${eventEnd.toLocaleString()}"`);
+                                        console.log(`Calendar: Event (LEGACY) ID: ${appt.id}, Title: "${eventTitle}", Inferred Start (local): "${eventStart.toLocaleString()}", Inferred End (local): "${endDateTime.toLocaleString()}"`);
                                     } else {
                                         console.error(`Calendar: Could not infer date for legacy appointment ID ${appt.id} with time: ${appt.time}. Skipping event.`);
-                                        return; // Skip this event if date inference fails
+                                        return; 
                                     }
                                 } else {
                                     console.error(`Calendar: Appointment ID ${appt.id} missing valid date/time information. Skipping event.`);
-                                    return; // Skip this event if no valid date/time
+                                    return; 
                                 }
                                 
                                 events.push({
                                     id: appt.id,
                                     title: eventTitle,
-                                    start: eventStart, // Now passing Date object directly
-                                    end: eventEnd,     // Now passing Date object directly
+                                    start: eventStart, 
+                                    end: eventEnd,     
                                     allDay: false, 
                                     classNames: ['approved-event'], 
                                     extendedProps: { 
                                         patientName: patientMap[appt.userId] || 'N/A',
                                         patientEmail: appt.email,
                                         patientPhone: appt.phoneNumber,
+                                        dob: appt.dob || 'N/A', 
                                         reason: appt.reason,
                                         status: appt.status,
                                         displayTime: displayTimeForModal, 
@@ -2569,7 +3411,7 @@
                         startDateTime = event.start;
                     } else {
                         console.warn("Calendar: Event start date is not a valid Date object for event:", event.id, event.start);
-                        startDateTime = new Date(); // Fallback
+                        startDateTime = new Date(); 
                     }
 
                     const formattedDate = startDateTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -2579,9 +3421,10 @@
                     document.getElementById('modalPatientEmail').textContent = props.patientEmail;
                     document.getElementById('modalPatientPhone').textContent = props.patientPhone;
                     document.getElementById('modalEventDateTime').textContent = `${formattedDate} at ${props.displayTime}`;
+                    document.getElementById('modalEventDob').textContent = props.dob; // Display DOB in modal
                     document.getElementById('modalEventReason').textContent = props.reason;
                     document.getElementById('modalEventStatus').textContent = props.status.toUpperCase();
-
+                    
                     eventDetailsModal.classList.remove('hidden'); 
                     console.log("Calendar: Event details modal displayed.");
                 }
@@ -2607,7 +3450,8 @@
         // --- Initial Load Logic and Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DOM Content Loaded. Setting up event listeners.");
-            // Set up main screen navigation
+
+            // Set up main screen navigation (new layout)
             document.getElementById('loginBtn').addEventListener('click', login);
             document.getElementById('showSignupBtn').addEventListener('click', showSignup);
             document.getElementById('showAdminLoginBtn').addEventListener('click', showAdminLogin);
@@ -2618,22 +3462,50 @@
             document.getElementById('adminLoginBtn').addEventListener('click', adminLogin);
             document.getElementById('backToPatientLoginBtn').addEventListener('click', showLogin);
 
+            // NEW: Public access buttons (JavaScript actions)
+            document.getElementById('publicTmsQuestionnaireBtn').addEventListener('click', () => showTmsQuestionnaire(false)); // false means not logged-in call
+            document.getElementById('publicMentalHealthTestsBtn').addEventListener('click', showPublicMentalHealthTestSelection);
+            document.getElementById('backToPublicAccessBtn').addEventListener('click', showLoginScreenLayout); // From public mental health tests selection
+
+            // Public mental health test selection buttons
+            document.querySelectorAll('#publicMentalHealthTestsSection .test-card').forEach(card => {
+                card.addEventListener('click', (event) => {
+                    const testType = event.currentTarget.dataset.testType; // Use currentTarget to get the card itself
+                    startPublicTest(testType);
+                });
+            });
+
+
             // Set up dashboard logout buttons
             document.getElementById('patientLogoutBtn').addEventListener('click', logout);
             document.getElementById('adminLogoutBtn').addEventListener('click', logout);
 
-            // Set up patient dashboard buttons
+            // Set up patient dashboard buttons (logged-in mental health tests)
             document.getElementById('showBookingFormBtn').addEventListener('click', showBookingForm);
             document.getElementById('submitAppointmentRequestBtn').addEventListener('click', bookAppointment);
             document.getElementById('hideBookingFormBtn').addEventListener('click', hideBookingForm);
-            document.getElementById('submitTestBtn').addEventListener('click', submitTest);
-            document.getElementById('cancelTestBtn').addEventListener('click', cancelTest);
+            
+            // Logged-in test specific buttons
+            // These will be overridden by publicTest logic if in public mode, which is correct.
+            document.getElementById('submitTestBtn').addEventListener('click', submitTest); 
+            document.getElementById('cancelTestBtn').addEventListener('click', cancelTest); 
 
-            // Set up patient TMS Questionnaire buttons and event handlers
-            document.getElementById('showTmsQuestionnaireBtn').addEventListener('click', showTmsQuestionnaire);
+
+            // Set up patient TMS Questionnaire buttons (logged-in specific)
+            document.getElementById('showTmsQuestionnaireBtnLoggedIn').addEventListener('click', () => showTmsQuestionnaire(true)); // true means logged-in call
             document.getElementById('submitTmsQuestionnaireBtn').addEventListener('click', submitTmsQuestionnaire);
             document.getElementById('cancelTmsQuestionnaireBtn').addEventListener('click', cancelTmsQuestionnaire);
             setupTmsFormListeners(); // Initialize listeners for conditional follow-ups
+
+            // Setup TMS Detail Modal close button
+            document.getElementById('closeTmsModalBtn').addEventListener('click', () => {
+                document.getElementById('tmsDetailModal').classList.add('hidden');
+            });
+
+            // Setup Public Test Detail Modal close button
+            document.getElementById('closePublicTestModalBtn').addEventListener('click', () => {
+                document.getElementById('publicTestDetailModal').classList.add('hidden');
+            });
 
 
             // Set up patient sidebar navigation using event delegation
@@ -2644,11 +3516,11 @@
                 }
             });
 
-            // Set up test card event listeners using event delegation for mentalHealthSection
+            // Set up test card event listeners using event delegation for mentalHealthSection (logged-in tests)
             document.getElementById('mentalHealthSection').addEventListener('click', (event) => {
                 if (event.target.closest('.test-card')) {
                     const testType = event.target.closest('.test-card').dataset.testType;
-                    console.log("Mental health test card clicked:", testType);
+                    console.log("Mental health test card clicked (logged-in):", testType);
                     startTest(testType);
                 }
             });
@@ -2661,12 +3533,6 @@
                 }
             });
 
-            // Removed category button event listeners
-            // document.getElementById('showPendingAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing pending appointments."); showAdminAppointmentCategory('pending'); });
-            // document.getElementById('showApprovedAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing approved appointments."); showAdminAppointmentCategory('approved'); });
-            // document.getElementById('showDeniedAppointmentsBtn').addEventListener('click', () => { console.log("Admin: Showing denied appointments."); showAdminAppointmentCategory('denied'); });
-
-
             // Set up admin patient management buttons
             document.getElementById('showAddPatientFormBtn').addEventListener('click', showAddPatientForm);
             document.getElementById('addPatientBtn').addEventListener('click', addPatient);
@@ -2674,11 +3540,7 @@
 
             // Admin Patient Detail View buttons
             document.getElementById('backToPatientsListBtn').addEventListener('click', () => { console.log("Admin: Back to patient list."); loadPatientsList(); });
-            // Event listeners for the new separated buttons will be attached in showPatientDetails()
-            // document.getElementById('viewPatientMentalHealthResultsBtn').addEventListener('click', () => loadPatientDataSection(currentPatientIdInAdminView, 'mentalHealthTests'));
-            // document.getElementById('viewPatientTmsQuestionnairesBtn').addEventListener('click', () => loadPatientDataSection(currentPatientIdInAdminView, 'tmsQuestionnaires'));
-            // The "bookedAppointments" button listener is now added directly in showPatientDetails()
-
+            
             // Check Firebase Auth state on page load
             onAuthStateChanged(auth, (user) => {
                 console.log("Auth state changed. Current user:", user ? user.uid : "No user");
@@ -2700,7 +3562,8 @@
                          showAdminDashboard();
                     } else {
                         console.log("Auth state changed: No user or admin session found. Showing login.");
-                        showLogin();
+                        showLoginScreenLayout(); // Show the new login/public access wrapper
+                        showLogin(); // Show default login form within it
                     }
                 }
             });
