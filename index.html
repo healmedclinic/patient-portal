@@ -202,20 +202,36 @@
         .btn.patient-card-btn {
             background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); /* Admin patient card background */
             color: white;
-            text-align: left; /* Keep left-aligned for more content */
             padding: 15px 20px;
             margin-bottom: 15px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             font-size: 1.2em;
             font-weight: bold;
-            display: block; /* Ensure it takes full width and stacks */
+            display: flex; /* Use flex to align text and icon */
+            justify-content: space-between; /* Space out name and icon */
+            align-items: center;
             width: 100%;
             text-decoration: none !important; /* NEW: Remove underline */
+            text-align: left; /* Keep left-aligned for more content */
         }
         .btn.patient-card-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .btn.patient-card-btn span {
+            flex-grow: 1; /* Allow name to take available space */
+        }
+        .btn.patient-card-btn .delete-icon {
+            color: #ffcccc; /* Light red for trash icon on blue background */
+            font-size: 0.9em;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .btn.patient-card-btn .delete-icon:hover {
+            color: #ff0000; /* Darker red on hover */
+            transform: scale(1.2);
         }
 
         /* New buttons for viewing specific patient data */
@@ -704,6 +720,8 @@
             border-radius: 10px;
             margin-bottom: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            display: flex; /* Use flex for alignment */
+            flex-direction: column;
         }
         .public-test-submission-card {
             background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); /* Blue for public tests */
@@ -716,13 +734,18 @@
             margin-bottom: 5px;
             font-size: 0.95em;
         }
+        .tms-submission-card .btn-group, .public-test-submission-card .btn-group {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
         .tms-submission-card .btn-view-details, .public-test-submission-card .btn-view-details {
             background: #2c3e50;
             color: white;
             width: auto;
             padding: 8px 15px;
             border-radius: 5px;
-            margin-top: 10px;
             text-align: center;
             text-decoration: none !important;
         }
@@ -730,6 +753,18 @@
             background: #34495e;
             transform: translateY(-2px);
         }
+        .submission-delete-icon {
+            color: #ffcccc; /* Light red for trash icon */
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+            margin-left: auto; /* Push to the right */
+        }
+        .submission-delete-icon:hover {
+            color: #ff0000; /* Darker red on hover */
+            transform: scale(1.2);
+        }
+
 
         /* Public Mental Health Test Selection Screen */
         .public-test-selection {
@@ -804,6 +839,19 @@
             background: #6c757d;
             text-align: center;
         }
+        #testInterface .public-info-section, #tmsQuestionnaireSection .public-info-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #testInterface .public-info-section h3, #tmsQuestionnaireSection .public-info-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
 
         /* Public Test Result Display */
         #publicTestResultDisplay {
@@ -1072,6 +1120,29 @@
         <div id="testInterface" class="section hidden">
             <h2 id="testTitle"></h2>
             <div id="testQuestions"></div>
+
+            <!-- NEW: Public User Info Section for Mental Health Tests -->
+            <div id="publicTestUserInfo" class="public-info-section hidden">
+                <h3>Your Contact Information (Optional, for follow-up or linking)</h3>
+                <p>If you'd like to potentially link this submission to a future account or receive follow-up, please provide your details. Otherwise, you can submit anonymously.</p>
+                <div class="form-group">
+                    <label for="publicTestFullName">Full Name:</label>
+                    <input type="text" id="publicTestFullName" placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                    <label for="publicTestEmail">Email:</label>
+                    <input type="email" id="publicTestEmail" placeholder="Your email">
+                </div>
+                <div class="form-group">
+                    <label for="publicTestPhone">Phone Number:</label>
+                    <input type="tel" id="publicTestPhone" placeholder="Your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="publicTestDob">Date of Birth:</label>
+                    <input type="date" id="publicTestDob">
+                </div>
+            </div>
+
             <button class="btn" id="submitTestBtn">Submit Test</button>
             <button class="btn btn-secondary" id="cancelTestBtn">Cancel</button>
             <!-- Public test result display will appear here -->
@@ -1082,6 +1153,7 @@
         <div id="tmsQuestionnaireSection" class="section hidden">
             <h2>TMS Daily Questionnaire</h2>
             <p>Please fill out the following information and questions.</p>
+            <!-- Original fields now potentially pre-filled, or manually filled for public -->
             <div class="form-group">
                 <label for="tmsFullName">Full Name:</label>
                 <input type="text" id="tmsFullName" placeholder="Your full name" required>
@@ -1093,6 +1165,11 @@
             <div class="form-group">
                 <label for="tmsPhone">Phone Number:</label>
                 <input type="tel" id="tmsPhone" placeholder="Your phone number" required>
+            </div>
+             <!-- NEW: DOB for TMS Questionnaire -->
+            <div class="form-group">
+                <label for="tmsDob">Date of Birth:</label>
+                <input type="date" id="tmsDob" required>
             </div>
             <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
 
@@ -1406,6 +1483,7 @@
             <h3 id="tmsModalTitle">TMS Questionnaire from <span id="tmsModalPatientName"></span></h3>
             <p><strong>Email:</strong> <span id="tmsModalPatientEmail"></span></p>
             <p><strong>Phone:</strong> <span id="tmsModalPatientPhone"></span></p>
+            <p><strong>Date of Birth:</strong> <span id="tmsModalDob"></span></p>
             <p><strong>Submitted On:</strong> <span id="tmsModalSubmittedAt"></span></p>
             <hr>
             <div id="tmsModalAnswers"></div>
@@ -1420,6 +1498,7 @@
             <p><strong>Submitted By:</strong> <span id="publicTestModalSubmitter"></span></p>
             <p><strong>Email:</strong> <span id="publicTestModalSubmitterEmail"></span></p>
             <p><strong>Phone:</strong> <span id="publicTestModalSubmitterPhone"></span></p>
+            <p><strong>Date of Birth:</strong> <span id="publicTestModalDob"></span></p>
             <p><strong>Score:</strong> <span id="publicTestModalScore"></span></p>
             <p><strong>Breakdown:</strong> <span id="publicTestModalBreakdown"></span></p>
             <p><strong>Submitted On:</strong> <span id="publicTestModalSubmittedAt"></span></p>
@@ -1447,7 +1526,7 @@
 
         // --- Firebase SDK v9 Modular Imports from CDN ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
         import { getDatabase, ref, set, push, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
 
@@ -1701,13 +1780,13 @@
             }
         }
 
-        // Patient Signup
+        // Patient Signup (UPDATED for data linking)
         async function signup() {
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
             const password = document.getElementById('signupPassword').value;
-            const dob = document.getElementById('signupDob').value; // Get Date of Birth
-            const phone = document.getElementById('signupPhone').value;
+            const dob = document.getElementById('signupDob').value.trim(); // Get Date of Birth
+            const phone = document.getElementById('signupPhone').value.trim();
             const gender = document.getElementById('signupGender').value;
 
             if (!name || !email || !password || !dob || !phone || !gender) {
@@ -1734,6 +1813,65 @@
                     createdAt: new Date().toISOString()
                 });
                 console.log("Patient data saved to Realtime Database for UID:", userId);
+
+                // --- NEW: Data Linking Logic ---
+                console.log("Signup: Checking for matching public submissions for new user:", name, dob);
+
+                // Check for matching public mental health test submissions
+                const publicMHTestsSnapshot = await get(ref(database, 'publicMentalHealthTestSubmissions'));
+                if (publicMHTestsSnapshot.exists()) {
+                    publicMHTestsSnapshot.forEach(async (childSnapshot) => {
+                        const submission = childSnapshot.val();
+                        // Match only if fullName AND dob match, AND it's not already linked to a user
+                        if (submission.fullName === name && submission.dob === dob && !submission.userId) {
+                            console.log("Signup: Found matching public mental health test submission:", childSnapshot.key);
+                            // Copy to user's personal test results
+                            await push(ref(database, `testResults/${userId}`), {
+                                testType: submission.testType,
+                                score: submission.score,
+                                breakdown: submission.breakdown,
+                                answers: submission.answers,
+                                createdAt: submission.submittedAt, // Use original submission time
+                                userId: userId // Link to this new user
+                            });
+                            console.log("Signup: Copied public mental health test to user's private record.");
+                            // Update the original public submission to mark it as linked
+                            await update(ref(database, `publicMentalHealthTestSubmissions/${childSnapshot.key}`), {
+                                userId: userId // Set userId to link it to the newly registered user
+                            });
+                            console.log("Signup: Updated public mental health test with new user ID.");
+                        }
+                    });
+                }
+
+                // Check for matching public TMS questionnaire submissions
+                const publicTmsSnapshot = await get(ref(database, 'publicTmsQuestionnaires'));
+                if (publicTmsSnapshot.exists()) {
+                    publicTmsSnapshot.forEach(async (childSnapshot) => {
+                        const submission = childSnapshot.val();
+                        // Match only if fullName AND dob match, AND it's not already linked to a user
+                        if (submission.fullName === name && submission.dob === dob && !submission.userId) {
+                            console.log("Signup: Found matching public TMS questionnaire submission:", childSnapshot.key);
+                            // Copy to user's personal TMS records
+                            await push(ref(database, `tmsQuestionnaires/${userId}`), {
+                                fullName: submission.fullName,
+                                email: submission.email,
+                                phoneNumber: submission.phoneNumber,
+                                dob: submission.dob,
+                                answers: submission.answers,
+                                submittedAt: submission.submittedAt,
+                                userId: userId // Link to this new user
+                            });
+                            console.log("Signup: Copied public TMS questionnaire to user's private record.");
+                            // Update the original public submission to mark it as linked
+                            await update(ref(database, `publicTmsQuestionnaires/${childSnapshot.key}`), {
+                                userId: userId // Set userId to link it to the newly registered user
+                            });
+                            console.log("Signup: Updated public TMS questionnaire with new user ID.");
+                        }
+                    });
+                }
+                // --- END Data Linking Logic ---
 
                 showMessage('Account created successfully! Please login.');
                 showLoginScreenLayout(); // Show the full login layout
@@ -1765,7 +1903,7 @@
 
         // NEW: Function to show the entire two-column login screen layout
         function showLoginScreenLayout() {
-            document.getElementById('welcomeScreenWrapper').classList.remove('hidden');
+            document.getElementById('welcomeScreenWrapper').classList.add('hidden');
             document.getElementById('patientDashboard').classList.add('hidden');
             document.getElementById('adminDashboard').classList.add('hidden');
             document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // Ensure public test selection is hidden
@@ -2048,6 +2186,7 @@
             const testQuestionsDiv = document.getElementById('testQuestions');
             testQuestionsDiv.innerHTML = '';
             document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Hide any previous public results
+            document.getElementById('publicTestUserInfo').classList.add('hidden'); // Hide public info section for logged-in tests
 
             document.getElementById('testTitle').textContent = currentTest.title;
 
@@ -2132,6 +2271,7 @@
                     fullName: patientData ? patientData.fullName : 'Logged-in User', // Get full name
                     email: patientData ? patientData.email : 'N/A', // Get email
                     phoneNumber: patientData ? patientData.phoneNumber : 'N/A', // Get phone number
+                    dob: patientData ? patientData.dob : 'N/A', // Get DOB
                     testType: currentTest.title,
                     score: score,
                     breakdown: breakdown,
@@ -2157,6 +2297,7 @@
             document.getElementById('mentalHealthSection').classList.remove('hidden');
             document.getElementById('testQuestions').innerHTML = '';
             document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Ensure hidden
+            document.getElementById('publicTestUserInfo').classList.add('hidden'); // Ensure hidden
         }
 
         // Load Patient's Past Test Results
@@ -2220,6 +2361,7 @@
             const testQuestionsDiv = document.getElementById('testQuestions');
             testQuestionsDiv.innerHTML = ''; // Clear existing questions
             document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Hide previous results
+            document.getElementById('publicTestUserInfo').classList.remove('hidden'); // Show public info section
 
             document.getElementById('testTitle').textContent = currentTest.title;
             console.log("DEBUG: testTitle set to:", currentTest.title);
@@ -2287,16 +2429,25 @@
             const breakdown = currentTest.getBreakdown(score, answers); 
             console.log("Public: Test submitted. Calculated Score:", score, "Breakdown:", breakdown);
 
+            const publicTestFullName = document.getElementById('publicTestFullName').value.trim();
+            const publicTestEmail = document.getElementById('publicTestEmail').value.trim();
+            const publicTestPhone = document.getElementById('publicTestPhone').value.trim();
+            const publicTestDob = document.getElementById('publicTestDob').value.trim();
+
             try {
                 // Save public test results to Firebase (for Admin)
                 const newPublicTestResultRef = push(ref(database, 'publicMentalHealthTestSubmissions'));
                 await set(newPublicTestResultRef, {
-                    // No userId, fullName, email, phoneNumber for truly anonymous public submissions here
+                    fullName: publicTestFullName || 'Anonymous User', // If not provided, mark anonymous
+                    email: publicTestEmail || 'N/A',
+                    phoneNumber: publicTestPhone || 'N/A',
+                    dob: publicTestDob || 'N/A',
                     testType: currentTest.title,
                     score: score,
                     breakdown: breakdown,
                     answers: answers,
-                    submittedAt: new Date().toISOString()
+                    submittedAt: new Date().toISOString(),
+                    userId: null // Initially null, updated if linked to a registered user later
                 });
                 console.log("Public: Test results saved to Firebase for admin review. Path:", newPublicTestResultRef.toString());
                 showMessage('Test submitted successfully! Your results are available for review by our staff.');
@@ -2316,6 +2467,7 @@
             `;
             resultDisplayDiv.classList.remove('hidden');
             document.getElementById('testQuestions').innerHTML = ''; // Clear questions
+            document.getElementById('publicTestUserInfo').classList.add('hidden'); // Hide info section after submit
             document.getElementById('submitTestBtn').classList.add('hidden'); // Hide submit
             document.getElementById('cancelTestBtn').classList.add('hidden'); // Hide cancel
 
@@ -2324,6 +2476,12 @@
                 document.getElementById('testInterface').classList.add('hidden');
                 document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
                 document.getElementById('cancelTestBtn').classList.remove('hidden');
+                // Clear user info fields for next quick test
+                document.getElementById('publicTestFullName').value = '';
+                document.getElementById('publicTestEmail').value = '';
+                document.getElementById('publicTestPhone').value = '';
+                document.getElementById('publicTestDob').value = '';
+
                 showPublicMentalHealthTestSelection(); // Go back to public test selection
             };
 
@@ -2332,6 +2490,12 @@
                 document.getElementById('testInterface').classList.add('hidden');
                 document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
                 document.getElementById('cancelTestBtn').classList.remove('hidden');
+                // Clear user info fields for next quick test
+                document.getElementById('publicTestFullName').value = '';
+                document.getElementById('publicTestEmail').value = '';
+                document.getElementById('publicTestPhone').value = '';
+                document.getElementById('publicTestDob').value = '';
+                
                 showLoginScreenLayout(); // Go back to main login/public access screen
                 showLogin();
             };
@@ -2346,6 +2510,13 @@
             document.getElementById('testInterface').classList.remove('public-test-interface');
             document.getElementById('testQuestions').innerHTML = '';
             document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Ensure hidden
+            document.getElementById('publicTestUserInfo').classList.add('hidden'); // Ensure hidden
+            // Clear user info fields
+            document.getElementById('publicTestFullName').value = '';
+            document.getElementById('publicTestEmail').value = '';
+            document.getElementById('publicTestPhone').value = '';
+            document.getElementById('publicTestDob').value = '';
+
             showPublicMentalHealthTestSelection(); // Return to public test selection
         }
 
@@ -2358,6 +2529,7 @@
             document.getElementById('tmsFullName').value = '';
             document.getElementById('tmsEmail').value = '';
             document.getElementById('tmsPhone').value = '';
+            document.getElementById('tmsDob').value = ''; // NEW: Clear DOB
 
             // Pre-fill if logged in
             if (isLoggedInCall && currentUser) {
@@ -2367,6 +2539,7 @@
                         document.getElementById('tmsFullName').value = patientData.fullName || '';
                         document.getElementById('tmsEmail').value = patientData.email || '';
                         document.getElementById('tmsPhone').value = patientData.phoneNumber || '';
+                        document.getElementById('tmsDob').value = patientData.dob || ''; // Pre-fill DOB
                     }
                 }).catch(error => console.error("Error pre-filling TMS form:", error));
             }
@@ -2395,6 +2568,7 @@
         function resetTmsForm() {
             // Reset contact info fields (if not pre-filled by logged-in user logic)
             // No need to clear tmsFullName, tmsEmail, tmsPhone here, as showTmsQuestionnaire does it.
+            // document.getElementById('tmsDob').value = ''; // This will be handled by showTmsQuestionnaire
 
             // Reset questionnaire fields
             document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
@@ -2484,9 +2658,10 @@
             const tmsFullName = document.getElementById('tmsFullName').value.trim();
             const tmsEmail = document.getElementById('tmsEmail').value.trim();
             const tmsPhone = document.getElementById('tmsPhone').value.trim();
+            const tmsDob = document.getElementById('tmsDob').value.trim(); // NEW: Get DOB
 
-            if (!tmsFullName || !tmsEmail || !tmsPhone) {
-                showMessage('Please provide your Full Name, Email, and Phone Number at the top of the questionnaire.', true);
+            if (!tmsFullName || !tmsEmail || !tmsPhone || !tmsDob) { // NEW: Validate DOB
+                showMessage('Please provide your Full Name, Email, Phone Number, and Date of Birth at the top of the questionnaire.', true);
                 return;
             }
 
@@ -2570,8 +2745,10 @@
                     fullName: tmsFullName,
                     email: tmsEmail,
                     phoneNumber: tmsPhone,
+                    dob: tmsDob, // NEW: Include DOB
                     answers: answers,
-                    submittedAt: new Date().toISOString()
+                    submittedAt: new Date().toISOString(),
+                    userId: null // Initially null, updated if linked to a registered user later
                 };
 
                 if (currentUser) {
@@ -2733,11 +2910,11 @@
                 showMessage('Unauthorized action.', true);
                 return;
             }
-            const name = document.getElementById('newPatientName').value;
-            const email = document.getElementById('newPatientEmail').value;
+            const name = document.getElementById('newPatientName').value.trim();
+            const email = document.getElementById('newPatientEmail').value.trim();
             const password = document.getElementById('newPatientPassword').value;
-            const dob = document.getElementById('newPatientDob').value; // Get DOB
-            const phone = document.getElementById('newPatientPhone').value;
+            const dob = document.getElementById('newPatientDob').value.trim(); // Get DOB
+            const phone = document.getElementById('newPatientPhone').value.trim();
             const gender = document.getElementById('newPatientGender').value;
 
             if (!name || !email || !password || !dob || !phone || !gender) { // Include dob in validation
@@ -2764,6 +2941,56 @@
                     createdAt: new Date().toISOString()
                 });
                 console.log("Admin: Saved patient data to Realtime Database for UID:", userId);
+
+                // Admin-side data linking for manually added patients (similar to signup)
+                console.log("Admin Add Patient: Checking for matching public submissions for new user:", name, dob);
+                 // Check for matching public mental health test submissions
+                const publicMHTestsSnapshot = await get(ref(database, 'publicMentalHealthTestSubmissions'));
+                if (publicMHTestsSnapshot.exists()) {
+                    publicMHTestsSnapshot.forEach(async (childSnapshot) => {
+                        const submission = childSnapshot.val();
+                        if (submission.fullName === name && submission.dob === dob && !submission.userId) {
+                            console.log("Admin Add Patient: Found matching public mental health test submission:", childSnapshot.key);
+                            await push(ref(database, `testResults/${userId}`), {
+                                testType: submission.testType,
+                                score: submission.score,
+                                breakdown: submission.breakdown,
+                                answers: submission.answers,
+                                createdAt: submission.submittedAt,
+                                userId: userId
+                            });
+                            await update(ref(database, `publicMentalHealthTestSubmissions/${childSnapshot.key}`), {
+                                userId: userId
+                            });
+                            console.log("Admin Add Patient: Copied and linked public mental health test.");
+                        }
+                    });
+                }
+
+                // Check for matching public TMS questionnaire submissions
+                const publicTmsSnapshot = await get(ref(database, 'publicTmsQuestionnaires'));
+                if (publicTmsSnapshot.exists()) {
+                    publicTmsSnapshot.forEach(async (childSnapshot) => {
+                        const submission = childSnapshot.val();
+                        if (submission.fullName === name && submission.dob === dob && !submission.userId) {
+                            console.log("Admin Add Patient: Found matching public TMS questionnaire submission:", childSnapshot.key);
+                            await push(ref(database, `tmsQuestionnaires/${userId}`), {
+                                fullName: submission.fullName,
+                                email: submission.email,
+                                phoneNumber: submission.phoneNumber,
+                                dob: submission.dob,
+                                answers: submission.answers,
+                                submittedAt: submission.submittedAt,
+                                userId: userId
+                            });
+                            await update(ref(database, `publicTmsQuestionnaires/${childSnapshot.key}`), {
+                                userId: userId
+                            });
+                            console.log("Admin Add Patient: Copied and linked public TMS questionnaire.");
+                        }
+                    });
+                }
+
                 showMessage(`Patient ${name} added successfully! Temporary password: ${password}`);
                 hideAddPatientForm();
                 loadPatientsList(); // Reload patient list to show the new patient
@@ -2773,7 +3000,90 @@
             }
         }
 
-        // Load All Patients for Admin (Now displays buttons)
+        // Delete Patient and all their associated data (New Function)
+        async function deletePatient(patientId, patientEmail) {
+            if (!currentUser || !isAdmin) {
+                showMessage('Unauthorized action.', true);
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete patient ${patientEmail} and ALL their associated data? This action cannot be undone.`)) {
+                return;
+            }
+
+            console.log("Admin: Attempting to delete patient UID:", patientId, "Email:", patientEmail);
+
+            try {
+                // 1. Delete patient's Authentication record (requires admin/server-side, but client-side for demo)
+                // In a real application, Firebase Admin SDK (server-side) should be used for this:
+                // admin.auth().deleteUser(patientId)
+                // For this client-side demo, we'll note this limitation.
+                // NOTE: Client-side deleteUser requires the user to be currently logged in and recently authenticated.
+                // Since this is admin deleting another user, it's a simplification.
+                // In a real app, this would be a callable Cloud Function or backend API.
+
+                // 2. Delete patient's data from Realtime Database
+                await remove(ref(database, 'patients/' + patientId));
+                console.log("Admin: Patient profile data removed for UID:", patientId);
+
+                // 3. Delete patient's appointments
+                const appointmentsSnapshot = await get(ref(database, 'appointments'));
+                if (appointmentsSnapshot.exists()) {
+                    appointmentsSnapshot.forEach(async (childSnapshot) => {
+                        const appt = childSnapshot.val();
+                        if (appt.userId === patientId) {
+                            await remove(ref(database, 'appointments/' + childSnapshot.key));
+                            console.log("Admin: Deleted appointment ID:", childSnapshot.key, "for patient UID:", patientId);
+                        }
+                    });
+                }
+
+                // 4. Delete patient's personal mental health test results
+                await remove(ref(database, 'testResults/' + patientId)); // Deletes the entire sub-path
+                console.log("Admin: Personal mental health test results removed for UID:", patientId);
+
+                // 5. Delete patient's personal TMS questionnaires
+                await remove(ref(database, 'tmsQuestionnaires/' + patientId)); // Deletes the entire sub-path
+                console.log("Admin: Personal TMS questionnaires removed for UID:", patientId);
+
+                // 6. Update linked public mental health test submissions (set userId to null or delete if originally public for this user)
+                const publicMHTestsSnapshot = await get(ref(database, 'publicMentalHealthTestSubmissions'));
+                if (publicMHTestsSnapshot.exists()) {
+                    publicMHTestsSnapshot.forEach(async (childSnapshot) => {
+                        const submission = childSnapshot.val();
+                        if (submission.userId === patientId) {
+                            // If it was a linked public submission, just remove the link (or delete the entry if it's cleaner)
+                            // For simplicity and to prevent orphaned records in admin view, we'll delete.
+                            await remove(ref(database, 'publicMentalHealthTestSubmissions/' + childSnapshot.key));
+                            console.log("Admin: Removed linked public MH test submission ID:", childSnapshot.key, "for patient UID:", patientId);
+                        }
+                    });
+                }
+
+                // 7. Update linked public TMS questionnaire submissions
+                const publicTmsSnapshot = await get(ref(database, 'publicTmsQuestionnaires'));
+                if (publicTmsSnapshot.exists()) {
+                    publicTmsSnapshot.forEach(async (childSnapshot) => {
+                        const submission = childSnapshot.val();
+                        if (submission.userId === patientId) {
+                             // If it was a linked public submission, just remove the link (or delete the entry if it's cleaner)
+                            await remove(ref(database, 'publicTmsQuestionnaires/' + childSnapshot.key));
+                            console.log("Admin: Removed linked public TMS submission ID:", childSnapshot.key, "for patient UID:", patientId);
+                        }
+                    });
+                }
+
+
+                showMessage(`Patient ${patientEmail} and all associated data have been deleted.`);
+                loadPatientsList(); // Refresh the list
+            } catch (error) {
+                console.error("Admin: Error deleting patient:", error);
+                showMessage(`Error deleting patient: ${error.message}`, true);
+            }
+        }
+
+
+        // Load All Patients for Admin (Now displays buttons with delete option)
         function loadPatientsList() {
             const patientsListDiv = document.getElementById('patientsList');
             if (!currentUser || !isAdmin) {
@@ -2786,6 +3096,7 @@
             document.getElementById('patientDetailView').classList.add('hidden'); 
             document.getElementById('addPatientForm').classList.add('hidden'); 
 
+            // Use onValue for real-time updates when patients data changes
             onValue(ref(database, 'patients'), (snapshot) => {
                 patientsListDiv.innerHTML = '';
                 let hasPatients = false;
@@ -2806,8 +3117,9 @@
                         hasPatients = true;
                         filteredPatients.forEach((patient) => {
                             patientsListDiv.innerHTML += `
-                                <button class="btn patient-card-btn" data-patient-id="${patient.id}">
-                                    ${patient.fullName} (${patient.email})
+                                <button class="btn patient-card-btn" data-patient-id="${patient.id}" data-patient-email="${patient.email}">
+                                    <span>${patient.fullName} (${patient.email})</span>
+                                    <i class="fas fa-trash-alt delete-icon" data-patient-id="${patient.id}" data-patient-email="${patient.email}" title="Delete Patient"></i>
                                 </button>
                             `;
                         });
@@ -2818,16 +3130,24 @@
                 }
                 console.log("Admin: Patient buttons loaded. Total displayed elements:", patientsListDiv.children.length);
 
-                // Attach event listeners to the new patient buttons
+                // Attach event listeners to the new patient buttons (delegation for both button and icon)
                 document.querySelectorAll('#patientsList .patient-card-btn').forEach(button => {
                     button.addEventListener('click', (event) => {
-                        const patientId = event.target.dataset.patientId;
-                        showPatientDetails(patientId);
+                        // If the trash icon was clicked, handle deletion
+                        if (event.target.classList.contains('delete-icon')) {
+                            const patientIdToDelete = event.target.dataset.patientId;
+                            const patientEmailToDelete = event.target.dataset.patientEmail;
+                            deletePatient(patientIdToDelete, patientEmailToDelete);
+                        } else {
+                            // Otherwise, show patient details
+                            const patientId = event.currentTarget.dataset.patientId;
+                            showPatientDetails(patientId);
+                        }
                     });
                 });
 
             }, {
-                onlyOnce: false
+                onlyOnce: false // Keep listening for real-time updates
             });
         }
 
@@ -2941,6 +3261,7 @@
                                     <li><strong>Full Name:</strong> ${q.fullName || 'N/A'}</li>
                                     <li><strong>Email:</strong> ${q.email || 'N/A'}</li>
                                     <li><strong>Phone:</strong> ${q.phoneNumber || 'N/A'}</li>
+                                    <li><strong>Date of Birth:</strong> ${q.dob || 'N/A'}</li>
                                     <li><strong>Q1. Eat/Drink:</strong> ${q.answers.q1_eat_drink} ${q.answers.q1_eat_drink === 'yes' ? `(Details: ${q.answers.q1_eat_drink_details})` : ''}</li>
                                     <li><strong>Q2. Meds Prescribed:</strong> ${q.answers.q2_med_prescribed}</li>
                                     ${q.answers.q2_med_prescribed === 'no' ? `<li><strong>Q2a. Med Changes:</strong> ${q.answers.q2a_med_changes} ${q.answers.q2a_med_changes === 'yes' ? `(Details: ${q.answers.q2a_med_changes_details})` : ''}</li>` : ''}
@@ -3023,7 +3344,7 @@
                         if (userTmsSnapshot.exists()) {
                             userTmsSnapshot.forEach(childSnapshot => {
                                 const submission = childSnapshot.val();
-                                allTmsSubmissions.push({ id: childSnapshot.key, fromUser: userId, ...submission });
+                                allTmsSubmissions.push({ id: childSnapshot.key, fromUser: userId, type: 'logged-in-original', firebasePath: `tmsQuestionnaires/${userId}`, ...submission });
                             });
                         }
                     }
@@ -3038,54 +3359,105 @@
                 if (publicTmsSnapshot.exists()) {
                     publicTmsSnapshot.forEach(childSnapshot => {
                         const submission = childSnapshot.val();
-                        allTmsSubmissions.push({ id: childSnapshot.key, fromUser: 'public', ...submission });
+                        allTmsSubmissions.push({ id: childSnapshot.key, fromUser: 'public', type: submission.userId ? 'logged-in-linked-public' : 'public-anonymous', firebasePath: 'publicTmsQuestionnaires', ...submission });
                     });
                 }
             } catch (error) {
                 console.error("Admin: Error fetching public TMS submissions:", error);
             }
 
-            allTmsSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Sort by most recent
+            // Deduplicate: Prioritize 'logged-in-original' over 'logged-in-linked-public'
+            const uniqueSubmissions = [];
+            const seenKeys = new Set(); // Using a key like "fullName-dob-submittedAt"
+
+            allTmsSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Sort by most recent for stable deduplication
+
+            for (const submission of allTmsSubmissions) {
+                const key = `${submission.fullName || 'Anonymous'}-${submission.dob || 'N/A'}-${submission.submittedAt}`;
+                
+                if (!seenKeys.has(key) || submission.type === 'logged-in-original') {
+                    if (seenKeys.has(key)) {
+                        // If we already have a submission with this key, and the new one is an original, remove the old one
+                        const existingIndex = uniqueSubmissions.findIndex(us => `${us.fullName || 'Anonymous'}-${us.dob || 'N/A'}-${us.submittedAt}` === key);
+                        if (existingIndex !== -1 && uniqueSubmissions[existingIndex].type !== 'logged-in-original') {
+                            uniqueSubmissions.splice(existingIndex, 1);
+                        } else if (existingIndex !== -1 && uniqueSubmissions[existingIndex].type === 'logged-in-original') {
+                             // Already have an original, skip this linked public copy
+                            continue;
+                        }
+                    }
+                    uniqueSubmissions.push(submission);
+                    seenKeys.add(key);
+                }
+            }
+
+            uniqueSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Re-sort after deduplication
 
             tmsSubmissionsListDiv.innerHTML = ''; // Clear loading message
 
-            if (allTmsSubmissions.length > 0) {
-                allTmsSubmissions.forEach(submission => {
-                    const submittedByInfo = submission.fromUser === 'public' 
-                        ? `<strong>Public Submission</strong>` 
-                        : `<strong>Logged-in User</strong>`; // User ID already in button data-user-id
+            if (uniqueSubmissions.length > 0) {
+                uniqueSubmissions.forEach(submission => {
+                    const submitterName = submission.fullName || 'Anonymous';
+                    let submissionOrigin = '';
+                    if (submission.type === 'public-anonymous') {
+                        submissionOrigin = 'Quick Access (Anonymous)';
+                    } else if (submission.type === 'logged-in-original') {
+                        submissionOrigin = 'Patient Portal';
+                    } else if (submission.type === 'logged-in-linked-public') {
+                        submissionOrigin = 'Quick Access (Linked to Account)';
+                    }
 
                     tmsSubmissionsListDiv.innerHTML += `
-                        <div class="tms-submission-card" data-submission-id="${submission.id}" data-submission-type="${submission.fromUser === 'public' ? 'public' : 'user'}" data-user-id="${submission.userId || ''}">
-                            <h4>TMS Questionnaire from ${submission.fullName || 'Anonymous'} (${submittedByInfo})</h4>
+                        <div class="tms-submission-card">
+                            <h4>TMS Questionnaire from ${submitterName} (${submissionOrigin})</h4>
                             <p><strong>Email:</strong> ${submission.email || 'N/A'}</p>
                             <p><strong>Phone:</strong> ${submission.phoneNumber || 'N/A'}</p>
+                            <p><strong>Date of Birth:</strong> ${submission.dob || 'N/A'}</p>
                             <p><strong>Submitted On:</strong> ${new Date(submission.submittedAt).toLocaleString()}</p>
-                            <button class="btn btn-view-details" data-submission-id="${submission.id}" data-submission-path="${submission.fromUser === 'public' ? 'publicTmsQuestionnaires' : `tmsQuestionnaires/${submission.fromUser}`}">View Details</button>
+                            <div class="btn-group">
+                                <button class="btn btn-view-details" 
+                                    data-submission-id="${submission.id}" 
+                                    data-firebase-path="${submission.firebasePath}">View Details</button>
+                                <i class="fas fa-trash-alt submission-delete-icon" 
+                                    data-submission-id="${submission.id}" 
+                                    data-submission-type="${submission.type}" 
+                                    data-user-id="${submission.userId || ''}"
+                                    data-firebase-path="${submission.firebasePath}" 
+                                    title="Delete Submission"></i>
+                            </div>
                         </div>
                     `;
                 });
 
-                // Attach event listeners for "View Details" buttons
+                // Attach event listeners for "View Details" and "Delete" buttons
                 document.querySelectorAll('.tms-submission-card .btn-view-details').forEach(button => {
                     button.addEventListener('click', (event) => {
                         const submissionId = event.target.dataset.submissionId;
-                        const submissionPath = event.target.dataset.submissionPath; // e.g., "publicTmsQuestionnaires" or "tmsQuestionnaires/UID"
-                        viewTmsSubmissionDetails(submissionId, submissionPath);
+                        const firebasePath = event.target.dataset.firebasePath; 
+                        viewTmsSubmissionDetails(submissionId, firebasePath);
+                    });
+                });
+                document.querySelectorAll('.tms-submission-card .submission-delete-icon').forEach(icon => {
+                    icon.addEventListener('click', (event) => {
+                        const submissionId = event.target.dataset.submissionId;
+                        const submissionType = event.target.dataset.submissionType;
+                        const userId = event.target.dataset.userId; // Will be empty for anonymous
+                        const firebasePath = event.target.dataset.firebasePath;
+                        deleteTmsSubmission(submissionId, submissionType, userId, firebasePath);
                     });
                 });
 
             } else {
                 tmsSubmissionsListDiv.innerHTML = '<p>No TMS Daily Questionnaires found.</p>';
             }
-            console.log("Admin: TMS submissions loaded. Total:", allTmsSubmissions.length);
+            console.log("Admin: TMS submissions loaded. Total unique:", uniqueSubmissions.length);
         }
 
         // NEW: Function to display full TMS submission details in a modal
-        async function viewTmsSubmissionDetails(submissionId, submissionPath) {
-            console.log("Admin: Viewing TMS submission details for ID:", submissionId, "Path:", submissionPath);
+        async function viewTmsSubmissionDetails(submissionId, firebasePath) {
+            console.log("Admin: Viewing TMS submission details for ID:", submissionId, "Firebase Path:", firebasePath);
             try {
-                const submissionSnapshot = await get(ref(database, `${submissionPath}/${submissionId}`));
+                const submissionSnapshot = await get(ref(database, `${firebasePath}/${submissionId}`));
                 const submission = submissionSnapshot.val();
 
                 if (submission) {
@@ -3093,6 +3465,7 @@
                     document.getElementById('tmsModalPatientEmail').textContent = submission.email || 'N/A';
                     document.getElementById('tmsModalPatientPhone').textContent = submission.phoneNumber || 'N/A';
                     document.getElementById('tmsModalSubmittedAt').textContent = new Date(submission.submittedAt).toLocaleString();
+                    document.getElementById('tmsModalDob').textContent = submission.dob || 'N/A'; // Show DOB in modal
                     
                     const answersDiv = document.getElementById('tmsModalAnswers');
                     answersDiv.innerHTML = '<h4>Questionnaire Answers:</h4>';
@@ -3134,13 +3507,58 @@
                     console.log("Admin: TMS submission details modal displayed for:", submission.fullName);
                 } else {
                     showMessage('TMS submission details not found.', true);
-                    console.error("Admin: TMS submission not found for ID:", submissionId, "Path:", submissionPath);
+                    console.error("Admin: TMS submission not found for ID:", submissionId, "Path:", firebasePath);
                 }
             } catch (error) {
                 console.error("Admin: Error fetching TMS submission details:", error);
                 showMessage(`Error fetching TMS submission details: ${error.message}`, true);
             }
         }
+
+        // NEW: Function to delete a specific TMS submission
+        async function deleteTmsSubmission(submissionId, submissionType, userId, firebasePath) {
+            if (!currentUser || !isAdmin) {
+                showMessage('Unauthorized action.', true);
+                return;
+            }
+
+            if (!confirm('Are you sure you want to delete this TMS questionnaire submission?')) {
+                return;
+            }
+
+            console.log("Admin: Deleting TMS submission. ID:", submissionId, "Type:", submissionType, "User ID:", userId, "Firebase Path:", firebasePath);
+
+            try {
+                // Delete from the public submissions path (always exists if visible here)
+                await remove(ref(database, `publicTmsQuestionnaires/${submissionId}`));
+                console.log("Admin: Deleted publicTmsQuestionnaires entry for ID:", submissionId);
+
+                // If it was an original logged-in submission, also delete from their private record
+                if (submissionType === 'logged-in-original' && userId) {
+                    // We need to find the specific ID under the user's tmsQuestionnaires path
+                    // This can be tricky if the ID under public is different from the private one.
+                    // A more robust solution might store the private ID in the public record.
+                    // For now, we'll try to find the match by content or just delete the whole sub-path if necessary.
+                    // Simpler: just delete the specific ID from the original path IF it matches.
+                    // If the path already includes the user ID and submission ID, this is direct.
+                    const originalPath = `tmsQuestionnaires/${userId}/${submissionId}`;
+                    const originalSnapshot = await get(ref(database, originalPath));
+                    if (originalSnapshot.exists()) {
+                        await remove(ref(database, originalPath));
+                        console.log("Admin: Also deleted original logged-in TMS entry for ID:", submissionId, "from user path:", originalPath);
+                    } else {
+                        console.warn("Admin: Original logged-in TMS entry not found at expected path:", originalPath);
+                    }
+                }
+
+                showMessage('TMS questionnaire submission deleted successfully!');
+                loadAdminTmsSubmissions(); // Refresh the list
+            } catch (error) {
+                console.error("Admin: Error deleting TMS submission:", error);
+                showMessage(`Error deleting TMS submission: ${error.message}`, true);
+            }
+        }
+
 
         // NEW: Load all Mental Health Test Submissions for Admin Portal (Combined view)
         async function loadAdminPublicTestResults() {
@@ -3154,7 +3572,7 @@
 
             let allTestSubmissions = [];
 
-            // 1. Fetch from public submissions path (anonymous and logged-in copies)
+            // 1. Fetch from publicMentalHealthTestSubmissions path (both truly anonymous and logged-in copies)
             try {
                 const publicTestsSnapshot = await get(ref(database, 'publicMentalHealthTestSubmissions'));
                 if (publicTestsSnapshot.exists()) {
@@ -3162,7 +3580,7 @@
                         const submission = childSnapshot.val();
                         allTestSubmissions.push({ 
                             id: childSnapshot.key, 
-                            type: submission.userId ? 'logged-in-copy' : 'public-anonymous', // Differentiate copied logged-in from truly anonymous
+                            type: submission.userId ? 'logged-in-linked-public' : 'public-anonymous', // Differentiate copied logged-in from truly anonymous
                             testType: submission.testType,
                             score: submission.score,
                             breakdown: submission.breakdown,
@@ -3171,7 +3589,9 @@
                             userId: submission.userId || null,
                             fullName: submission.fullName || 'Anonymous User',
                             email: submission.email || 'N/A',
-                            phoneNumber: submission.phoneNumber || 'N/A'
+                            phoneNumber: submission.phoneNumber || 'N/A',
+                            dob: submission.dob || 'N/A',
+                            firebasePath: 'publicMentalHealthTestSubmissions' // Path for deletion
                         });
                     });
                 }
@@ -3183,99 +3603,118 @@
             try {
                 const loggedInTestsSnapshot = await get(ref(database, 'testResults'));
                 if (loggedInTestsSnapshot.exists()) {
-                    const patientPromises = [];
-                    const tempLoggedInSubmissions = [];
-
                     loggedInTestsSnapshot.forEach(childSnapshot => {
                         const submission = childSnapshot.val();
+                        // This assumes the `testResults` directly contain the user's submissions
                         if (submission.userId) {
-                            tempLoggedInSubmissions.push({ id: childSnapshot.key, ...submission });
-                            patientPromises.push(get(ref(database, 'patients/' + submission.userId)));
+                            allTestSubmissions.push({
+                                id: childSnapshot.key, 
+                                type: 'logged-in-original', 
+                                testType: submission.testType,
+                                score: submission.score,
+                                breakdown: submission.breakdown,
+                                answers: submission.answers,
+                                submittedAt: submission.createdAt, // Use createdAt for original
+                                userId: submission.userId,
+                                fullName: submission.fullName || 'N/A', 
+                                email: submission.email || 'N/A',
+                                phoneNumber: submission.phoneNumber || 'N/A',
+                                dob: submission.dob || 'N/A',
+                                firebasePath: `testResults/${submission.userId}` // Path for deletion
+                            });
                         }
-                    });
-
-                    const patientSnapshots = await Promise.all(patientPromises);
-                    const patientMap = {};
-                    patientSnapshots.forEach(snap => {
-                        if (snap.exists()) {
-                            patientMap[snap.key] = snap.val();
-                        }
-                    });
-
-                    tempLoggedInSubmissions.forEach(submission => {
-                        const patientData = patientMap[submission.userId];
-                        // Add original logged-in submission for comprehensive view
-                        allTestSubmissions.push({
-                            id: submission.id, 
-                            type: 'logged-in-original', 
-                            testType: submission.testType,
-                            score: submission.score,
-                            breakdown: submission.breakdown,
-                            answers: submission.answers,
-                            submittedAt: submission.createdAt,
-                            userId: submission.userId,
-                            fullName: patientData ? patientData.fullName : 'Unknown Logged-in User',
-                            email: patientData ? patientData.email : 'N/A',
-                            phoneNumber: patientData ? patientData.phoneNumber : 'N/A'
-                        });
                     });
                 }
             } catch (error) {
                 console.error("Admin: Error fetching logged-in mental health test submissions:", error);
             }
 
-            // Sort all submissions by date (most recent first)
-            allTestSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); 
+            // Deduplicate: Prefer 'logged-in-original' over 'logged-in-linked-public' if they represent the same test.
+            const uniqueSubmissions = [];
+            const seenKeys = new Set(); // Stores a key like "testType-score-submittedAt-fullName-dob"
+
+            allTestSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Sort by most recent for stable deduplication
+
+            for (const submission of allTestSubmissions) {
+                const key = `${submission.testType}-${submission.score}-${submission.submittedAt}-${submission.fullName || 'Anonymous'}-${submission.dob || 'N/A'}`;
+                
+                if (!seenKeys.has(key) || submission.type === 'logged-in-original') {
+                    if (seenKeys.has(key)) {
+                        // If we already have a submission with this key, and the new one is an original, remove the old one
+                        const existingIndex = uniqueSubmissions.findIndex(us => 
+                            `${us.testType}-${us.score}-${us.submittedAt}-${us.fullName || 'Anonymous'}-${us.dob || 'N/A'}` === key
+                        );
+                        if (existingIndex !== -1 && uniqueSubmissions[existingIndex].type !== 'logged-in-original') {
+                            uniqueSubmissions.splice(existingIndex, 1);
+                        } else if (existingIndex !== -1 && uniqueSubmissions[existingIndex].type === 'logged-in-original') {
+                             // Already have an original, skip this linked public copy
+                            continue;
+                        }
+                    }
+                    uniqueSubmissions.push(submission);
+                    seenKeys.add(key);
+                }
+            }
+
+            uniqueSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Re-sort after deduplication
 
             publicTestResultsListDiv.innerHTML = ''; // Clear loading message
 
-            if (allTestSubmissions.length > 0) {
-                // Deduplicate: Prefer 'logged-in-original' over 'logged-in-copy' if they represent the same test.
-                // For simplicity, we'll just check for similarity in content and date.
-                const uniqueSubmissions = [];
-                const seenKeys = new Set(); // Stores a key like "testType-score-submittedAt-userId"
-
-                for (const submission of allTestSubmissions) {
-                    const key = `${submission.testType}-${submission.score}-${submission.submittedAt}-${submission.userId || 'anonymous'}`;
-                    
-                    // If we haven't seen this exact key, or if this is an 'original' and the seen one is just a 'copy'
-                    if (!seenKeys.has(key)) {
-                        uniqueSubmissions.push(submission);
-                        seenKeys.add(key);
-                    }
-                }
-                uniqueSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Re-sort after deduplication
-
+            if (uniqueSubmissions.length > 0) {
                 uniqueSubmissions.forEach(submission => {
-                    const submitterName = submission.fullName || (submission.userId ? `Logged-in User (${submission.userId})` : 'Anonymous User');
-                    const submissionOrigin = submission.type === 'public-anonymous' ? 'Quick Access' : 'Patient Portal';
+                    const submitterName = submission.fullName || 'Anonymous User';
+                    let submissionOrigin = '';
+                    if (submission.type === 'public-anonymous') {
+                        submissionOrigin = 'Quick Access (Anonymous)';
+                    } else if (submission.type === 'logged-in-original') {
+                        submissionOrigin = 'Patient Portal';
+                    } else if (submission.type === 'logged-in-linked-public') {
+                        submissionOrigin = 'Quick Access (Linked to Account)';
+                    }
 
                     publicTestResultsListDiv.innerHTML += `
-                        <div class="public-test-submission-card" 
-                            data-submission-id="${submission.id}" 
-                            data-submission-type="${submission.type}" 
-                            data-user-id="${submission.userId || ''}">
+                        <div class="public-test-submission-card">
                             <h4>${submission.testType} - Submitted from ${submissionOrigin} on: ${new Date(submission.submittedAt).toLocaleString()}</h4>
                             <p><strong>Submitted By:</strong> ${submitterName}</p>
                             <p><strong>Email:</strong> ${submission.email}</p>
                             <p><strong>Phone:</strong> ${submission.phoneNumber}</p>
+                            <p><strong>Date of Birth:</strong> ${submission.dob || 'N/A'}</p>
                             <p><strong>Score:</strong> ${submission.score}</p>
                             <p><strong>Breakdown:</strong> ${submission.breakdown}</p>
-                            <button class="btn btn-view-details" 
-                                data-submission-id="${submission.id}" 
-                                data-submission-type="${submission.type}" 
-                                data-user-id="${submission.userId || ''}">View Details</button>
+                            <div class="btn-group">
+                                <button class="btn btn-view-details" 
+                                    data-submission-id="${submission.id}" 
+                                    data-submission-type="${submission.type}" 
+                                    data-user-id="${submission.userId || ''}"
+                                    data-firebase-path="${submission.firebasePath}">View Details</button>
+                                <i class="fas fa-trash-alt submission-delete-icon" 
+                                    data-submission-id="${submission.id}" 
+                                    data-submission-type="${submission.type}" 
+                                    data-user-id="${submission.userId || ''}"
+                                    data-firebase-path="${submission.firebasePath}" 
+                                    title="Delete Submission"></i>
+                            </div>
                         </div>
                     `;
                 });
 
-                // Attach event listeners for "View Details" buttons
+                // Attach event listeners for "View Details" and "Delete" buttons
                 document.querySelectorAll('#publicTestResultsList .btn-view-details').forEach(button => {
                     button.addEventListener('click', (event) => {
                         const submissionId = event.target.dataset.submissionId;
                         const submissionType = event.target.dataset.submissionType; 
                         const userId = event.target.dataset.userId || null;
-                        viewPublicTestSubmissionDetails(submissionId, submissionType, userId);
+                        const firebasePath = event.target.dataset.firebasePath;
+                        viewPublicTestSubmissionDetails(submissionId, submissionType, userId, firebasePath);
+                    });
+                });
+                document.querySelectorAll('#publicTestResultsList .submission-delete-icon').forEach(icon => {
+                    icon.addEventListener('click', (event) => {
+                        const submissionId = event.target.dataset.submissionId;
+                        const submissionType = event.target.dataset.dataset.submissionType;
+                        const userId = event.target.dataset.userId; // Will be empty for anonymous
+                        const firebasePath = event.target.dataset.firebasePath;
+                        deleteMentalHealthSubmission(submissionId, submissionType, userId, firebasePath);
                     });
                 });
 
@@ -3286,26 +3725,60 @@
 
         }
 
-        // NEW: Function to display full Public Test submission details in a modal (now supports combined data)
-        async function viewPublicTestSubmissionDetails(submissionId, submissionType, userId) {
-            console.log("Admin: Viewing test submission details for ID:", submissionId, "Type:", submissionType, "User ID:", userId);
+        // NEW: Function to delete a specific Mental Health Test submission
+        async function deleteMentalHealthSubmission(submissionId, submissionType, userId, firebasePath) {
+            if (!currentUser || !isAdmin) {
+                showMessage('Unauthorized action.', true);
+                return;
+            }
+
+            if (!confirm('Are you sure you want to delete this mental health test submission?')) {
+                return;
+            }
+
+            console.log("Admin: Deleting MH Test submission. ID:", submissionId, "Type:", submissionType, "User ID:", userId, "Firebase Path:", firebasePath);
+
             try {
-                let submission;
-                // Determine the correct Firebase path based on the submission type
-                if (submissionType === 'public-anonymous' || submissionType === 'logged-in-copy') {
-                    const snapshot = await get(ref(database, `publicMentalHealthTestSubmissions/${submissionId}`));
-                    submission = snapshot.val();
-                } else if (submissionType === 'logged-in-original' && userId) {
-                    const snapshot = await get(ref(database, `testResults/${submissionId}`));
-                    submission = snapshot.val();
+                // Delete from the public submissions path (always exists if visible here)
+                await remove(ref(database, `publicMentalHealthTestSubmissions/${submissionId}`));
+                console.log("Admin: Deleted publicMentalHealthTestSubmissions entry for ID:", submissionId);
+
+                // If it was an original logged-in submission, also delete from their private record
+                if (submissionType === 'logged-in-original' && userId) {
+                    const originalPath = `testResults/${userId}/${submissionId}`;
+                    const originalSnapshot = await get(ref(database, originalPath));
+                    if (originalSnapshot.exists()) {
+                        await remove(ref(database, originalPath));
+                        console.log("Admin: Also deleted original logged-in MH Test entry for ID:", submissionId, "from user path:", originalPath);
+                    } else {
+                        console.warn("Admin: Original logged-in MH Test entry not found at expected path:", originalPath);
+                    }
                 }
+
+                showMessage('Mental health test submission deleted successfully!');
+                loadAdminPublicTestResults(); // Refresh the list
+            } catch (error) {
+                console.error("Admin: Error deleting mental health test submission:", error);
+                showMessage(`Error deleting mental health test submission: ${error.message}`, true);
+            }
+        }
+
+
+        // NEW: Function to display full Public Test submission details in a modal (now supports combined data)
+        async function viewPublicTestSubmissionDetails(submissionId, submissionType, userId, firebasePath) {
+            console.log("Admin: Viewing test submission details for ID:", submissionId, "Type:", submissionType, "User ID:", userId, "Firebase Path:", firebasePath);
+            try {
+                const submissionSnapshot = await get(ref(database, `${firebasePath}/${submissionId}`));
+                const submission = submissionSnapshot.val();
 
                 if (submission) {
                     let finalFullName = submission.fullName || 'Anonymous User';
                     let finalEmail = submission.email || 'N/A';
                     let finalPhone = submission.phoneNumber || 'N/A';
+                    let finalDob = submission.dob || 'N/A';
 
                     // If it's an 'original' logged-in submission, ensure we fetch the contact info
+                    // The 'testResults' path doesn't always store full patient details like email/phone
                     if (submissionType === 'logged-in-original' && submission.userId) {
                         const patientSnapshot = await get(ref(database, `patients/${submission.userId}`));
                         const patientData = patientSnapshot.val();
@@ -3313,6 +3786,7 @@
                             finalFullName = patientData.fullName;
                             finalEmail = patientData.email;
                             finalPhone = patientData.phoneNumber;
+                            finalDob = patientData.dob;
                         }
                     }
 
@@ -3320,6 +3794,7 @@
                     document.getElementById('publicTestModalSubmitter').textContent = finalFullName;
                     document.getElementById('publicTestModalSubmitterEmail').textContent = finalEmail;
                     document.getElementById('publicTestModalSubmitterPhone').textContent = finalPhone;
+                    document.getElementById('publicTestModalDob').textContent = finalDob; // Display DOB
                     document.getElementById('publicTestModalScore').textContent = submission.score;
                     document.getElementById('publicTestModalBreakdown').textContent = submission.breakdown;
                     document.getElementById('publicTestModalSubmittedAt').textContent = new Date(submission.submittedAt || submission.createdAt).toLocaleString(); // Use createdAt for logged-in original
@@ -3626,8 +4101,8 @@
             document.getElementById('submitAppointmentRequestBtn').addEventListener('click', bookAppointment);
             document.getElementById('hideBookingFormBtn').addEventListener('click', hideBookingForm);
             
-            // Logged-in test specific buttons
-            // These will be overridden by publicTest logic if in public mode, which is correct.
+            // Test specific buttons (used by both public and logged-in, handlers assigned dynamically)
+            // Initial assignment for logged-in paths (can be overridden by public functions)
             document.getElementById('submitTestBtn').addEventListener('click', submitTest); 
             document.getElementById('cancelTestBtn').addEventListener('click', cancelTest); 
 
