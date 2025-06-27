@@ -469,7 +469,6 @@
             margin-bottom: 5px;
         }
 
-
         /* Admin specific styles */
         .admin-card {
             background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
@@ -508,7 +507,6 @@
             margin-bottom: 10px;
         }
 
-
         .action-buttons {
             margin-top: 15px;
             display: flex;
@@ -542,7 +540,6 @@
         .btn-deny:hover {
             transform: translateY(-2px);
         }
-
 
         .logout-btn {
             position: absolute;
@@ -841,7 +838,6 @@
             text-decoration: none !important;
         }
 
-
         @media (max-width: 768px) {
             .dashboard {
                 flex-direction: column;
@@ -881,7 +877,6 @@
             #patientSidebarNav li:nth-child(5) {
                 margin-bottom: 0;
             }
-
 
             .main-content {
                 padding: 15px;
@@ -936,7 +931,6 @@
                 margin-right: 0;
                 font-size: 14px;
             }
-
 
             #calendar {
                 padding: 5px;
@@ -1074,6 +1068,109 @@
             <button class="btn btn-back" id="backToPublicAccessBtn">Back to Main Screen</button>
         </div>
 
+        <!-- TEST INTERFACE: MOVED HERE, OUTSIDE DASHBOARD -->
+        <div id="testInterface" class="section hidden">
+            <h2 id="testTitle"></h2>
+            <div id="testQuestions"></div>
+            <button class="btn" id="submitTestBtn">Submit Test</button>
+            <button class="btn btn-secondary" id="cancelTestBtn">Cancel</button>
+            <!-- Public test result display will appear here -->
+            <div id="publicTestResultDisplay" class="hidden"></div>
+        </div>
+
+        <!-- TMS DAILY QUESTIONNAIRE SECTION: MOVED HERE, OUTSIDE DASHBOARD -->
+        <div id="tmsQuestionnaireSection" class="section hidden">
+            <h2>TMS Daily Questionnaire</h2>
+            <p>Please fill out the following information and questions.</p>
+            <div class="form-group">
+                <label for="tmsFullName">Full Name:</label>
+                <input type="text" id="tmsFullName" placeholder="Your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="tmsEmail">Email:</label>
+                <input type="email" id="tmsEmail" placeholder="Your email" required>
+            </div>
+            <div class="form-group">
+                <label for="tmsPhone">Phone Number:</label>
+                <input type="tel" id="tmsPhone" placeholder="Your phone number" required>
+            </div>
+            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
+
+            <div class="form-group">
+                <label>1. Have you had anything to eat or drink today?</label>
+                <div class="radio-group-inline">
+                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
+                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
+                </div>
+                <div id="q1_followup" class="follow-up-question hidden">
+                    <label for="q1_eat_drink_details">What did you have to eat or drink?</label>
+                    <textarea id="q1_eat_drink_details"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>2. Have you been taking your medication as prescribed and at the same time?</label>
+                <div class="radio-group-inline">
+                    <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="yes" required> Yes</label>
+                    <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="no"> No</label>
+                </div>
+                <div id="q2_followup" class="follow-up-question hidden">
+                    <label>2a. Any changes to your medication?</label>
+                    <div class="radio-group-inline">
+                        <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="yes" required> Yes</label>
+                        <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="no"> No</label>
+                    </div>
+                    <div id="q2a_followup" class="follow-up-question hidden">
+                        <label for="q2a_med_changes_details">Please specify changes to your medication:</label>
+                        <textarea id="q2a_med_changes_details"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="q3_sleep_hours">3. How did you sleep last night? Number of hours?</label>
+                <input type="number" id="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
+            </div>
+
+            <div class="form-group">
+                <label>4. Any caffeine intake today?</label>
+                <div class="radio-group-inline">
+                    <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="yes" required> Yes</label>
+                    <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="no"> No</label>
+                </div>
+                <div id="q4_followup" class="follow-up-question hidden">
+                    <label for="q4_caffeine_details">What caffeine drink did you have or how many?</label>
+                    <textarea id="q4_caffeine_details"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>5. Any alcohol intake today?</label>
+                <div class="radio-group-inline">
+                    <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="yes" required> Yes</label>
+                    <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="no"> No</label>
+                </div>
+                <div id="q5_followup" class="follow-up-question hidden">
+                    <label for="q5_alcohol_details">How much alcohol?</label>
+                    <textarea id="q5_alcohol_details"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>6. Do you have any metal in or around your head (above the collar)?</label>
+                <div class="radio-group-inline">
+                    <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="yes" required> Yes</label>
+                    <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="no"> No</label>
+                </div>
+                <div id="q6_followup" class="follow-up-question hidden">
+                    <label for="q6_metal_head_details">Please specify (e.g., dental implants, surgical clips, shrapnel, etc.):</label>
+                    <textarea id="q6_metal_head_details"></textarea>
+                </div>
+            </div>
+
+            <button class="btn" id="submitTmsQuestionnaireBtn">Submit Questionnaire</button>
+            <button class="btn btn-secondary" id="cancelTmsQuestionnaireBtn">Cancel</button>
+        </div>
 
         <!-- Patient Dashboard -->
         <div id="patientDashboard" class="dashboard hidden">
@@ -1148,16 +1245,6 @@
                     <div id="testResultsList"></div>
                 </div>
 
-                <!-- Test Taking Interface (Shared for both logged-in and public tests) -->
-                <div id="testInterface" class="section hidden">
-                    <h2 id="testTitle"></h2>
-                    <div id="testQuestions"></div>
-                    <button class="btn" id="submitTestBtn">Submit Test</button>
-                    <button class="btn btn-secondary" id="cancelTestBtn">Cancel</button>
-                    <!-- Public test result display will appear here -->
-                    <div id="publicTestResultDisplay" class="hidden"></div>
-                </div>
-
                 <!-- Health Records Section -->
                 <div id="healthRecordsSection" class="section hidden">
                     <h2>Health Records</h2>
@@ -1176,101 +1263,10 @@
                     <h2>Forms</h2>
                     <p>Please review and complete any necessary forms below.</p>
                     <button class="btn" id="showTmsQuestionnaireBtnLoggedIn" style="margin-top: 15px;">TMS Daily Questionnaire (Logged In)</button>
-                    <!-- REMOVED: New Patient Form was here -->
-                </div>
-
-                <!-- NEW: TMS Daily Questionnaire Section (for both public & logged-in users) -->
-                <div id="tmsQuestionnaireSection" class="section hidden">
-                    <h2>TMS Daily Questionnaire</h2>
-                    <p>Please fill out the following information and questions.</p>
-                    <div class="form-group">
-                        <label for="tmsFullName">Full Name:</label>
-                        <input type="text" id="tmsFullName" placeholder="Your full name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tmsEmail">Email:</label>
-                        <input type="email" id="tmsEmail" placeholder="Your email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tmsPhone">Phone Number:</label>
-                        <input type="tel" id="tmsPhone" placeholder="Your phone number" required>
-                    </div>
-                    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
-
-                    <div class="form-group">
-                        <label>1. Have you had anything to eat or drink today?</label>
-                        <div class="radio-group-inline">
-                            <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
-                            <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
-                        </div>
-                        <div id="q1_followup" class="follow-up-question hidden">
-                            <label for="q1_eat_drink_details">What did you have to eat or drink?</label>
-                            <textarea id="q1_eat_drink_details"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>2. Have you been taking your medication as prescribed and at the same time?</label>
-                        <div class="radio-group-inline">
-                            <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="yes" required> Yes</label>
-                            <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="no"> No</label>
-                        </div>
-                        <div id="q2_followup" class="follow-up-question hidden">
-                            <label>2a. Any changes to your medication?</label>
-                            <div class="radio-group-inline">
-                                <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="yes" required> Yes</label>
-                                <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="no"> No</label>
-                            </div>
-                            <div id="q2a_followup" class="follow-up-question hidden">
-                                <label for="q2a_med_changes_details">Please specify changes to your medication:</label>
-                                <textarea id="q2a_med_changes_details"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="q3_sleep_hours">3. How did you sleep last night? Number of hours?</label>
-                        <input type="number" id="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>4. Any caffeine intake today?</label>
-                        <div class="radio-group-inline">
-                            <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="yes" required> Yes</label>
-                            <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="no"> No</label>
-                        </div>
-                        <div id="q4_followup" class="follow-up-question hidden">
-                            <label for="q4_caffeine_details">What caffeine drink did you have or how many?</label>
-                            <textarea id="q4_caffeine_details"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>5. Any alcohol intake today?</label>
-                        <div class="radio-group-inline">
-                            <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="yes" required> Yes</label>
-                            <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="no"> No</label>
-                        </div>
-                        <div id="q5_followup" class="follow-up-question hidden">
-                            <label for="q5_alcohol_details">How much alcohol?</label>
-                            <textarea id="q5_alcohol_details"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>6. Do you have any metal in or around your head (above the collar)?</label>
-                        <div class="radio-group-inline">
-                            <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="yes" required> Yes</label>
-                            <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="no"> No</label>
-                        </div>
-                        <div id="q6_followup" class="follow-up-question hidden">
-                            <label for="q6_metal_head_details">Please specify (e.g., dental implants, surgical clips, shrapnel, etc.):</label>
-                            <textarea id="q6_metal_head_details"></textarea>
-                        </div>
-                    </div>
-
-                    <button class="btn" id="submitTmsQuestionnaireBtn">Submit Questionnaire</button>
-                    <button class="btn btn-secondary" id="cancelTmsQuestionnaireBtn">Cancel</button>
+                    <!-- New Patient Form is now a direct link here -->
+                    <a href="https://www.jotform.com/sign/251304457972056/invite/01jtzza5kqcb83f96f3923b7ac" target="_blank" class="btn external-link-btn">New Patient Form</a>
+                    <a href="https://v-gedipudi1.github.io/consent-forms/" target="_blank" class="btn external-link-btn">TMS Consent Form</a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScOt3ov7drpfVaJ3GPPa3GyyEG4i3qErkgpz704BUxhGItg6Q/viewform?usp=header" target="_blank" class="btn external-link-btn">Upload ID and Insurance Form</a>
                 </div>
 
             </div>
@@ -1366,9 +1362,9 @@
 
                 <!-- NEW ADMIN PUBLIC TEST RESULTS SECTION -->
                 <div id="adminPublicTestResultsSection" class="section hidden">
-                    <h2>All Public Mental Health Test Results</h2>
+                    <h2>All Mental Health Test Results</h2>
                     <div id="publicTestResultsList">
-                        <p>Loading public test results...</p>
+                        <p>Loading mental health test results...</p>
                     </div>
                 </div>
 
@@ -1420,7 +1416,10 @@
     <div id="publicTestDetailModal" class="modal hidden">
         <div class="modal-content">
             <span class="close-button" id="closePublicTestModalBtn">&times;</span>
-            <h3 id="publicTestModalTitle">Public Mental Health Test Submission (<span id="publicTestModalType"></span>)</h3>
+            <h3 id="publicTestModalTitle">Mental Health Test Submission (<span id="publicTestModalType"></span>)</h3>
+            <p><strong>Submitted By:</strong> <span id="publicTestModalSubmitter"></span></p>
+            <p><strong>Email:</strong> <span id="publicTestModalSubmitterEmail"></span></p>
+            <p><strong>Phone:</strong> <span id="publicTestModalSubmitterPhone"></span></p>
             <p><strong>Score:</strong> <span id="publicTestModalScore"></span></p>
             <p><strong>Breakdown:</strong> <span id="publicTestModalBreakdown"></span></p>
             <p><strong>Submitted On:</strong> <span id="publicTestModalSubmittedAt"></span></p>
@@ -1464,7 +1463,7 @@
         let currentTest = null; // Stores details of the test currently being taken
         let adminCalendarInstance = null; // To hold the FullCalendar object for the admin portal
         let currentPatientIdInAdminView = null; // To track which patient is currently being viewed by admin
-        let isPublicTestMode = false; // NEW: Flag to indicate if currently taking a public test
+        let isPublicTestMode = false; // Flag to indicate if currently taking a public test
 
         // --- Admin Credentials (Email must exist in Firebase Authentication) ---
         const ADMIN_EMAIL = 'admin@healmed.com'; // Use the email you created in Firebase Auth
@@ -1634,6 +1633,8 @@
             document.getElementById('patientDashboard').classList.add('hidden');
             document.getElementById('adminDashboard').classList.add('hidden');
             document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // NEW: Hide public test selection
+            document.getElementById('tmsQuestionnaireSection').classList.add('hidden'); // Ensure TMS questionnaire is hidden
+            document.getElementById('testInterface').classList.add('hidden'); // Ensure test interface is hidden
         }
 
         // --- Authentication Functions (Firebase Integrated) ---
@@ -1810,8 +1811,9 @@
 
         function showPatientSection(sectionId) {
             document.querySelectorAll('#patientDashboard .section').forEach(s => s.classList.add('hidden'));
-            document.getElementById('testInterface').classList.add('hidden');
-            document.getElementById('tmsQuestionnaireSection').classList.add('hidden'); // Hide TMS form if navigating away
+            // Keep testInterface and tmsQuestionnaireSection hidden when navigating within patient dashboard
+            document.getElementById('testInterface').classList.add('hidden'); 
+            document.getElementById('tmsQuestionnaireSection').classList.add('hidden'); 
 
             document.querySelectorAll('#patientSidebarNav li').forEach(li => li.classList.remove('active'));
             const targetListItem = document.querySelector(`#patientSidebarNav li[data-section="${sectionId}"]`);
@@ -2027,10 +2029,12 @@
             });
         }
 
-        // Start a Mental Health Test (for logged-in users, saves results)
+        // Start a Mental Health Test (for logged-in users, saves results to their personal record AND to admin)
         function startTest(testType) {
-            if (!currentUser) { // Should not happen if button disabled, but good guard
-                showMessage('You must be logged in to take a test.', true);
+            // This function is intended for *logged-in* users accessing tests from their dashboard.
+            // It requires a logged-in user to save results to their personal health record.
+            if (!currentUser) { 
+                showMessage('To take a test from your personal dashboard, please log in. You can access quick tests from the main screen.', true);
                 return;
             }
             isPublicTestMode = false; // Ensure we're in logged-in mode
@@ -2047,13 +2051,11 @@
 
             document.getElementById('testTitle').textContent = currentTest.title;
 
-
             currentTest.questions.forEach((questionText, index) => {
                 let questionPrefix = '';
                 if (testType === 'depression' || testType === 'anxiety') {
                     questionPrefix = 'Over the last 2 weeks, how often have you been bothered by: ';
                 } else if (testType === 'adhd') {
-                    // ADHD questions have their own natural phrasing
                     questionPrefix = ''; // No additional prefix needed for ASRS
                 }
 
@@ -2073,7 +2075,13 @@
                 testQuestionsDiv.innerHTML += questionHtml;
             });
 
-            document.getElementById('mentalHealthSection').classList.add('hidden');
+            // Make sure the general patient dashboard sections are hidden
+            document.getElementById('mentalHealthSection').classList.add('hidden'); 
+            document.getElementById('appointmentsSection').classList.add('hidden');
+            document.getElementById('healthRecordsSection').classList.add('hidden');
+            document.getElementById('profileSection').classList.add('hidden');
+            document.getElementById('formsSection').classList.add('hidden');
+
             document.getElementById('testInterface').classList.remove('hidden');
             document.getElementById('testInterface').classList.remove('public-test-interface'); // Ensure correct styling
             document.getElementById('submitTestBtn').onclick = submitTest; // Re-assign logged-in submit handler
@@ -2081,7 +2089,7 @@
             console.log("Patient: Test interface displayed for:", testType);
         }
 
-        // Submit Mental Health Test (for logged-in users, saves results)
+        // Submit Mental Health Test (for logged-in users, saves results to patient's record AND to public for admin)
         async function submitTest() {
             let score = 0;
             const totalQuestions = currentTest.questions.length;
@@ -2098,11 +2106,11 @@
                 answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
             }
 
-            // Pass the full answers array for ADHD to allow specific Part A calculation
             const breakdown = currentTest.getBreakdown(score, answers); 
             console.log("Patient: Logged-in test submitted. Calculated Score:", score, "Breakdown:", breakdown);
 
             try {
+                // 1. Save to patient's own testResults (for their health records)
                 const newTestResultRef = push(ref(database, 'testResults'));
                 await set(newTestResultRef, {
                     userId: currentUser.uid,
@@ -2112,8 +2120,27 @@
                     answers: answers,
                     createdAt: new Date().toISOString()
                 });
-                console.log("Patient: Test results saved to Firebase. Path:", newTestResultRef.toString());
-                showMessage('Test submitted successfully! Your results have been saved to your health records.');
+                console.log("Patient: Test results saved to patient's health records. Path:", newTestResultRef.toString());
+
+                // 2. Also save to publicMentalHealthTestSubmissions for Admin review (including patient details)
+                const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
+                const patientData = patientSnapshot.val();
+
+                const newPublicSubmissionRef = push(ref(database, 'publicMentalHealthTestSubmissions'));
+                await set(newPublicSubmissionRef, {
+                    userId: currentUser.uid, // Include userId for logged-in submissions
+                    fullName: patientData ? patientData.fullName : 'Logged-in User', // Get full name
+                    email: patientData ? patientData.email : 'N/A', // Get email
+                    phoneNumber: patientData ? patientData.phoneNumber : 'N/A', // Get phone number
+                    testType: currentTest.title,
+                    score: score,
+                    breakdown: breakdown,
+                    answers: answers,
+                    submittedAt: new Date().toISOString()
+                });
+                console.log("Patient: Test results also saved to public submissions for admin. Path:", newPublicSubmissionRef.toString());
+
+                showMessage('Test submitted successfully! Your results have been saved and forwarded for review.');
                 cancelTest(); // Return to logged-in mental health section
                 loadTestResults();
             } catch (error) {
@@ -2176,9 +2203,11 @@
             console.log("Public: Showing mental health test selection.");
         }
 
-        // Start a Public Mental Health Test (does not save results)
+        // Start a Public Mental Health Test (does not save results for patient's personal record, only for admin)
         function startPublicTest(testType) {
             console.log("DEBUG: Entered startPublicTest for type:", testType);
+            hideAllScreens(); // Ensure everything else is hidden for a clean state
+            
             isPublicTestMode = true; // Set flag for public mode
             currentTest = testQuestions[testType];
             if (!currentTest) {
@@ -2189,7 +2218,7 @@
             console.log("DEBUG: currentTest found:", currentTest.title);
 
             const testQuestionsDiv = document.getElementById('testQuestions');
-            testQuestionsDiv.innerHTML = '';
+            testQuestionsDiv.innerHTML = ''; // Clear existing questions
             document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Hide previous results
 
             document.getElementById('testTitle').textContent = currentTest.title;
@@ -2199,7 +2228,6 @@
             document.getElementById('submitTestBtn').classList.remove('hidden');
             document.getElementById('cancelTestBtn').classList.remove('hidden');
             console.log("DEBUG: Submit and Cancel buttons should be visible.");
-
 
             let questionsHtml = '';
             currentTest.questions.forEach((questionText, index) => {
@@ -2228,8 +2256,7 @@
             testQuestionsDiv.innerHTML = questionsHtml; // Set innerHTML once
             console.log("DEBUG: testQuestionsDiv innerHTML set. Number of questions:", currentTest.questions.length);
 
-
-            document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // Hide selection screen
+            // Make sure the test interface is shown
             document.getElementById('testInterface').classList.remove('hidden'); // Show test interface
             document.getElementById('testInterface').classList.add('public-test-interface'); // Add public-specific styling
             
@@ -2257,13 +2284,14 @@
                 answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
             }
 
-            const breakdown = currentTest.getBreakdown(score, answers); // Pass answers for ADHD specific logic
+            const breakdown = currentTest.getBreakdown(score, answers); 
             console.log("Public: Test submitted. Calculated Score:", score, "Breakdown:", breakdown);
 
             try {
-                // NEW: Save public test results to Firebase
+                // Save public test results to Firebase (for Admin)
                 const newPublicTestResultRef = push(ref(database, 'publicMentalHealthTestSubmissions'));
                 await set(newPublicTestResultRef, {
+                    // No userId, fullName, email, phoneNumber for truly anonymous public submissions here
                     testType: currentTest.title,
                     score: score,
                     breakdown: breakdown,
@@ -3114,75 +3142,188 @@
             }
         }
 
-        // NEW: Load all Public Mental Health Test Submissions for Admin Portal
+        // NEW: Load all Mental Health Test Submissions for Admin Portal (Combined view)
         async function loadAdminPublicTestResults() {
             const publicTestResultsListDiv = document.getElementById('publicTestResultsList');
             if (!currentUser || !isAdmin) {
                 publicTestResultsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
-            console.log("Admin: Loading all public mental health test submissions.");
-            publicTestResultsListDiv.innerHTML = '<p>Loading public test results...</p>'; // Show loading
+            console.log("Admin: Loading all mental health test submissions (public and logged-in).");
+            publicTestResultsListDiv.innerHTML = '<p>Loading mental health test results...</p>'; // Show loading
 
+            let allTestSubmissions = [];
+
+            // 1. Fetch from public submissions path (anonymous and logged-in copies)
             try {
                 const publicTestsSnapshot = await get(ref(database, 'publicMentalHealthTestSubmissions'));
-                const publicTestSubmissions = [];
                 if (publicTestsSnapshot.exists()) {
                     publicTestsSnapshot.forEach(childSnapshot => {
                         const submission = childSnapshot.val();
-                        publicTestSubmissions.push({ id: childSnapshot.key, ...submission });
-                    });
-                }
-
-                publicTestSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Sort by most recent
-
-                publicTestResultsListDiv.innerHTML = ''; // Clear loading message
-
-                if (publicTestSubmissions.length > 0) {
-                    publicTestSubmissions.forEach(submission => {
-                        publicTestResultsListDiv.innerHTML += `
-                            <div class="public-test-submission-card" data-submission-id="${submission.id}">
-                                <h4>${submission.testType} - Submitted on: ${new Date(submission.submittedAt).toLocaleString()}</h4>
-                                <p><strong>Score:</strong> ${submission.score}</p>
-                                <p><strong>Breakdown:</strong> ${submission.breakdown}</p>
-                                <button class="btn btn-view-details" data-submission-id="${submission.id}">View Details</button>
-                            </div>
-                        `;
-                    });
-
-                    // Attach event listeners for "View Details" buttons
-                    document.querySelectorAll('#publicTestResultsList .btn-view-details').forEach(button => {
-                        button.addEventListener('click', (event) => {
-                            const submissionId = event.target.dataset.submissionId;
-                            viewPublicTestSubmissionDetails(submissionId);
+                        allTestSubmissions.push({ 
+                            id: childSnapshot.key, 
+                            type: submission.userId ? 'logged-in-copy' : 'public-anonymous', // Differentiate copied logged-in from truly anonymous
+                            testType: submission.testType,
+                            score: submission.score,
+                            breakdown: submission.breakdown,
+                            answers: submission.answers,
+                            submittedAt: submission.submittedAt,
+                            userId: submission.userId || null,
+                            fullName: submission.fullName || 'Anonymous User',
+                            email: submission.email || 'N/A',
+                            phoneNumber: submission.phoneNumber || 'N/A'
                         });
                     });
-
-                } else {
-                    publicTestResultsListDiv.innerHTML = '<p>No public mental health test results found.</p>';
                 }
-                console.log("Admin: Public test submissions loaded. Total:", publicTestSubmissions.length);
-
             } catch (error) {
                 console.error("Admin: Error fetching public mental health test submissions:", error);
-                publicTestResultsListDiv.innerHTML = '<p>Error loading public test results.</p>';
-                showMessage(`Error loading public test results: ${error.message}`, true);
             }
+
+            // 2. Fetch from logged-in users' testResults path (original source)
+            try {
+                const loggedInTestsSnapshot = await get(ref(database, 'testResults'));
+                if (loggedInTestsSnapshot.exists()) {
+                    const patientPromises = [];
+                    const tempLoggedInSubmissions = [];
+
+                    loggedInTestsSnapshot.forEach(childSnapshot => {
+                        const submission = childSnapshot.val();
+                        if (submission.userId) {
+                            tempLoggedInSubmissions.push({ id: childSnapshot.key, ...submission });
+                            patientPromises.push(get(ref(database, 'patients/' + submission.userId)));
+                        }
+                    });
+
+                    const patientSnapshots = await Promise.all(patientPromises);
+                    const patientMap = {};
+                    patientSnapshots.forEach(snap => {
+                        if (snap.exists()) {
+                            patientMap[snap.key] = snap.val();
+                        }
+                    });
+
+                    tempLoggedInSubmissions.forEach(submission => {
+                        const patientData = patientMap[submission.userId];
+                        // Add original logged-in submission for comprehensive view
+                        allTestSubmissions.push({
+                            id: submission.id, 
+                            type: 'logged-in-original', 
+                            testType: submission.testType,
+                            score: submission.score,
+                            breakdown: submission.breakdown,
+                            answers: submission.answers,
+                            submittedAt: submission.createdAt,
+                            userId: submission.userId,
+                            fullName: patientData ? patientData.fullName : 'Unknown Logged-in User',
+                            email: patientData ? patientData.email : 'N/A',
+                            phoneNumber: patientData ? patientData.phoneNumber : 'N/A'
+                        });
+                    });
+                }
+            } catch (error) {
+                console.error("Admin: Error fetching logged-in mental health test submissions:", error);
+            }
+
+            // Sort all submissions by date (most recent first)
+            allTestSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); 
+
+            publicTestResultsListDiv.innerHTML = ''; // Clear loading message
+
+            if (allTestSubmissions.length > 0) {
+                // Deduplicate: Prefer 'logged-in-original' over 'logged-in-copy' if they represent the same test.
+                // For simplicity, we'll just check for similarity in content and date.
+                const uniqueSubmissions = [];
+                const seenKeys = new Set(); // Stores a key like "testType-score-submittedAt-userId"
+
+                for (const submission of allTestSubmissions) {
+                    const key = `${submission.testType}-${submission.score}-${submission.submittedAt}-${submission.userId || 'anonymous'}`;
+                    
+                    // If we haven't seen this exact key, or if this is an 'original' and the seen one is just a 'copy'
+                    if (!seenKeys.has(key)) {
+                        uniqueSubmissions.push(submission);
+                        seenKeys.add(key);
+                    }
+                }
+                uniqueSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Re-sort after deduplication
+
+                uniqueSubmissions.forEach(submission => {
+                    const submitterName = submission.fullName || (submission.userId ? `Logged-in User (${submission.userId})` : 'Anonymous User');
+                    const submissionOrigin = submission.type === 'public-anonymous' ? 'Quick Access' : 'Patient Portal';
+
+                    publicTestResultsListDiv.innerHTML += `
+                        <div class="public-test-submission-card" 
+                            data-submission-id="${submission.id}" 
+                            data-submission-type="${submission.type}" 
+                            data-user-id="${submission.userId || ''}">
+                            <h4>${submission.testType} - Submitted from ${submissionOrigin} on: ${new Date(submission.submittedAt).toLocaleString()}</h4>
+                            <p><strong>Submitted By:</strong> ${submitterName}</p>
+                            <p><strong>Email:</strong> ${submission.email}</p>
+                            <p><strong>Phone:</strong> ${submission.phoneNumber}</p>
+                            <p><strong>Score:</strong> ${submission.score}</p>
+                            <p><strong>Breakdown:</strong> ${submission.breakdown}</p>
+                            <button class="btn btn-view-details" 
+                                data-submission-id="${submission.id}" 
+                                data-submission-type="${submission.type}" 
+                                data-user-id="${submission.userId || ''}">View Details</button>
+                        </div>
+                    `;
+                });
+
+                // Attach event listeners for "View Details" buttons
+                document.querySelectorAll('#publicTestResultsList .btn-view-details').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const submissionId = event.target.dataset.submissionId;
+                        const submissionType = event.target.dataset.submissionType; 
+                        const userId = event.target.dataset.userId || null;
+                        viewPublicTestSubmissionDetails(submissionId, submissionType, userId);
+                    });
+                });
+
+            } else {
+                publicTestResultsListDiv.innerHTML = '<p>No mental health test results found.</p>';
+            }
+            console.log("Admin: Combined mental health test submissions loaded. Total unique displayed:", uniqueSubmissions.length);
+
         }
 
-        // NEW: Function to display full Public Test submission details in a modal
-        async function viewPublicTestSubmissionDetails(submissionId) {
-            console.log("Admin: Viewing public test submission details for ID:", submissionId);
+        // NEW: Function to display full Public Test submission details in a modal (now supports combined data)
+        async function viewPublicTestSubmissionDetails(submissionId, submissionType, userId) {
+            console.log("Admin: Viewing test submission details for ID:", submissionId, "Type:", submissionType, "User ID:", userId);
             try {
-                const submissionSnapshot = await get(ref(database, `publicMentalHealthTestSubmissions/${submissionId}`));
-                const submission = submissionSnapshot.val();
+                let submission;
+                // Determine the correct Firebase path based on the submission type
+                if (submissionType === 'public-anonymous' || submissionType === 'logged-in-copy') {
+                    const snapshot = await get(ref(database, `publicMentalHealthTestSubmissions/${submissionId}`));
+                    submission = snapshot.val();
+                } else if (submissionType === 'logged-in-original' && userId) {
+                    const snapshot = await get(ref(database, `testResults/${submissionId}`));
+                    submission = snapshot.val();
+                }
 
                 if (submission) {
+                    let finalFullName = submission.fullName || 'Anonymous User';
+                    let finalEmail = submission.email || 'N/A';
+                    let finalPhone = submission.phoneNumber || 'N/A';
+
+                    // If it's an 'original' logged-in submission, ensure we fetch the contact info
+                    if (submissionType === 'logged-in-original' && submission.userId) {
+                        const patientSnapshot = await get(ref(database, `patients/${submission.userId}`));
+                        const patientData = patientSnapshot.val();
+                        if (patientData) {
+                            finalFullName = patientData.fullName;
+                            finalEmail = patientData.email;
+                            finalPhone = patientData.phoneNumber;
+                        }
+                    }
+
                     document.getElementById('publicTestModalType').textContent = submission.testType;
+                    document.getElementById('publicTestModalSubmitter').textContent = finalFullName;
+                    document.getElementById('publicTestModalSubmitterEmail').textContent = finalEmail;
+                    document.getElementById('publicTestModalSubmitterPhone').textContent = finalPhone;
                     document.getElementById('publicTestModalScore').textContent = submission.score;
                     document.getElementById('publicTestModalBreakdown').textContent = submission.breakdown;
-                    document.getElementById('publicTestModalSubmittedAt').textContent = new Date(submission.submittedAt).toLocaleString();
-                    
+                    document.getElementById('publicTestModalSubmittedAt').textContent = new Date(submission.submittedAt || submission.createdAt).toLocaleString(); // Use createdAt for logged-in original
+
                     const answersDiv = document.getElementById('publicTestModalAnswers');
                     answersDiv.innerHTML = '<h4>Questionnaire Answers:</h4>';
                     if (submission.answers && Array.isArray(submission.answers)) {
@@ -3194,14 +3335,14 @@
                     }
 
                     document.getElementById('publicTestDetailModal').classList.remove('hidden');
-                    console.log("Admin: Public test submission details modal displayed for:", submission.testType);
+                    console.log("Admin: Mental health test submission details modal displayed for:", submission.testType);
                 } else {
-                    showMessage('Public test submission details not found.', true);
-                    console.error("Admin: Public test submission not found for ID:", submissionId);
+                    showMessage('Mental health test submission details not found.', true);
+                    console.error("Admin: Test submission not found for ID:", submissionId, "Type:", submissionType);
                 }
             } catch (error) {
-                console.error("Admin: Error fetching public test submission details:", error);
-                showMessage(`Error fetching public test submission details: ${error.message}`, true);
+                console.error("Admin: Error fetching mental health test submission details:", error);
+                showMessage(`Error fetching test submission details: ${error.message}`, true);
             }
         }
 
@@ -3227,7 +3368,7 @@
             const ampm = timePartMatch[2] ? timePartMatch[2].toLowerCase() : '';
 
             if (ampm === 'pm' && hour < 12) hour += 12;
-            if (amppm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
+            if (ampm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
 
             // Start with today's date components, then set the target hour and minute
             let resultDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
