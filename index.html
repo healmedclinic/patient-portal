@@ -1079,105 +1079,100 @@
         </div>
 
         <!-- TMS DAILY QUESTIONNAIRE SECTION: MOVED HERE, OUTSIDE DASHBOARD -->
-        <div id="tmsQuestionnaireSection" class="section hidden">
-            <h2>TMS Daily Questionnaire</h2>
-            <p>Please fill out the following information and questions.</p>
-            <div class="form-group">
-                <label for="tmsFullName">Full Name:</label>
-                <input type="text" id="tmsFullName" placeholder="Your full name" required>
-            </div>
-            <div class="form-group">
-                <label for="tmsEmail">Email:</label>
-                <input type="email" id="tmsEmail" placeholder="Your email">
-            </div>
-            <div class="form-group">
-                <label for="tmsPhone">Phone Number:</label>
-                <input type="tel" id="tmsPhone" placeholder="Your phone number">
-            </div>
-            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
+        <div id="tmsQuestionnaireSection" class="section">
+    <h2>TMS Daily Questionnaire</h2>
+    <p>Please fill out the following information and questions.</p>
 
-            <div class="form-group">
-                <label>1. Have you had anything to eat or drink today?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
-                </div>
-                <div id="q1_followup" class="follow-up-question hidden">
-                    <label for="q1_eat_drink_details">What did you have to eat or drink?</label>
-                    <textarea id="q1_eat_drink_details"></textarea>
-                </div>
-            </div>
+    <div class="form-group">
+        <label for="tmsFullName">Full Name:</label>
+        <input type="text" id="tmsFullName" placeholder="Your full name" required>
+    </div>
 
-            <div class="form-group">
-                <label>3. Have you been taking your medication as prescribed and at the same time?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="no"> No</label>
-                </div>
-                <div id="q2_followup" class="follow-up-question hidden">
-                    <label>3a. Any changes to your medication?</label>
-                    <div class="radio-group-inline">
-                        <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="yes" required> Yes</label>
-                        <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="no"> No</label>
-                    </div>
-                    <div id="q2a_followup" class="follow-up-question hidden">
-                        <label for="q2a_med_changes_details">Please specify changes to your medication:</label>
-                        <textarea id="q2a_med_changes_details"></textarea>
-                    </div>
-                </div>
-            </div>
+    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
 
-            <div class="form-group">
-                <label for="q3_sleep_hours">4. How did you sleep last night? Number of hours?</label>
-                <input type="text" id="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
-            </div>
-
-            <div class="form-group">
-                <label>5. Any caffeine intake today?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="no"> No</label>
-                </div>
-                <div id="q4_followup" class="follow-up-question hidden">
-                    <label for="q4_caffeine_details">What caffeine drink did you have or how many?</label>
-                    <textarea id="q4_caffeine_details"></textarea>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>6. Any alcohol intake today?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="no"> No</label>
-                </div>
-                <div id="q5_followup" class="follow-up-question hidden">
-                    <label for="q5_alcohol_details">How much alcohol?</label>
-                    <textarea id="q5_alcohol_details"></textarea>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>2. Have you consumed any substances that were NOT prescribed by any physicians today?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
-                </div>
-
-            <div class="form-group">
-                <label>7. Do you have any metal in or around your head (above the collar)?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="no"> No</label>
-                </div>
-                <div id="q6_followup" class="follow-up-question hidden">
-                    <label for="q6_metal_head_details">Please specify (e.g., dental implants, surgical clips, shrapnel, etc.):</label>
-                    <textarea id="q6_metal_head_details"></textarea>
-                </div>
-            </div>
-
-            <button class="btn" id="submitTmsQuestionnaireBtn">Submit Questionnaire</button>
-            <button class="btn btn-secondary" id="cancelTmsQuestionnaireBtn">Cancel</button>
+    <div class="form-group">
+        <label>1. Have you had anything to eat or drink today?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
         </div>
+        <div id="q1_followup" class="follow-up-question hidden">
+            <label for="q1_eat_drink_details">What did you have to eat or drink?</label>
+            <textarea id="q1_eat_drink_details"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>2. Have you been taking your medication as prescribed and at the same time?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="no"> No</label>
+        </div>
+        <div id="q2_followup" class="follow-up-question hidden">
+            <label>2a. Any changes to your medication?</label>
+            <div class="radio-group-inline">
+                <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="yes" required> Yes</label>
+                <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="no"> No</label>
+            </div>
+            <div id="q2a_followup" class="follow-up-question hidden">
+                <label for="q2a_med_changes_details">Please specify changes to your medication:</label>
+                <textarea id="q2a_med_changes_details"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="q3_sleep_hours">3. How did you sleep last night? Number of hours?</label>
+        <input type="number" id="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
+    </div>
+
+    <div class="form-group">
+        <label>4. Any caffeine intake today?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="no"> No</label>
+        </div>
+        <div id="q4_followup" class="follow-up-question hidden">
+            <label for="q4_caffeine_details">What caffeine drink did you have or how many?</label>
+            <textarea id="q4_caffeine_details"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>5. Any alcohol intake today?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="no"> No</label>
+        </div>
+        <div id="q5_followup" class="follow-up-question hidden">
+            <label for="q5_alcohol_details">How much alcohol?</label>
+            <textarea id="q5_alcohol_details"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>6. Have you consumed any substances that were NOT prescribed by any physicians today?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q6_unprescribed_substances" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q6_unprescribed_substances" value="no"> No</label>
+        </div>
+        </div>
+
+    <div class="form-group">
+        <label>7. Do you have any metal in or around your head (above the collar)?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q7_metal_head" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q7_metal_head" value="no"> No</label>
+        </div>
+        <div id="q7_followup" class="follow-up-question hidden">
+            <label for="q7_metal_head_details">Please specify (e.g., dental implants, surgical clips, shrapnel, etc.):</label>
+            <textarea id="q7_metal_head_details"></textarea>
+        </div>
+    </div>
+
+    <button class="btn" id="submitTmsQuestionnaireBtn">Submit Questionnaire</button>
+    <button class="btn btn-secondary" id="cancelTmsQuestionnaireBtn">Cancel</button>
+</div>
 
         <!-- Patient Dashboard -->
         <div id="patientDashboard" class="dashboard hidden">
@@ -2492,8 +2487,8 @@
             const tmsEmail = document.getElementById('tmsEmail').value.trim();
             const tmsPhone = document.getElementById('tmsPhone').value.trim();
 
-            if (!tmsFullName || !tmsEmail || !tmsPhone) {
-                showMessage('Please provide your Full Name, Email, and Phone Number at the top of the questionnaire.', true);
+            if (!tmsFullName) {
+                showMessage('Please provide your Full Name at the top of the questionnaire.', true);
                 return;
             }
 
