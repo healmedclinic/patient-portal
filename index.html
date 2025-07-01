@@ -1088,11 +1088,11 @@
             </div>
             <div class="form-group">
                 <label for="tmsEmail">Email:</label>
-                <input type="email" id="tmsEmail" placeholder="Your email" required>
+                <input type="email" id="tmsEmail" placeholder="Your email">
             </div>
             <div class="form-group">
                 <label for="tmsPhone">Phone Number:</label>
-                <input type="tel" id="tmsPhone" placeholder="Your phone number" required>
+                <input type="tel" id="tmsPhone" placeholder="Your phone number">
             </div>
             <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
 
@@ -1136,7 +1136,7 @@
 
             <div class="form-group">
                 <label for="q3_sleep_hours">4. How did you sleep last night? Number of hours?</label>
-                <input type="number" id="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
+                <input type="text" id="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
             </div>
 
             <div class="form-group">
@@ -2492,8 +2492,8 @@
             const tmsEmail = document.getElementById('tmsEmail').value.trim();
             const tmsPhone = document.getElementById('tmsPhone').value.trim();
 
-            if (!tmsFullName || !tmsEmail || !tmsPhone) {
-                showMessage('Please provide your Full Name, Email, and Phone Number at the top of the questionnaire.', true);
+            if (!tmsFullName) {
+                showMessage('Please provide your Full Name at the top of the questionnaire.', true);
                 return;
             }
 
