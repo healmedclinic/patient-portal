@@ -212,6 +212,7 @@
             display: block; /* Ensure it takes full width and stacks */
             width: 100%;
             text-decoration: none !important; /* NEW: Remove underline */
+            text-align: center; /* NEW: Center text */
         }
         .btn.patient-card-btn:hover {
             transform: translateY(-3px);
@@ -478,10 +479,10 @@
             margin-bottom: 15px;
         }
         .admin-card.approved-status {
-             background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
         }
         .admin-card.denied-status {
-             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
         }
         .admin-card .document-image {
             max-width: 100px;
@@ -989,7 +990,7 @@
                             <label for="signupPassword">Password:</label>
                             <input type="password" id="signupPassword" placeholder="Create a password" required>
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label for="signupDob">Date of Birth:</label>
                             <input type="date" id="signupDob" required>
                         </div>
@@ -1071,6 +1072,11 @@
         <!-- TEST INTERFACE: MOVED HERE, OUTSIDE DASHBOARD -->
         <div id="testInterface" class="section hidden">
             <h2 id="testTitle"></h2>
+            <!-- NEW: Full Name field for public tests -->
+            <div id="publicTestNameField" class="form-group hidden">
+                <label for="publicTestFullName">Your Full Name:</label>
+                <input type="text" id="publicTestFullName" placeholder="Enter your full name" required>
+            </div>
             <div id="testQuestions"></div>
             <button class="btn" id="submitTestBtn">Submit Test</button>
             <button class="btn btn-secondary" id="cancelTestBtn">Cancel</button>
@@ -1109,13 +1115,6 @@
             </div>
 
             <div class="form-group">
-                <label>2. Have you consumed any substances that were NOT prescribed by any physicians today?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
-                </div>
-
-            <div class="form-group">
                 <label>3. Have you been taking your medication as prescribed and at the same time?</label>
                 <div class="radio-group-inline">
                     <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="yes" required> Yes</label>
@@ -1136,7 +1135,7 @@
 
             <div class="form-group">
                 <label for="q3_sleep_hours">4. How did you sleep last night? Number of hours?</label>
-                <input type="number" id="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
+                <input type="text" id="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
             </div>
 
             <div class="form-group">
@@ -1160,6 +1159,14 @@
                 <div id="q5_followup" class="follow-up-question hidden">
                     <label for="q5_alcohol_details">How much alcohol?</label>
                     <textarea id="q5_alcohol_details"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>2. Have you consumed any substances that were NOT prescribed by any physicians today?</label>
+                <div class="radio-group-inline">
+                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
+                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
                 </div>
             </div>
 
@@ -1297,7 +1304,7 @@
                 <!-- Admin Appointments Section -->
                 <div id="adminAppointmentsSection" class="section">
                     <h2 id="adminAppointmentsTitle">Appointment Requests</h2>
-                    <div id="adminPendingAppointmentsList"></div> 
+                    <div id="adminPendingAppointmentsList"></div>
                 </div>
 
                 <!-- Admin Patients Section -->
@@ -1636,7 +1643,7 @@
 
         // Modified to hide the new wrapper AND public test section
         function hideAllScreens() {
-            document.getElementById('welcomeScreenWrapper').classList.add('hidden'); 
+            document.getElementById('welcomeScreenWrapper').classList.add('hidden');
             document.getElementById('patientDashboard').classList.add('hidden');
             document.getElementById('adminDashboard').classList.add('hidden');
             document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // NEW: Hide public test selection
@@ -1819,8 +1826,8 @@
         function showPatientSection(sectionId) {
             document.querySelectorAll('#patientDashboard .section').forEach(s => s.classList.add('hidden'));
             // Keep testInterface and tmsQuestionnaireSection hidden when navigating within patient dashboard
-            document.getElementById('testInterface').classList.add('hidden'); 
-            document.getElementById('tmsQuestionnaireSection').classList.add('hidden'); 
+            document.getElementById('testInterface').classList.add('hidden');
+            document.getElementById('tmsQuestionnaireSection').classList.add('hidden');
 
             document.querySelectorAll('#patientSidebarNav li').forEach(li => li.classList.remove('active'));
             const targetListItem = document.querySelector(`#patientSidebarNav li[data-section="${sectionId}"]`);
@@ -1833,8 +1840,8 @@
 
         function showAdminSection(sectionId) {
             document.querySelectorAll('#adminDashboard .section').forEach(s => s.classList.add('hidden'));
-            document.getElementById('patientDetailView').classList.add('hidden'); 
-            document.getElementById('addPatientForm').classList.add('hidden'); 
+            document.getElementById('patientDetailView').classList.add('hidden');
+            document.getElementById('addPatientForm').classList.add('hidden');
 
             document.querySelectorAll('#adminSidebarNav li').forEach(li => li.classList.remove('active'));
             const targetListItem = document.querySelector(`#adminSidebarNav li[data-section="${sectionId}"]`);
@@ -1852,12 +1859,12 @@
             }
 
             if (sectionId === 'calendar') {
-                loadAdminCalendar(); 
+                loadAdminCalendar();
             } else if (sectionId === 'appointments') {
-                 loadAdminAppointments();
-                 document.getElementById('adminAppointmentsTitle').textContent = "Appointment Requests";
+                loadAdminAppointments();
+                document.getElementById('adminAppointmentsTitle').textContent = "Appointment Requests";
             } else if (sectionId === 'patients') {
-                 loadPatientsList(); 
+                loadPatientsList();
             } else if (sectionId === 'tmsSubmissions') { // NEW: Load all TMS submissions for admin
                 loadAdminTmsSubmissions();
             } else if (sectionId === 'publicTestResults') { // NEW: Load all public test results for admin
@@ -1922,8 +1929,8 @@
         // Book New Appointment (Updated to save date and DOB, with duplicate check)
         async function bookAppointment() {
             const dob = document.getElementById('bookApptDob').value;
-            const date = document.getElementById('appointmentDate').value; 
-            const time = document.getElementById('appointmentTime').value; 
+            const date = document.getElementById('appointmentDate').value;
+            const time = document.getElementById('appointmentTime').value;
             const reason = document.getElementById('appointmentReason').value;
 
             if (!dob || !date || !time || !reason) {
@@ -1955,7 +1962,7 @@
                     const apptArray = Object.values(existingAppointments);
 
                     // Check for existing pending or approved appointments for THIS user's full name AND DOB for the same date/time
-                    const duplicateCheck = apptArray.some(appt => 
+                    const duplicateCheck = apptArray.some(appt =>
                         appt.fullName === patientData.fullName && // Match full name
                         appt.dob === dob && // Match DOB
                         appt.appointmentDate === date &&
@@ -1976,15 +1983,15 @@
                     fullName: patientData.fullName,
                     email: patientData.email,
                     phoneNumber: patientData.phoneNumber,
-                    dob: dob, // Save DOB with appointment
-                    appointmentDate: date, 
-                    appointmentTime: time, 
+                    dob: dob,
+                    appointmentDate: date,
+                    appointmentTime: time,
                     reason: reason,
-                    status: 'pending',
+                    status: 'pending', // Default status
                     createdAt: new Date().toISOString()
                 });
-                console.log("Patient: Appointment request submitted successfully to Firebase. Path:", newAppointmentRef.toString());
-                showMessage('Appointment request submitted successfully!');
+                console.log("Patient: Appointment request submitted for UID:", currentUser.uid, "Appointment ID:", newAppointmentRef.key);
+                showMessage('Appointment request submitted successfully! We will review and get back to you shortly.');
                 hideBookingForm();
             } catch (error) {
                 console.error("Patient: Error booking appointment:", error);
@@ -1992,72 +1999,22 @@
             }
         }
 
-        // Load Patient's Appointments (Updated to show date and DOB)
-        function loadAppointments() {
-            const appointmentsListDiv = document.getElementById('appointmentsList');
-            if (!currentUser) {
-                appointmentsListDiv.innerHTML = '<p>Please log in to view your appointments.</p>';
-                return;
-            }
-            console.log("Patient: Loading appointments for patient UID:", currentUser.uid);
-            onValue(ref(database, 'appointments'), (snapshot) => {
-                appointmentsListDiv.innerHTML = '';
-                let hasAppointments = false;
-                snapshot.forEach((childSnapshot) => {
-                    const appt = childSnapshot.val();
-                    const apptId = childSnapshot.key;
-
-                    if (appt.userId === currentUser.uid) {
-                        hasAppointments = true;
-                        const statusClass = `status-${appt.status}`;
-                        // Display both date and time if available, otherwise fallback to old 'time' string
-                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
-                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
-                            : appt.time || 'N/A'; // Fallback for old data without specific date/time
-                        appointmentsListDiv.innerHTML += `
-                            <div class="appointment-card">
-                                <h4>Appointment Request</h4>
-                                <p><strong>Date & Time:</strong> ${displayDateTime}</p>
-                                <p><strong>Date of Birth:</strong> ${appt.dob || 'N/A'}</p>
-                                <p><strong>Reason:</strong> ${appt.reason}</p>
-                                <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${apptId}</p>
-                            </div>
-                        `;
-                    }
-                });
-                if (!hasAppointments) {
-                    appointmentsListDiv.innerHTML = '<p>No appointments found.</p>';
-                }
-                console.log("Patient: Appointments loaded. Total displayed:", appointmentsListDiv.children.length);
-            }, {
-                onlyOnce: false
-            });
-        }
-
-        // Start a Mental Health Test (for logged-in users, saves results to their personal record AND to admin)
+        // Start a Mental Health Test (for logged-in users)
         function startTest(testType) {
-            // This function is intended for *logged-in* users accessing tests from their dashboard.
-            // It requires a logged-in user to save results to their personal health record.
-            if (!currentUser) { 
-                showMessage('To take a test from your personal dashboard, please log in. You can access quick tests from the main screen.', true);
-                return;
-            }
-            isPublicTestMode = false; // Ensure we're in logged-in mode
             console.log("Patient: Starting logged-in test:", testType);
+            isPublicTestMode = false; // Ensure public mode flag is false
             currentTest = testQuestions[testType];
             if (!currentTest) {
-                console.error("Patient: Test type not found in testQuestions object:", testType);
                 showMessage("Selected test not found. Please try again.", true);
                 return;
             }
-            const testQuestionsDiv = document.getElementById('testQuestions');
-            testQuestionsDiv.innerHTML = '';
-            document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Hide any previous public results
-
             document.getElementById('testTitle').textContent = currentTest.title;
+            document.getElementById('testQuestions').innerHTML = ''; // Clear previous questions
+            document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Hide any previous public results
+            document.getElementById('publicTestNameField').classList.add('hidden'); // Hide name field for logged-in users
+            document.getElementById('publicTestFullName').value = ''; // Clear name field
 
+            let questionsHtml = '';
             currentTest.questions.forEach((questionText, index) => {
                 let questionPrefix = '';
                 if (testType === 'depression' || testType === 'anxiety') {
@@ -2065,8 +2022,7 @@
                 } else if (testType === 'adhd') {
                     questionPrefix = ''; // No additional prefix needed for ASRS
                 }
-
-                const questionHtml = `
+                questionsHtml += `
                     <div class="question">
                         <h4>${index + 1}. ${questionPrefix}${questionText}?</h4>
                         <div class="radio-group">
@@ -2079,24 +2035,19 @@
                         </div>
                     </div>
                 `;
-                testQuestionsDiv.innerHTML += questionHtml;
             });
-
-            // Make sure the general patient dashboard sections are hidden
-            document.getElementById('mentalHealthSection').classList.add('hidden'); 
-            document.getElementById('appointmentsSection').classList.add('hidden');
-            document.getElementById('healthRecordsSection').classList.add('hidden');
-            document.getElementById('profileSection').classList.add('hidden');
-            document.getElementById('formsSection').classList.add('hidden');
-
-            document.getElementById('testInterface').classList.remove('hidden');
-            document.getElementById('testInterface').classList.remove('public-test-interface'); // Ensure correct styling
-            document.getElementById('submitTestBtn').onclick = submitTest; // Re-assign logged-in submit handler
-            document.getElementById('cancelTestBtn').onclick = cancelTest; // Re-assign logged-in cancel handler
-            console.log("Patient: Test interface displayed for:", testType);
+            document.getElementById('testQuestions').innerHTML = questionsHtml;
+            document.getElementById('testInterface').classList.remove('hidden'); // Show test interface
+            document.getElementById('testInterface').classList.remove('public-test-interface'); // Remove public-specific styling
+            // Ensure submit/cancel buttons are visible
+            document.getElementById('submitTestBtn').classList.remove('hidden');
+            document.getElementById('cancelTestBtn').classList.remove('hidden');
+            // Re-assign logged-in specific handlers
+            document.getElementById('submitTestBtn').onclick = submitTest;
+            document.getElementById('cancelTestBtn').onclick = cancelTest;
         }
 
-        // Submit Mental Health Test (for logged-in users, saves results to patient's record AND to public for admin)
+        // Submit Mental Health Test (for logged-in users)
         async function submitTest() {
             let score = 0;
             const totalQuestions = currentTest.questions.length;
@@ -2113,11 +2064,16 @@
                 answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
             }
 
-            const breakdown = currentTest.getBreakdown(score, answers); 
-            console.log("Patient: Logged-in test submitted. Calculated Score:", score, "Breakdown:", breakdown);
+            const breakdown = currentTest.getBreakdown(score, answers);
+            console.log("Patient: Logged-in test submitted. Score:", score, "Breakdown:", breakdown);
+
+            if (!currentUser) {
+                showMessage('You must be logged in to submit a test.', true);
+                return;
+            }
 
             try {
-                // 1. Save to patient's own testResults (for their health records)
+                // Save to patient's own test results
                 const newTestResultRef = push(ref(database, 'testResults'));
                 await set(newTestResultRef, {
                     userId: currentUser.uid,
@@ -2127,9 +2083,10 @@
                     answers: answers,
                     createdAt: new Date().toISOString()
                 });
-                console.log("Patient: Test results saved to patient's health records. Path:", newTestResultRef.toString());
+                console.log("Patient: Test results saved to patient's record. Path:", newTestResultRef.toString());
 
-                // 2. Also save to publicMentalHealthTestSubmissions for Admin review (including patient details)
+                // Also save a copy to publicMentalHealthTestSubmissions for admin review
+                // This copy will include patient's full name, email, phone for admin's convenience
                 const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
                 const patientData = patientSnapshot.val();
 
@@ -2231,6 +2188,11 @@
             document.getElementById('testTitle').textContent = currentTest.title;
             console.log("DEBUG: testTitle set to:", currentTest.title);
 
+            // NEW: Show and clear the public name field
+            document.getElementById('publicTestNameField').classList.remove('hidden');
+            document.getElementById('publicTestFullName').value = '';
+            console.log("DEBUG: Public name field shown and cleared.");
+
             // Ensure submit/cancel buttons are visible when starting a new test
             document.getElementById('submitTestBtn').classList.remove('hidden');
             document.getElementById('cancelTestBtn').classList.remove('hidden');
@@ -2242,7 +2204,7 @@
                 if (testType === 'depression' || testType === 'anxiety') {
                     questionPrefix = 'Over the last 2 weeks, how often have you been bothered by: ';
                 } else if (testType === 'adhd') {
-                     questionPrefix = ''; // No additional prefix needed for ASRS
+                    questionPrefix = ''; // No additional prefix needed for ASRS
                 }
 
                 const questionHtml = `
@@ -2276,6 +2238,12 @@
 
         // Submit Public Mental Health Test (displays results, DOES save to Firebase for Admin)
         async function submitPublicTest() {
+            const publicFullName = document.getElementById('publicTestFullName').value.trim(); // NEW: Get full name
+            if (!publicFullName) {
+                showMessage('Please enter your full name before submitting the test.', true);
+                return;
+            }
+
             let score = 0;
             const totalQuestions = currentTest.questions.length;
             const answers = [];
@@ -2291,14 +2259,14 @@
                 answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
             }
 
-            const breakdown = currentTest.getBreakdown(score, answers); 
+            const breakdown = currentTest.getBreakdown(score, answers);
             console.log("Public: Test submitted. Calculated Score:", score, "Breakdown:", breakdown);
 
             try {
                 // Save public test results to Firebase (for Admin)
                 const newPublicTestResultRef = push(ref(database, 'publicMentalHealthTestSubmissions'));
                 await set(newPublicTestResultRef, {
-                    // No userId, fullName, email, phoneNumber for truly anonymous public submissions here
+                    fullName: publicFullName, // NEW: Save full name
                     testType: currentTest.title,
                     score: score,
                     breakdown: breakdown,
@@ -2323,6 +2291,7 @@
             `;
             resultDisplayDiv.classList.remove('hidden');
             document.getElementById('testQuestions').innerHTML = ''; // Clear questions
+            document.getElementById('publicTestNameField').classList.add('hidden'); // NEW: Hide name field after submission
             document.getElementById('submitTestBtn').classList.add('hidden'); // Hide submit
             document.getElementById('cancelTestBtn').classList.add('hidden'); // Hide cancel
 
@@ -2352,6 +2321,8 @@
             document.getElementById('testInterface').classList.add('hidden');
             document.getElementById('testInterface').classList.remove('public-test-interface');
             document.getElementById('testQuestions').innerHTML = '';
+            document.getElementById('publicTestNameField').classList.add('hidden'); // NEW: Hide name field on cancel
+            document.getElementById('publicTestFullName').value = ''; // NEW: Clear name field on cancel
             document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Ensure hidden
             showPublicMentalHealthTestSelection(); // Return to public test selection
         }
@@ -2623,7 +2594,7 @@
                 if (rawSnapshotData) {
                     const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
                     // CRITICAL FIX: Ensure status is trimmed and explicitly 'pending'
-                    const pendingAppointments = appointmentsArray.filter(appt => appt.status && appt.status.trim() === 'pending'); 
+                    const pendingAppointments = appointmentsArray.filter(appt => appt.status && appt.status.trim() === 'pending');
                     pendingAppointments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
                     pendingAppointments.forEach((appt) => {
@@ -2679,8 +2650,8 @@
                 console.log("Admin: Appointment approved:", apptId);
                 showMessage('Appointment approved successfully!');
                 if (adminCalendarInstance) {
-                     adminCalendarInstance.refetchEvents();
-                     console.log("Admin: Calendar events refetched after approval.");
+                    adminCalendarInstance.refetchEvents();
+                    console.log("Admin: Calendar events refetched after approval.");
                 }
             } catch (error) {
                 console.error("Admin: Error approving appointment:", error);
@@ -2716,8 +2687,8 @@
                 return;
             }
             document.getElementById('addPatientForm').classList.remove('hidden');
-            document.getElementById('patientsList').classList.add('hidden'); 
-            document.getElementById('patientDetailView').classList.add('hidden'); 
+            document.getElementById('patientsList').classList.add('hidden');
+            document.getElementById('patientDetailView').classList.add('hidden');
             // Clear the form fields
             document.getElementById('newPatientName').value = '';
             document.getElementById('newPatientEmail').value = '';
@@ -2730,7 +2701,7 @@
 
         function hideAddPatientForm() {
             document.getElementById('addPatientForm').classList.add('hidden');
-            document.getElementById('patientsList').classList.remove('hidden'); 
+            document.getElementById('patientsList').classList.remove('hidden');
             console.log("Admin: Hiding add patient form.");
         }
 
@@ -2790,8 +2761,8 @@
             console.log("Admin: Loading list of patient buttons.");
             
             document.getElementById('patientsList').classList.remove('hidden');
-            document.getElementById('patientDetailView').classList.add('hidden'); 
-            document.getElementById('addPatientForm').classList.add('hidden'); 
+            document.getElementById('patientDetailView').classList.add('hidden');
+            document.getElementById('addPatientForm').classList.add('hidden');
 
             onValue(ref(database, 'patients'), (snapshot) => {
                 patientsListDiv.innerHTML = '';
@@ -2803,7 +2774,7 @@
                     const patientsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
                     
                     // Filter out "Jane Doe" and "user testing"
-                    const filteredPatients = patientsArray.filter(patient => 
+                    const filteredPatients = patientsArray.filter(patient =>
                         patient.fullName !== "Jane Doe" && patient.fullName !== "user testing"
                     );
 
@@ -2968,7 +2939,7 @@
                 if (appointmentsSnapshot.exists()) {
                     appointmentsSnapshot.forEach(child => {
                         const appt = child.val();
-                        if (appt.userId === patientId && appt.status && appt.status.trim() === 'approved') { 
+                        if (appt.userId === patientId && appt.status && appt.status.trim() === 'approved') {
                             bookedAppointments.push(appt);
                         }
                     });
@@ -2977,7 +2948,7 @@
                 bookedAppointments.sort((a, b) => {
                     const dateA = new Date(`${a.appointmentDate}T${a.appointmentTime}`);
                     const dateB = new Date(`${b.appointmentDate}T${b.appointmentTime}`);
-                    return dateB - dateA; 
+                    return dateB - dateA;
                 });
 
                 if (bookedAppointments.length > 0) {
@@ -3058,8 +3029,8 @@
 
             if (allTmsSubmissions.length > 0) {
                 allTmsSubmissions.forEach(submission => {
-                    const submittedByInfo = submission.fromUser === 'public' 
-                        ? `<strong>Public Submission</strong>` 
+                    const submittedByInfo = submission.fromUser === 'public'
+                        ? `<strong>Public Submission</strong>`
                         : `<strong>Logged-in User</strong>`; // User ID already in button data-user-id
 
                     tmsSubmissionsListDiv.innerHTML += `
@@ -3167,8 +3138,8 @@
                 if (publicTestsSnapshot.exists()) {
                     publicTestsSnapshot.forEach(childSnapshot => {
                         const submission = childSnapshot.val();
-                        allTestSubmissions.push({ 
-                            id: childSnapshot.key, 
+                        allTestSubmissions.push({
+                            id: childSnapshot.key,
                             type: submission.userId ? 'logged-in-copy' : 'public-anonymous', // Differentiate copied logged-in from truly anonymous
                             testType: submission.testType,
                             score: submission.score,
@@ -3176,7 +3147,7 @@
                             answers: submission.answers,
                             submittedAt: submission.submittedAt,
                             userId: submission.userId || null,
-                            fullName: submission.fullName || 'Anonymous User',
+                            fullName: submission.fullName || 'Anonymous User', // Use the name from the public submission
                             email: submission.email || 'N/A',
                             phoneNumber: submission.phoneNumber || 'N/A'
                         });
@@ -3205,7 +3176,7 @@
                     const patientMap = {};
                     patientSnapshots.forEach(snap => {
                         if (snap.exists()) {
-                            patientMap[snap.key] = snap.val();
+                            patientMap[snap.key] = snap.val(); // Store full patient data
                         }
                     });
 
@@ -3213,8 +3184,8 @@
                         const patientData = patientMap[submission.userId];
                         // Add original logged-in submission for comprehensive view
                         allTestSubmissions.push({
-                            id: submission.id, 
-                            type: 'logged-in-original', 
+                            id: submission.id,
+                            type: 'logged-in-original',
                             testType: submission.testType,
                             score: submission.score,
                             breakdown: submission.breakdown,
@@ -3232,7 +3203,7 @@
             }
 
             // Sort all submissions by date (most recent first)
-            allTestSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); 
+            allTestSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
 
             publicTestResultsListDiv.innerHTML = ''; // Clear loading message
 
@@ -3258,9 +3229,9 @@
                     const submissionOrigin = submission.type === 'public-anonymous' ? 'Quick Access' : 'Patient Portal';
 
                     publicTestResultsListDiv.innerHTML += `
-                        <div class="public-test-submission-card" 
-                            data-submission-id="${submission.id}" 
-                            data-submission-type="${submission.type}" 
+                        <div class="public-test-submission-card"
+                            data-submission-id="${submission.id}"
+                            data-submission-type="${submission.type}"
                             data-user-id="${submission.userId || ''}">
                             <h4>${submission.testType} - Submitted from ${submissionOrigin} on: ${new Date(submission.submittedAt).toLocaleString()}</h4>
                             <p><strong>Submitted By:</strong> ${submitterName}</p>
@@ -3268,9 +3239,9 @@
                             <p><strong>Phone:</strong> ${submission.phoneNumber}</p>
                             <p><strong>Score:</strong> ${submission.score}</p>
                             <p><strong>Breakdown:</strong> ${submission.breakdown}</p>
-                            <button class="btn btn-view-details" 
-                                data-submission-id="${submission.id}" 
-                                data-submission-type="${submission.type}" 
+                            <button class="btn btn-view-details"
+                                data-submission-id="${submission.id}"
+                                data-submission-type="${submission.type}"
                                 data-user-id="${submission.userId || ''}">View Details</button>
                         </div>
                     `;
@@ -3280,7 +3251,7 @@
                 document.querySelectorAll('#publicTestResultsList .btn-view-details').forEach(button => {
                     button.addEventListener('click', (event) => {
                         const submissionId = event.target.dataset.submissionId;
-                        const submissionType = event.target.dataset.submissionType; 
+                        const submissionType = event.target.dataset.submissionType;
                         const userId = event.target.dataset.userId || null;
                         viewPublicTestSubmissionDetails(submissionId, submissionType, userId);
                     });
@@ -3375,7 +3346,7 @@
             const ampm = timePartMatch[2] ? timePartMatch[2].toLowerCase() : '';
 
             if (ampm === 'pm' && hour < 12) hour += 12;
-            if (ampm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
+            if (amppm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
 
             // Start with today's date components, then set the target hour and minute
             let resultDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -3391,6 +3362,31 @@
             resultDate.setDate(resultDate.getDate() + dayDifference);
             console.log("Calendar: Parsed legacy time string to Date object (local timezone):", resultDate.toLocaleString());
             return resultDate; // Return the Date object
+        }
+
+
+        // NEW: Function to update appointment date and time in Firebase
+        async function updateAppointmentDateTime(appointmentId, newStart, newEnd) {
+            console.log(`Calendar: Updating appointment ${appointmentId} to start: ${newStart.toISOString()}, end: ${newEnd.toISOString()}`);
+            try {
+                // Format newStart back to YYYY-MM-DD and HH:MM strings for Firebase
+                const newDateStr = newStart.toISOString().split('T')[0]; // YYYY-MM-DD
+                const newTimeStr = newStart.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); // HH:MM (24-hour format)
+
+                // Update the Firebase record
+                await update(ref(database, `appointments/${appointmentId}`), {
+                    appointmentDate: newDateStr,
+                    appointmentTime: newTimeStr
+                    // Note: We don't store 'end' in Firebase for simplicity,
+                    // as it's typically derived as +1 hour from start.
+                    // If your appointments can have variable durations, you might need to store `durationMinutes` or `appointmentEndTime`.
+                });
+                showMessage('Appointment updated successfully!');
+                console.log(`Calendar: Appointment ${appointmentId} updated in Firebase.`);
+            } catch (error) {
+                console.error("Calendar: Error updating appointment date/time in Firebase:", error);
+                showMessage(`Error updating appointment: ${error.message}`, true);
+            }
         }
 
 
@@ -3425,10 +3421,10 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
-                navLinks: true, 
-                editable: false, 
-                selectable: false, 
-                dayMaxEvents: true, 
+                navLinks: true,
+                editable: true, // <--- CHANGED: Enable dragging and resizing
+                selectable: false,
+                dayMaxEvents: true,
                 datesSet: function(dateInfo) {
                     console.log("Calendar: Current date range set:", dateInfo.startStr, "to", dateInfo.endStr);
                 },
@@ -3444,6 +3440,7 @@
                 },
                 events: async function(fetchInfo, successCallback, failureCallback) {
                     console.log("Calendar: events callback fired. Fetching approved appointments from Firebase for range:", fetchInfo.startStr, "to", fetchInfo.endStr);
+                    // Use onValue to listen for real-time updates
                     onValue(ref(database, 'appointments'), async (snapshot) => {
                         const rawSnapshotData = snapshot.val();
                         console.log("Calendar: Raw appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
@@ -3526,7 +3523,7 @@
                                     id: appt.id,
                                     title: eventTitle,
                                     start: eventStart, 
-                                    end: eventEnd,     
+                                    end: eventEnd,    
                                     allDay: false, 
                                     classNames: ['approved-event'], 
                                     extendedProps: { 
@@ -3575,6 +3572,34 @@
                     
                     eventDetailsModal.classList.remove('hidden'); 
                     console.log("Calendar: Event details modal displayed.");
+                },
+                eventDrop: function(info) { // <--- NEW: Event listener for dragging events
+                    console.log("Calendar: Event dropped!", info.event.id);
+                    // Confirm with admin before updating
+                    // Using a custom modal instead of alert/confirm for better UX
+                    showConfirmationModal(
+                        `Are you sure you want to move "${info.event.title}" to ${info.event.start.toLocaleString()}?`,
+                        () => { // On confirm
+                            updateAppointmentDateTime(info.event.id, info.event.start, info.event.end);
+                        },
+                        () => { // On cancel
+                            info.revert(); // Revert the drag if canceled
+                        }
+                    );
+                },
+                eventResize: function(info) { // <--- NEW: Event listener for resizing events
+                    console.log("Calendar: Event resized!", info.event.id);
+                    // Confirm with admin before updating
+                    // Using a custom modal instead of alert/confirm for better UX
+                    showConfirmationModal(
+                        `Are you sure you want to resize "${info.event.title}" to ${info.event.start.toLocaleTimeString()} - ${info.event.end.toLocaleTimeString()} on ${info.event.start.toLocaleDateString()}?`,
+                        () => { // On confirm
+                            updateAppointmentDateTime(info.event.id, info.event.start, info.event.end);
+                        },
+                        () => { // On cancel
+                            info.revert(); // Revert the resize if canceled
+                        }
+                    );
                 }
             });
 
@@ -3590,6 +3615,54 @@
                 if (event.target == eventDetailsModal) {
                     eventDetailsModal.classList.add('hidden');
                     console.log("Calendar: Event details modal hidden via outside click.");
+                }
+            };
+        }
+
+        // NEW: Custom Confirmation Modal (replaces alert/confirm for better UX)
+        function showConfirmationModal(message, onConfirm, onCancel) {
+            const modalHtml = `
+                <div id="customConfirmModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button" id="customConfirmCloseBtn">&times;</span>
+                        <h3>Confirmation</h3>
+                        <p>${message}</p>
+                        <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                            <button class="btn" id="customConfirmYesBtn" style="width: 45%; background: #27ae60;">Yes</button>
+                            <button class="btn btn-secondary" id="customConfirmNoBtn" style="width: 45%;">No</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            const modal = document.getElementById('customConfirmModal');
+            const closeBtn = document.getElementById('customConfirmCloseBtn');
+            const yesBtn = document.getElementById('customConfirmYesBtn');
+            const noBtn = document.getElementById('customConfirmNoBtn');
+
+            const cleanup = () => {
+                modal.remove();
+            };
+
+            closeBtn.onclick = () => {
+                cleanup();
+                if (onCancel) onCancel();
+            };
+            yesBtn.onclick = () => {
+                cleanup();
+                if (onConfirm) onConfirm();
+            };
+            noBtn.onclick = () => {
+                cleanup();
+                if (onCancel) onCancel();
+            };
+
+            // Close if clicked outside
+            modal.onclick = (event) => {
+                if (event.target === modal) {
+                    cleanup();
+                    if (onCancel) onCancel();
                 }
             };
         }
@@ -3623,7 +3696,6 @@
                 });
             });
 
-
             // Set up dashboard logout buttons
             document.getElementById('patientLogoutBtn').addEventListener('click', logout);
             document.getElementById('adminLogoutBtn').addEventListener('click', logout);
@@ -3635,8 +3707,8 @@
             
             // Logged-in test specific buttons
             // These will be overridden by publicTest logic if in public mode, which is correct.
-            document.getElementById('submitTestBtn').addEventListener('click', submitTest); 
-            document.getElementById('cancelTestBtn').addEventListener('click', cancelTest); 
+            document.getElementById('submitTestBtn').addEventListener('click', submitTest);
+            document.getElementById('cancelTestBtn').addEventListener('click', cancelTest);
 
 
             // Set up patient TMS Questionnaire buttons (logged-in specific)
@@ -3705,9 +3777,9 @@
                     }
                 } else {
                     if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-                         isAdmin = true;
-                         console.log("Auth state changed: Admin session found (from storage, no current Firebase Auth user yet).");
-                         showAdminDashboard();
+                        isAdmin = true;
+                        console.log("Auth state changed: Admin session found (from storage, no current Firebase Auth user yet).");
+                        showAdminDashboard();
                     } else {
                         console.log("Auth state changed: No user or admin session found. Showing login.");
                         showLoginScreenLayout(); // Show the new login/public access wrapper
