@@ -6,7 +6,7 @@
     <title>HealMed Patient/Admin Portal</title>
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
-    <!-- Font Awesome for Icons (Still useful for general icons if needed) -->
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* All your CSS styles are now embedded here */
@@ -209,10 +209,11 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             font-size: 1.2em;
             font-weight: bold;
-            display: block; /* Ensure it takes full width and stacks */
+            display: flex; /* Use flex to align text and icon */
+            justify-content: space-between; /* Push text to left, icon to right */
+            align-items: center;
             width: 100%;
             text-decoration: none !important; /* NEW: Remove underline */
-            text-align: center; /* NEW: Center text */
         }
         .btn.patient-card-btn:hover {
             transform: translateY(-3px);
@@ -696,6 +697,17 @@
             margin-bottom: 8px;
             color: #555;
         }
+        .modal-content hr {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+        .modal-content .form-group {
+            margin-bottom: 15px;
+        }
+        .modal-content .form-group label {
+            font-weight: bold;
+        }
 
         /* Admin TMS Submissions specific styles */
         .tms-submission-card, .public-test-submission-card { /* Combined style for similar cards */
@@ -705,6 +717,9 @@
             border-radius: 10px;
             margin-bottom: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            display: flex; /* Use flex for alignment */
+            justify-content: space-between; /* Push content to left, buttons to right */
+            align-items: center;
         }
         .public-test-submission-card {
             background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); /* Blue for public tests */
@@ -717,19 +732,41 @@
             margin-bottom: 5px;
             font-size: 0.95em;
         }
+        .tms-submission-card .card-actions, .public-test-submission-card .card-actions {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            gap: 8px;
+            margin-left: 15px; /* Space from content */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
         .tms-submission-card .btn-view-details, .public-test-submission-card .btn-view-details {
             background: #2c3e50;
             color: white;
             width: auto;
             padding: 8px 15px;
             border-radius: 5px;
-            margin-top: 10px;
             text-align: center;
             text-decoration: none !important;
         }
         .tms-submission-card .btn-view-details:hover, .public-test-submission-card .btn-view-details:hover {
             background: #34495e;
             transform: translateY(-2px);
+        }
+
+        /* Delete button styling (trash icon) */
+        .btn-delete {
+            background: none;
+            border: none;
+            color: #e74c3c; /* Red color for trash icon */
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .btn-delete:hover {
+            color: #c0392b;
+            transform: scale(1.1);
         }
 
         /* Public Mental Health Test Selection Screen */
@@ -1165,8 +1202,8 @@
             <div class="form-group">
                 <label>2. Have you consumed any substances that were NOT prescribed by any physicians today?</label>
                 <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
+                    <label class="radio-option-inline"><input type="radio" name="q_unprescribed_substance" value="yes" required> Yes</label> <!-- Changed name to avoid conflict -->
+                    <label class="radio-option-inline"><input type="radio" name="q_unprescribed_substance" value="no"> No</label>
                 </div>
             </div>
 
@@ -1423,6 +1460,13 @@
             <p><strong>Submitted On:</strong> <span id="tmsModalSubmittedAt"></span></p>
             <hr>
             <div id="tmsModalAnswers"></div>
+            <hr>
+            <button class="btn" id="moveTmsToPatientBtn" style="margin-top: 15px;">Move to Patient Account</button>
+            <div id="assignTmsToPatientSection" class="form-group hidden" style="margin-top: 20px;">
+                <label for="tmsPatientSelectDropdown">Assign to Patient:</label>
+                <select id="tmsPatientSelectDropdown" style="width: 100%; padding: 10px; border-radius: 5px; margin-bottom: 10px;"></select>
+                <button class="btn" id="confirmTmsAssignmentBtn" style="width: 100%;">Confirm Assignment</button>
+            </div>
         </div>
     </div>
 
@@ -1439,8 +1483,18 @@
             <p><strong>Submitted On:</strong> <span id="publicTestModalSubmittedAt"></span></p>
             <hr>
             <div id="publicTestModalAnswers"></div>
+            <hr>
+            <button class="btn" id="movePublicTestToPatientBtn" style="margin-top: 15px;">Move to Patient Account</button>
+            <div id="assignPublicTestToPatientSection" class="form-group hidden" style="margin-top: 20px;">
+                <label for="publicTestPatientSelectDropdown">Assign to Patient:</label>
+                <select id="publicTestPatientSelectDropdown" style="width: 100%; padding: 10px; border-radius: 5px; margin-bottom: 10px;"></select>
+                <button class="btn" id="confirmPublicTestAssignmentBtn" style="width: 100%;">Confirm Assignment</button>
+            </div>
         </div>
     </div>
+
+    <!-- NEW: Custom Confirmation Modal HTML -->
+    <!-- This modal will be dynamically inserted by showConfirmationModal JS function -->
 
 
     <!-- FullCalendar JavaScript (Must be loaded AFTER the DOM elements) -->
@@ -1461,7 +1515,7 @@
 
         // --- Firebase SDK v9 Modular Imports from CDN ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
         import { getDatabase, ref, set, push, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
 
@@ -1478,6 +1532,7 @@
         let adminCalendarInstance = null; // To hold the FullCalendar object for the admin portal
         let currentPatientIdInAdminView = null; // To track which patient is currently being viewed by admin
         let isPublicTestMode = false; // Flag to indicate if currently taking a public test
+        let allPatientsData = []; // To store a list of all patients for dropdowns
 
         // --- Admin Credentials (Email must exist in Firebase Authentication) ---
         const ADMIN_EMAIL = 'admin@healmed.com'; // Use the email you created in Firebase Auth
@@ -1633,12 +1688,83 @@
 
         // --- Helper Functions for UI and Messages ---
         function showMessage(message, isError = false) {
-            alert(message); // Using alert as per previous pattern. Consider a custom modal for better UX.
-            if (isError) {
-                console.error(message);
-            } else {
-                console.log(message);
-            }
+            // Using a custom modal instead of alert for better UX
+            const messageType = isError ? 'Error' : 'Info';
+            const modalHtml = `
+                <div id="messageModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button" id="messageModalCloseBtn">&times;</span>
+                        <h3>${messageType}</h3>
+                        <p>${message}</p>
+                        <button class="btn" id="messageModalOkBtn" style="margin-top: 20px; width: 100%;">OK</button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            const modal = document.getElementById('messageModal');
+            const closeBtn = document.getElementById('messageModalCloseBtn');
+            const okBtn = document.getElementById('messageModalOkBtn');
+
+            const cleanup = () => {
+                modal.remove();
+            };
+
+            closeBtn.onclick = cleanup;
+            okBtn.onclick = cleanup;
+            modal.onclick = (event) => {
+                if (event.target === modal) {
+                    cleanup();
+                }
+            };
+        }
+
+        // NEW: Custom Confirmation Modal (replaces alert/confirm for better UX)
+        function showConfirmationModal(message, onConfirm, onCancel) {
+            const modalHtml = `
+                <div id="customConfirmModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button" id="customConfirmCloseBtn">&times;</span>
+                        <h3>Confirmation</h3>
+                        <p>${message}</p>
+                        <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                            <button class="btn" id="customConfirmYesBtn" style="width: 45%; background: #27ae60;">Yes</button>
+                            <button class="btn btn-secondary" id="customConfirmNoBtn" style="width: 45%;">No</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            const modal = document.getElementById('customConfirmModal');
+            const closeBtn = document.getElementById('customConfirmCloseBtn');
+            const yesBtn = document.getElementById('customConfirmYesBtn');
+            const noBtn = document.getElementById('customConfirmNoBtn');
+
+            const cleanup = () => {
+                modal.remove();
+            };
+
+            closeBtn.onclick = () => {
+                cleanup();
+                if (onCancel) onCancel();
+            };
+            yesBtn.onclick = () => {
+                cleanup();
+                if (onConfirm) onConfirm();
+            };
+            noBtn.onclick = () => {
+                cleanup();
+                if (onCancel) onCancel();
+            };
+
+            // Close if clicked outside
+            modal.onclick = (event) => {
+                if (event.target === modal) {
+                    cleanup();
+                    if (onCancel) onCancel();
+                }
+            };
         }
 
         // Modified to hide the new wrapper AND public test section
@@ -2222,7 +2348,7 @@
                 `;
                 questionsHtml += questionHtml; // Append to a temporary string
             });
-            testQuestionsDiv.innerHTML = questionsHtml; // Set innerHTML once
+            document.getElementById('testQuestions').innerHTML = questionsHtml; // Set innerHTML once
             console.log("DEBUG: testQuestionsDiv innerHTML set. Number of questions:", currentTest.questions.length);
 
             // Make sure the test interface is shown
@@ -2526,6 +2652,12 @@
                 }
             }
 
+            // Q_unprescribed_substance: Have you consumed any substances that were NOT prescribed by any physicians today?
+            const qUnprescribedSubstanceAnswer = document.querySelector('input[name="q_unprescribed_substance"]:checked');
+            if (!qUnprescribedSubstanceAnswer) { allRequiredAnswered = false; } else {
+                answers.q_unprescribed_substance = qUnprescribedSubstanceAnswer.value;
+            }
+
             // Q6: Do you have any metal in or around your head (above the collar)?
             const q6Answer = document.querySelector('input[name="q6_metal_head"]:checked');
             if (!q6Answer) { allRequiredAnswered = false; } else {
@@ -2751,6 +2883,71 @@
             }
         }
 
+        // NEW: Delete Patient Function
+        async function deletePatient(patientId) {
+            if (!currentUser || !isAdmin) {
+                showMessage('Unauthorized action.', true);
+                return;
+            }
+
+            showConfirmationModal(
+                `Are you sure you want to permanently delete this patient (UID: ${patientId}) and ALL their associated data (profile, tests, TMS, appointments)? This action cannot be undone.`,
+                async () => { // On Confirm
+                    try {
+                        // 1. Delete patient data from Realtime Database
+                        await remove(ref(database, 'patients/' + patientId));
+                        console.log(`Admin: Patient data deleted from /patients/${patientId}`);
+
+                        // 2. Delete associated test results
+                        const testResultsSnapshot = await get(ref(database, 'testResults'));
+                        if (testResultsSnapshot.exists()) {
+                            testResultsSnapshot.forEach(child => {
+                                if (child.val().userId === patientId) {
+                                    remove(ref(database, `testResults/${child.key}`));
+                                }
+                            });
+                        }
+                        console.log(`Admin: Associated test results deleted for patient ${patientId}`);
+
+                        // 3. Delete associated TMS questionnaires
+                        await remove(ref(database, `tmsQuestionnaires/${patientId}`));
+                        console.log(`Admin: Associated TMS questionnaires deleted for patient ${patientId}`);
+
+                        // 4. Delete associated appointments
+                        const appointmentsSnapshot = await get(ref(database, 'appointments'));
+                        if (appointmentsSnapshot.exists()) {
+                            appointmentsSnapshot.forEach(child => {
+                                if (child.val().userId === patientId) {
+                                    remove(ref(database, `appointments/${child.key}`));
+                                }
+                            });
+                        }
+                        console.log(`Admin: Associated appointments deleted for patient ${patientId}`);
+
+                        // 5. Delete the user from Firebase Authentication
+                        // NOTE: This requires admin SDK or a callable cloud function for security.
+                        // For a client-side app, you cannot directly delete another user's Auth record.
+                        // This part would typically be handled on a secure backend.
+                        // For demonstration purposes *only*, if you were to simulate it, you might do:
+                        // const userToDelete = auth.currentUser; // This is the *admin* user, not the patient!
+                        // await deleteUser(userToDelete); // This would delete the admin!
+                        // Instead, you'd need a Cloud Function or Admin SDK.
+                        showMessage(`Patient ${patientId} data deleted from database. NOTE: Deleting the Firebase Authentication user for this patient requires server-side access (Admin SDK).`, false);
+                        console.warn(`Admin: Firebase Auth user deletion for ${patientId} skipped (requires Admin SDK).`);
+
+                        loadPatientsList(); // Refresh the list
+                    } catch (error) {
+                        console.error("Admin: Error deleting patient and associated data:", error);
+                        showMessage(`Error deleting patient: ${error.message}`, true);
+                    }
+                },
+                () => { // On Cancel
+                    showMessage('Patient deletion cancelled.');
+                }
+            );
+        }
+
+
         // Load All Patients for Admin (Now displays buttons)
         function loadPatientsList() {
             const patientsListDiv = document.getElementById('patientsList');
@@ -2777,6 +2974,7 @@
                     const filteredPatients = patientsArray.filter(patient =>
                         patient.fullName !== "Jane Doe" && patient.fullName !== "user testing"
                     );
+                    allPatientsData = filteredPatients; // Store for dropdowns
 
                     filteredPatients.sort((a, b) => a.fullName.localeCompare(b.fullName)); // Sort alphabetically by name
 
@@ -2785,7 +2983,8 @@
                         filteredPatients.forEach((patient) => {
                             patientsListDiv.innerHTML += `
                                 <button class="btn patient-card-btn" data-patient-id="${patient.id}">
-                                    ${patient.fullName} (${patient.email})
+                                    <span>${patient.fullName} (${patient.email})</span>
+                                    <i class="fas fa-trash-alt btn-delete" data-id="${patient.id}" data-type="patient"></i>
                                 </button>
                             `;
                         });
@@ -2799,8 +2998,16 @@
                 // Attach event listeners to the new patient buttons
                 document.querySelectorAll('#patientsList .patient-card-btn').forEach(button => {
                     button.addEventListener('click', (event) => {
-                        const patientId = event.target.dataset.patientId;
-                        showPatientDetails(patientId);
+                        // Check if the click was on the trash icon
+                        if (event.target.classList.contains('btn-delete')) {
+                            event.stopPropagation(); // Prevent the parent button's click from firing
+                            const patientId = event.target.dataset.id;
+                            deletePatient(patientId);
+                        } else {
+                            // If not the trash icon, proceed with showing patient details
+                            const patientId = button.dataset.patientId;
+                            showPatientDetails(patientId);
+                        }
                     });
                 });
 
@@ -2980,6 +3187,34 @@
             console.log(`Admin: ${dataType} loaded for patient ID:`, patientId);
         }
 
+        // NEW: Delete TMS Submission Function
+        async function deleteTmsSubmission(submissionId, submissionPath, userIdForUserSubmission = null) {
+            if (!currentUser || !isAdmin) {
+                showMessage('Unauthorized action.', true);
+                return;
+            }
+
+            const pathToDelete = userIdForUserSubmission ? `${submissionPath}/${userIdForUserSubmission}/${submissionId}` : `${submissionPath}/${submissionId}`;
+
+            showConfirmationModal(
+                `Are you sure you want to permanently delete this TMS questionnaire submission (ID: ${submissionId})? This action cannot be undone.`,
+                async () => { // On Confirm
+                    try {
+                        await remove(ref(database, pathToDelete));
+                        showMessage('TMS submission deleted successfully!');
+                        console.log(`Admin: TMS submission deleted from ${pathToDelete}`);
+                        loadAdminTmsSubmissions(); // Refresh the list
+                    } catch (error) {
+                        console.error("Admin: Error deleting TMS submission:", error);
+                        showMessage(`Error deleting TMS submission: ${error.message}`, true);
+                    }
+                },
+                () => { // On Cancel
+                    showMessage('TMS submission deletion cancelled.');
+                }
+            );
+        }
+
         // NEW: Load all TMS Submissions for Admin Portal
         async function loadAdminTmsSubmissions() {
             const tmsSubmissionsListDiv = document.getElementById('tmsSubmissionsList');
@@ -3034,12 +3269,17 @@
                         : `<strong>Logged-in User</strong>`; // User ID already in button data-user-id
 
                     tmsSubmissionsListDiv.innerHTML += `
-                        <div class="tms-submission-card" data-submission-id="${submission.id}" data-submission-type="${submission.fromUser === 'public' ? 'public' : 'user'}" data-user-id="${submission.userId || ''}">
-                            <h4>TMS Questionnaire from ${submission.fullName || 'Anonymous'} (${submittedByInfo})</h4>
-                            <p><strong>Email:</strong> ${submission.email || 'N/A'}</p>
-                            <p><strong>Phone:</strong> ${submission.phoneNumber || 'N/A'}</p>
-                            <p><strong>Submitted On:</strong> ${new Date(submission.submittedAt).toLocaleString()}</p>
-                            <button class="btn btn-view-details" data-submission-id="${submission.id}" data-submission-path="${submission.fromUser === 'public' ? 'publicTmsQuestionnaires' : `tmsQuestionnaires/${submission.fromUser}`}">View Details</button>
+                        <div class="tms-submission-card">
+                            <div>
+                                <h4>TMS Questionnaire from ${submission.fullName || 'Anonymous'} (${submittedByInfo})</h4>
+                                <p><strong>Email:</strong> ${submission.email || 'N/A'}</p>
+                                <p><strong>Phone:</strong> ${submission.phoneNumber || 'N/A'}</p>
+                                <p><strong>Submitted On:</strong> ${new Date(submission.submittedAt).toLocaleString()}</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-view-details" data-submission-id="${submission.id}" data-submission-path="${submission.fromUser === 'public' ? 'publicTmsQuestionnaires' : `tmsQuestionnaires`}" data-user-id="${submission.fromUser === 'public' ? '' : submission.fromUser}">View Details</button>
+                                <i class="fas fa-trash-alt btn-delete" data-id="${submission.id}" data-type="${submission.fromUser === 'public' ? 'publicTms' : 'userTms'}" data-user-id="${submission.fromUser === 'public' ? '' : submission.fromUser}"></i>
+                            </div>
                         </div>
                     `;
                 });
@@ -3048,8 +3288,19 @@
                 document.querySelectorAll('.tms-submission-card .btn-view-details').forEach(button => {
                     button.addEventListener('click', (event) => {
                         const submissionId = event.target.dataset.submissionId;
-                        const submissionPath = event.target.dataset.submissionPath; // e.g., "publicTmsQuestionnaires" or "tmsQuestionnaires/UID"
-                        viewTmsSubmissionDetails(submissionId, submissionPath);
+                        const submissionPath = event.target.dataset.submissionPath;
+                        const userId = event.target.dataset.userId || null;
+                        viewTmsSubmissionDetails(submissionId, submissionPath, userId);
+                    });
+                });
+
+                // Attach event listeners for "Delete" buttons
+                document.querySelectorAll('.tms-submission-card .btn-delete').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const submissionId = event.target.dataset.id;
+                        const submissionType = event.target.dataset.type; // 'publicTms' or 'userTms'
+                        const userId = event.target.dataset.userId || null;
+                        deleteTmsSubmission(submissionId, submissionType === 'publicTms' ? 'publicTmsQuestionnaires' : 'tmsQuestionnaires', userId);
                     });
                 });
 
@@ -3060,10 +3311,11 @@
         }
 
         // NEW: Function to display full TMS submission details in a modal
-        async function viewTmsSubmissionDetails(submissionId, submissionPath) {
-            console.log("Admin: Viewing TMS submission details for ID:", submissionId, "Path:", submissionPath);
+        async function viewTmsSubmissionDetails(submissionId, submissionPath, userId) {
+            console.log("Admin: Viewing TMS submission details for ID:", submissionId, "Path:", submissionPath, "User ID:", userId);
             try {
-                const submissionSnapshot = await get(ref(database, `${submissionPath}/${submissionId}`));
+                const path = userId ? `${submissionPath}/${userId}/${submissionId}` : `${submissionPath}/${submissionId}`;
+                const submissionSnapshot = await get(ref(database, path));
                 const submission = submissionSnapshot.val();
 
                 if (submission) {
@@ -3081,6 +3333,7 @@
                         'q3_sleep_hours',
                         'q4_caffeine', 'q4_caffeine_details',
                         'q5_alcohol', 'q5_alcohol_details',
+                        'q_unprescribed_substance', // Added the new question
                         'q6_metal_head', 'q6_metal_head_details'
                     ];
 
@@ -3092,33 +3345,95 @@
                             switch(key) {
                                 case 'q1_eat_drink': readableQuestion = '1. Had anything to eat/drink:'; break;
                                 case 'q1_eat_drink_details': readableQuestion = 'Details (Q1):'; break;
-                                case 'q2_med_prescribed': readableQuestion = '2. Meds as prescribed:'; break;
-                                case 'q2a_med_changes': readableQuestion = '2a. Med Changes:'; break;
-                                case 'q2a_med_changes_details': readableQuestion = 'Details (Q2a):'; break;
-                                case 'q3_sleep_hours': readableQuestion = '3. Sleep hours:'; break;
-                                case 'q4_caffeine': readableQuestion = '4. Caffeine intake:'; break;
-                                case 'q4_caffeine_details': readableQuestion = 'Details (Q4):'; break;
-                                case 'q5_alcohol': readableQuestion = '5. Alcohol intake:'; break;
-                                case 'q5_alcohol_details': readableQuestion = 'Details (Q5):'; break;
-                                case 'q6_metal_head': readableQuestion = '6. Metal in head:'; break;
-                                case 'q6_metal_head_details': readableQuestion = 'Details (Q6):'; break;
+                                case 'q2_med_prescribed': readableQuestion = '3. Meds as prescribed:'; break;
+                                case 'q2a_med_changes': readableQuestion = '3a. Med Changes:'; break;
+                                case 'q2a_med_changes_details': readableQuestion = 'Details (Q3a):'; break;
+                                case 'q3_sleep_hours': readableQuestion = '4. Sleep hours:'; break;
+                                case 'q4_caffeine': readableQuestion = '5. Caffeine intake:'; break;
+                                case 'q4_caffeine_details': readableQuestion = 'Details (Q5):'; break;
+                                case 'q5_alcohol': readableQuestion = '6. Alcohol intake:'; break;
+                                case 'q5_alcohol_details': readableQuestion = 'Details (Q6):'; break;
+                                case 'q_unprescribed_substance': readableQuestion = '2. Unprescribed substances consumed:'; break; // Added new question text
+                                case 'q6_metal_head': readableQuestion = '7. Metal in head:'; break;
+                                case 'q6_metal_head_details': readableQuestion = 'Details (Q7):'; break;
                                 default: readableQuestion = key.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').replace(/^q\d+\s*/, '').trim() + ':';
                             }
                             answersDiv.innerHTML += `<p><strong>${readableQuestion}</strong> ${answerValue}</p>`;
                         }
                     });
 
+                    // Set up "Move to Patient" button and dropdown
+                    const moveBtn = document.getElementById('moveTmsToPatientBtn');
+                    const assignSection = document.getElementById('assignTmsToPatientSection');
+                    const patientDropdown = document.getElementById('tmsPatientSelectDropdown');
+                    const confirmAssignBtn = document.getElementById('confirmTmsAssignmentBtn');
+
+                    moveBtn.onclick = () => {
+                        assignSection.classList.toggle('hidden');
+                        if (!assignSection.classList.contains('hidden')) {
+                            populatePatientDropdown(patientDropdown);
+                        }
+                    };
+
+                    confirmAssignBtn.onclick = () => {
+                        const newPatientId = patientDropdown.value;
+                        if (newPatientId) {
+                            assignSubmissionToPatient(submissionId, 'tms', userId, newPatientId);
+                            document.getElementById('tmsDetailModal').classList.add('hidden'); // Close modal after action
+                        } else {
+                            showMessage('Please select a patient to assign to.', true);
+                        }
+                    };
+
+
                     document.getElementById('tmsDetailModal').classList.remove('hidden');
                     console.log("Admin: TMS submission details modal displayed for:", submission.fullName);
                 } else {
                     showMessage('TMS submission details not found.', true);
-                    console.error("Admin: TMS submission not found for ID:", submissionId, "Path:", submissionPath);
+                    console.error("Admin: TMS submission not found for ID:", submissionId, "Path:", path);
                 }
             } catch (error) {
                 console.error("Admin: Error fetching TMS submission details:", error);
                 showMessage(`Error fetching TMS submission details: ${error.message}`, true);
             }
         }
+
+        // NEW: Delete Mental Health Test Submission Function
+        async function deleteMentalHealthTestSubmission(submissionId, submissionType, userIdForUserSubmission = null) {
+            if (!currentUser || !isAdmin) {
+                showMessage('Unauthorized action.', true);
+                return;
+            }
+
+            let pathToDelete;
+            if (submissionType === 'public-anonymous' || submissionType === 'logged-in-copy') {
+                pathToDelete = `publicMentalHealthTestSubmissions/${submissionId}`;
+            } else if (submissionType === 'logged-in-original' && userIdForUserSubmission) {
+                pathToDelete = `testResults/${submissionId}`;
+            } else {
+                showMessage('Invalid submission type or user ID for deletion.', true);
+                return;
+            }
+
+            showConfirmationModal(
+                `Are you sure you want to permanently delete this Mental Health Test submission (ID: ${submissionId})? This action cannot be undone.`,
+                async () => { // On Confirm
+                    try {
+                        await remove(ref(database, pathToDelete));
+                        showMessage('Mental Health Test submission deleted successfully!');
+                        console.log(`Admin: Mental Health Test submission deleted from ${pathToDelete}`);
+                        loadAdminPublicTestResults(); // Refresh the list
+                    } catch (error) {
+                        console.error("Admin: Error deleting Mental Health Test submission:", error);
+                        showMessage(`Error deleting Mental Health Test submission: ${error.message}`, true);
+                    }
+                },
+                () => { // On Cancel
+                    showMessage('Mental Health Test submission deletion cancelled.');
+                }
+            );
+        }
+
 
         // NEW: Load all Mental Health Test Submissions for Admin Portal (Combined view)
         async function loadAdminPublicTestResults() {
@@ -3229,20 +3544,25 @@
                     const submissionOrigin = submission.type === 'public-anonymous' ? 'Quick Access' : 'Patient Portal';
 
                     publicTestResultsListDiv.innerHTML += `
-                        <div class="public-test-submission-card"
-                            data-submission-id="${submission.id}"
-                            data-submission-type="${submission.type}"
-                            data-user-id="${submission.userId || ''}">
-                            <h4>${submission.testType} - Submitted from ${submissionOrigin} on: ${new Date(submission.submittedAt).toLocaleString()}</h4>
-                            <p><strong>Submitted By:</strong> ${submitterName}</p>
-                            <p><strong>Email:</strong> ${submission.email}</p>
-                            <p><strong>Phone:</strong> ${submission.phoneNumber}</p>
-                            <p><strong>Score:</strong> ${submission.score}</p>
-                            <p><strong>Breakdown:</strong> ${submission.breakdown}</p>
-                            <button class="btn btn-view-details"
-                                data-submission-id="${submission.id}"
-                                data-submission-type="${submission.type}"
-                                data-user-id="${submission.userId || ''}">View Details</button>
+                        <div class="public-test-submission-card">
+                            <div>
+                                <h4>${submission.testType} - Submitted from ${submissionOrigin} on: ${new Date(submission.submittedAt).toLocaleString()}</h4>
+                                <p><strong>Submitted By:</strong> ${submitterName}</p>
+                                <p><strong>Email:</strong> ${submission.email}</p>
+                                <p><strong>Phone:</strong> ${submission.phoneNumber}</p>
+                                <p><strong>Score:</strong> ${submission.score}</p>
+                                <p><strong>Breakdown:</strong> ${submission.breakdown}</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-view-details"
+                                    data-submission-id="${submission.id}"
+                                    data-submission-type="${submission.type}"
+                                    data-user-id="${submission.userId || ''}">View Details</button>
+                                <i class="fas fa-trash-alt btn-delete"
+                                    data-id="${submission.id}"
+                                    data-type="${submission.type}"
+                                    data-user-id="${submission.userId || ''}"></i>
+                            </div>
                         </div>
                     `;
                 });
@@ -3254,6 +3574,16 @@
                         const submissionType = event.target.dataset.submissionType;
                         const userId = event.target.dataset.userId || null;
                         viewPublicTestSubmissionDetails(submissionId, submissionType, userId);
+                    });
+                });
+
+                // Attach event listeners for "Delete" buttons
+                document.querySelectorAll('#publicTestResultsList .btn-delete').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const submissionId = event.target.dataset.id;
+                        const submissionType = event.target.dataset.type;
+                        const userId = event.target.dataset.userId || null;
+                        deleteMentalHealthTestSubmission(submissionId, submissionType, userId);
                     });
                 });
 
@@ -3269,12 +3599,16 @@
             console.log("Admin: Viewing test submission details for ID:", submissionId, "Type:", submissionType, "User ID:", userId);
             try {
                 let submission;
+                let originalPath = ''; // To store the path for assignment logic
+
                 // Determine the correct Firebase path based on the submission type
                 if (submissionType === 'public-anonymous' || submissionType === 'logged-in-copy') {
-                    const snapshot = await get(ref(database, `publicMentalHealthTestSubmissions/${submissionId}`));
+                    originalPath = `publicMentalHealthTestSubmissions/${submissionId}`;
+                    const snapshot = await get(ref(database, originalPath));
                     submission = snapshot.val();
                 } else if (submissionType === 'logged-in-original' && userId) {
-                    const snapshot = await get(ref(database, `testResults/${submissionId}`));
+                    originalPath = `testResults/${submissionId}`;
+                    const snapshot = await get(ref(database, originalPath));
                     submission = snapshot.val();
                 }
 
@@ -3312,6 +3646,36 @@
                         answersDiv.innerHTML += '<p>No detailed answers available.</p>';
                     }
 
+                    // Set up "Move to Patient" button and dropdown
+                    const moveBtn = document.getElementById('movePublicTestToPatientBtn');
+                    const assignSection = document.getElementById('assignPublicTestToPatientSection');
+                    const patientDropdown = document.getElementById('publicTestPatientSelectDropdown');
+                    const confirmAssignBtn = document.getElementById('confirmPublicTestAssignmentBtn');
+
+                    // Only show "Move to Patient" if it's a public-anonymous submission
+                    if (submissionType === 'public-anonymous') {
+                        moveBtn.classList.remove('hidden');
+                        moveBtn.onclick = () => {
+                            assignSection.classList.toggle('hidden');
+                            if (!assignSection.classList.contains('hidden')) {
+                                populatePatientDropdown(patientDropdown);
+                            }
+                        };
+                        confirmAssignBtn.onclick = () => {
+                            const newPatientId = patientDropdown.value;
+                            if (newPatientId) {
+                                assignSubmissionToPatient(submissionId, 'mentalHealthTest', null, newPatientId); // currentUserId is null for public-anonymous
+                                document.getElementById('publicTestDetailModal').classList.add('hidden'); // Close modal after action
+                            } else {
+                                showMessage('Please select a patient to assign to.', true);
+                            }
+                        };
+                    } else {
+                        moveBtn.classList.add('hidden'); // Hide if not public-anonymous
+                        assignSection.classList.add('hidden'); // Ensure assignment section is hidden
+                    }
+
+
                     document.getElementById('publicTestDetailModal').classList.remove('hidden');
                     console.log("Admin: Mental health test submission details modal displayed for:", submission.testType);
                 } else {
@@ -3321,6 +3685,116 @@
             } catch (error) {
                 console.error("Admin: Error fetching mental health test submission details:", error);
                 showMessage(`Error fetching test submission details: ${error.message}`, true);
+            }
+        }
+
+        // NEW: Function to populate patient dropdowns
+        async function populatePatientDropdown(dropdownElement) {
+            // Ensure allPatientsData is loaded
+            if (allPatientsData.length === 0) {
+                const patientsSnapshot = await get(ref(database, 'patients'));
+                if (patientsSnapshot.exists()) {
+                    allPatientsData = Object.keys(patientsSnapshot.val()).map(key => ({ id: key, ...patientsSnapshot.val()[key] }));
+                    // Filter out "Jane Doe" and "user testing"
+                    allPatientsData = allPatientsData.filter(patient =>
+                        patient.fullName !== "Jane Doe" && patient.fullName !== "user testing"
+                    );
+                    allPatientsData.sort((a, b) => a.fullName.localeCompare(b.fullName));
+                }
+            }
+
+            dropdownElement.innerHTML = '<option value="">Select a Patient</option>';
+            allPatientsData.forEach(patient => {
+                const option = document.createElement('option');
+                option.value = patient.id;
+                option.textContent = `${patient.fullName} (${patient.email})`;
+                dropdownElement.appendChild(option);
+            });
+            console.log("Admin: Patient dropdown populated.");
+        }
+
+        // NEW: Function to assign a submission (TMS or Mental Health Test) to a specific patient
+        async function assignSubmissionToPatient(submissionId, submissionType, currentUserId, newPatientId) {
+            if (!currentUser || !isAdmin) {
+                showMessage('Unauthorized action.', true);
+                return;
+            }
+            if (!newPatientId) {
+                showMessage('Please select a patient to assign the submission to.', true);
+                return;
+            }
+
+            console.log(`Admin: Attempting to assign ${submissionType} submission ${submissionId} to patient ${newPatientId}`);
+
+            try {
+                let originalSubmissionPath;
+                let targetCollectionPath;
+                let submissionData;
+
+                if (submissionType === 'tms') {
+                    originalSubmissionPath = currentUserId ? `tmsQuestionnaires/${currentUserId}/${submissionId}` : `publicTmsQuestionnaires/${submissionId}`;
+                    targetCollectionPath = `tmsQuestionnaires/${newPatientId}`;
+                } else if (submissionType === 'mentalHealthTest') {
+                    originalSubmissionPath = currentUserId ? `testResults/${submissionId}` : `publicMentalHealthTestSubmissions/${submissionId}`;
+                    targetCollectionPath = `testResults`; // Mental health tests are flat under testResults
+                } else {
+                    showMessage('Invalid submission type for assignment.', true);
+                    return;
+                }
+
+                // 1. Fetch the original submission data
+                const originalSnapshot = await get(ref(database, originalSubmissionPath));
+                if (!originalSnapshot.exists()) {
+                    showMessage('Original submission not found.', true);
+                    return;
+                }
+                submissionData = originalSnapshot.val();
+
+                // 2. Get the new patient's details
+                const newPatientSnapshot = await get(ref(database, `patients/${newPatientId}`));
+                if (!newPatientSnapshot.exists()) {
+                    showMessage('Target patient not found.', true);
+                    return;
+                }
+                const newPatientData = newPatientSnapshot.val();
+
+                // 3. Prepare data for the new entry, updating contact info
+                const newSubmissionData = {
+                    ...submissionData,
+                    userId: newPatientId,
+                    fullName: newPatientData.fullName,
+                    email: newPatientData.email,
+                    phoneNumber: newPatientData.phoneNumber,
+                    // Preserve original submittedAt/createdAt
+                    submittedAt: submissionData.submittedAt || submissionData.createdAt,
+                    createdAt: submissionData.createdAt || submissionData.submittedAt // Ensure createdAt is present for testResults
+                };
+
+                // 4. Push the new entry to the target patient's path
+                const newEntryRef = push(ref(database, targetCollectionPath));
+                await set(newEntryRef, newSubmissionData);
+                console.log(`Admin: New entry created at ${newEntryRef.toString()}`);
+
+                // 5. Delete the original submission
+                await remove(ref(database, originalSubmissionPath));
+                console.log(`Admin: Original submission deleted from ${originalSubmissionPath}`);
+
+                showMessage('Submission successfully assigned to the selected patient!');
+
+                // Refresh relevant admin lists
+                if (submissionType === 'tms') {
+                    loadAdminTmsSubmissions();
+                } else if (submissionType === 'mentalHealthTest') {
+                    loadAdminPublicTestResults();
+                }
+                // If patient details view is open, refresh that too
+                if (currentPatientIdInAdminView === newPatientId) {
+                    loadPatientDataSection(newPatientId, submissionType === 'tms' ? 'tmsQuestionnaires' : 'mentalHealthTests');
+                }
+
+            } catch (error) {
+                console.error("Admin: Error assigning submission to patient:", error);
+                showMessage(`Error assigning submission: ${error.message}`, true);
             }
         }
 
@@ -3346,7 +3820,7 @@
             const ampm = timePartMatch[2] ? timePartMatch[2].toLowerCase() : '';
 
             if (ampm === 'pm' && hour < 12) hour += 12;
-            if (amppm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
+            if (ampm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
 
             // Start with today's date components, then set the target hour and minute
             let resultDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -3453,7 +3927,6 @@
                             console.log("Calendar: Filtered approved appointments (after trim):", approvedAppointments);
 
                             const patientPromises = approvedAppointments.map(appt => get(ref(database, 'patients/' + appt.userId)));
-                            const patientSnapshots = await Promise.all(patientPromises);
                             const patientMap = {};
                             patientSnapshots.forEach(snap => {
                                 if (snap.exists()) {
@@ -3619,54 +4092,6 @@
             };
         }
 
-        // NEW: Custom Confirmation Modal (replaces alert/confirm for better UX)
-        function showConfirmationModal(message, onConfirm, onCancel) {
-            const modalHtml = `
-                <div id="customConfirmModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close-button" id="customConfirmCloseBtn">&times;</span>
-                        <h3>Confirmation</h3>
-                        <p>${message}</p>
-                        <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                            <button class="btn" id="customConfirmYesBtn" style="width: 45%; background: #27ae60;">Yes</button>
-                            <button class="btn btn-secondary" id="customConfirmNoBtn" style="width: 45%;">No</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-            const modal = document.getElementById('customConfirmModal');
-            const closeBtn = document.getElementById('customConfirmCloseBtn');
-            const yesBtn = document.getElementById('customConfirmYesBtn');
-            const noBtn = document.getElementById('customConfirmNoBtn');
-
-            const cleanup = () => {
-                modal.remove();
-            };
-
-            closeBtn.onclick = () => {
-                cleanup();
-                if (onCancel) onCancel();
-            };
-            yesBtn.onclick = () => {
-                cleanup();
-                if (onConfirm) onConfirm();
-            };
-            noBtn.onclick = () => {
-                cleanup();
-                if (onCancel) onCancel();
-            };
-
-            // Close if clicked outside
-            modal.onclick = (event) => {
-                if (event.target === modal) {
-                    cleanup();
-                    if (onCancel) onCancel();
-                }
-            };
-        }
-
 
         // --- Initial Load Logic and Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -3720,11 +4145,13 @@
             // Setup TMS Detail Modal close button
             document.getElementById('closeTmsModalBtn').addEventListener('click', () => {
                 document.getElementById('tmsDetailModal').classList.add('hidden');
+                document.getElementById('assignTmsToPatientSection').classList.add('hidden'); // Hide assignment section on close
             });
 
             // Setup Public Test Detail Modal close button
             document.getElementById('closePublicTestModalBtn').addEventListener('click', () => {
                 document.getElementById('publicTestDetailModal').classList.add('hidden');
+                document.getElementById('assignPublicTestToPatientSection').classList.add('hidden'); // Hide assignment section on close
             });
 
 
