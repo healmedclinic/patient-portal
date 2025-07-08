@@ -1074,7 +1074,13 @@
                 <div class="public-access-buttons">
                     <button class="btn" id="publicTmsQuestionnaireBtn">TMS Daily Questionnaire</button>
                     <button class="btn" id="publicMentalHealthTestsBtn">Mental Health Tests</button>
-                    <!-- MOVED: New Patient Form now in Quick Access -->
+                    <!-- NEW: Guided Breathing Button -->
+                    <button class="btn" id="guidedBreathingBtn">Guided Breathing Exercise</button>
+                    <!-- NEW: What to Expect Button -->
+                    <button class="btn" id="whatToExpectBtn">What to Expect</button>
+                    <!-- NEW: General FAQs Button -->
+                    <button class="btn" id="generalFaqsBtn">General FAQs</button>
+                    <!-- Existing External Links -->
                     <a href="https://www.jotform.com/sign/251304457972056/invite/01jtzza5kqcb83f96f3923b7ac" target="_blank" class="btn">New Patient Form</a>
                     <a href="https://v-gedipudi1.github.io/consent-forms/" target="_blank" class="btn">TMS Consent Form</a>
                     <a href="https://docs.google.com/forms/d/e/1FAIpQLScOt3ov7drpfVaJ3GPPa3GyyEG4i3qErkgpz704BUxhGItg6Q/viewform?usp=header" target="_blank" class="btn">Upload ID and Insurance Form</a>
@@ -1106,6 +1112,67 @@
             <button class="btn btn-back" id="backToPublicAccessBtn">Back to Main Screen</button>
         </div>
 
+        <!-- NEW: Guided Breathing Section (initially hidden) -->
+        <div id="guidedBreathingSection" class="section hidden">
+            <h2>Guided Breathing Exercise</h2>
+            <p>Follow these simple steps to calm your mind and body:</p>
+            <ol>
+                <li>Find a quiet place and sit or lie down comfortably.</li>
+                <li>Gently close your eyes or soften your gaze.</li>
+                <li>Place one hand on your chest and the other on your abdomen.</li>
+                <li>Inhale slowly through your nose for a count of **four**, feeling your abdomen rise.</li>
+                <li>Hold your breath for a count of **four**.</li>
+                <li>Exhale slowly through your mouth for a count of **six**, feeling your abdomen fall.</li>
+                <li>Pause for a count of **two** before your next inhale.</li>
+                <li>Repeat this cycle for 5-10 minutes, or until you feel more relaxed.</li>
+            </ol>
+            <p style="margin-top: 20px; font-style: italic;">Focus on the sensation of your breath and let go of any distracting thoughts. It's okay if your mind wanders; just gently bring your attention back to your breathing.</p>
+            <button class="btn btn-back" id="backToMainFromBreathingBtn" style="margin-top: 20px;">Back to Main Screen</button>
+        </div>
+
+        <!-- NEW: What to Expect Section (initially hidden) -->
+        <div id="whatToExpectSection" class="section hidden">
+            <h2>What to Expect: TMS Therapy</h2>
+            <h3>Understanding Your First Appointment</h3>
+            <p>During your first appointment, you will be taken to a special room where you will sit in a reclining chair. You will be provided with ear-protecting foam plugs.</p>
+            <p>Your doctor will then determine the precise amount of magnetic energy needed for your treatment. This is done by gradually increasing the dose until your fingers or hands show a slight twitch, indicating the optimal stimulation level.</p>
+            <h3>The TMS Therapy Process</h3>
+            <p>First, you'll be asked to sit comfortably in an armchair and put on earplugs. The magnetic coil will then be carefully placed against your temple. You will hear clicking sounds as the device operates.</p>
+            <p>The TMS Therapy process typically takes about 19 minutes per session. It involves the stimulation of scalp nerves with a magnetic field. After your treatment, you can immediately return to your daily routine activities, as there is no downtime.</p>
+            <h3>Common Side Effects</h3>
+            <p>Side effects associated with TMS therapy are generally mild to moderate. They tend to improve shortly after an individual session and typically decrease over time with additional sessions. Potential side effects may include:</p>
+            <ul>
+                <li>Headache</li>
+                <li>Scalp discomfort at the site of stimulation</li>
+                <li>Lightheadedness</li>
+            </ul>
+            <p style="margin-top: 20px; font-style: italic;">Always discuss any concerns or side effects with your healthcare provider.</p>
+            <button class="btn btn-back" id="backToMainFromExpectBtn" style="margin-top: 20px;">Back to Main Screen</button>
+        </div>
+
+        <!-- NEW: General FAQs Section (initially hidden) -->
+        <div id="generalFaqsSection" class="section hidden">
+            <h2>General Frequently Asked Questions</h2>
+            <div class="faq-item" style="margin-bottom: 20px;">
+                <h3 style="color: #2c3e50; margin-bottom: 10px;">Q: What services does HealMed Clinic offer?</h3>
+                <p>A: HealMed Clinic offers a range of mental health services including Transcranial Magnetic Stimulation (TMS) therapy, various mental health screenings (depression, anxiety, ADHD), and general psychiatric consultations. We focus on personalized care to support your mental well-being.</p>
+            </div>
+            <div class="faq-item" style="margin-bottom: 20px;">
+                <h3 style="color: #2c3e50; margin-bottom: 10px;">Q: How can I book an appointment?</h3>
+                <p>A: New patients can fill out our "New Patient Form" available in the Quick Access section or by creating an account and logging into the Patient Portal. Existing patients can book or manage appointments directly through their Patient Portal dashboard under "Manage Appointments."</p>
+            </div>
+            <div class="faq-item" style="margin-bottom: 20px;">
+                <h3 style="color: #2c3e50; margin-bottom: 10px;">Q: Is my information kept confidential?</h3>
+                <p>A: Yes, absolutely. We adhere to strict privacy policies and all patient information, including test results and questionnaire responses, is kept confidential and secure in compliance with healthcare privacy regulations.</p>
+            </div>
+            <div class="faq-item" style="margin-bottom: 20px;">
+                <h3 style="color: #2c3e50; margin-bottom: 10px;">Q: What should I do in a mental health crisis?</h3>
+                <p>A: If you are experiencing a mental health crisis, please seek immediate professional help. You can contact a local crisis hotline, emergency services, or visit the nearest emergency room. Our portal is not for emergency situations.</p>
+            </div>
+            <button class="btn btn-back" id="backToMainFromFaqsBtn" style="margin-top: 20px;">Back to Main Screen</button>
+        </div>
+
+
         <!-- TEST INTERFACE: MOVED HERE, OUTSIDE DASHBOARD -->
         <div id="testInterface" class="section hidden">
             <h2 id="testTitle"></h2>
@@ -1129,14 +1196,8 @@
                 <label for="tmsFullName">Full Name:</label>
                 <input type="text" id="tmsFullName" placeholder="Your full name" required>
             </div>
-            <div class="form-group">
-                <label for="tmsEmail">Email:</label>
-                <input type="email" id="tmsEmail" placeholder="Your email" required>
-            </div>
-            <div class="form-group">
-                <label for="tmsPhone">Phone Number:</label>
-                <input type="tel" id="tmsPhone" placeholder="Your phone number" required>
-            </div>
+            <!-- REMOVED: Email field -->
+            <!-- REMOVED: Phone Number field -->
             <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
 
             <div class="form-group">
@@ -1146,7 +1207,7 @@
                     <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
                 </div>
                 <div id="q1_followup" class="follow-up-question hidden">
-                    <label for="q1_eat_drink_details">What did you have to eat or drink?</label>
+                    <label for="q1_eat_drink_details">What did you have to eat or drink? (Optional)</label>
                     <textarea id="q1_eat_drink_details"></textarea>
                 </div>
             </div>
@@ -1516,7 +1577,7 @@
         // --- Firebase SDK v9 Modular Imports from CDN ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-        import { getDatabase, ref, set, push, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { getDatabase, ref, set, push, onValue, update, remove, get } from "https://www.gstatic.com/firebase/database.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
 
         // --- Initialize Firebase Services ---
@@ -1762,7 +1823,6 @@
             modal.onclick = (event) => {
                 if (event.target === modal) {
                     cleanup();
-                    if (onCancel) onCancel();
                 }
             };
         }
@@ -1775,6 +1835,10 @@
             document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // NEW: Hide public test selection
             document.getElementById('tmsQuestionnaireSection').classList.add('hidden'); // Ensure TMS questionnaire is hidden
             document.getElementById('testInterface').classList.add('hidden'); // Ensure test interface is hidden
+            // NEW: Hide the new quick access content sections
+            document.getElementById('guidedBreathingSection').classList.add('hidden');
+            document.getElementById('whatToExpectSection').classList.add('hidden');
+            document.getElementById('generalFaqsSection').classList.add('hidden');
         }
 
         // --- Authentication Functions (Firebase Integrated) ---
@@ -1911,6 +1975,10 @@
             document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // Ensure public test selection is hidden
             document.getElementById('tmsQuestionnaireSection').classList.add('hidden'); // Ensure TMS questionnaire is hidden
             document.getElementById('testInterface').classList.add('hidden'); // Ensure test interface is hidden
+            // NEW: Hide the new quick access content sections
+            document.getElementById('guidedBreathingSection').classList.add('hidden');
+            document.getElementById('whatToExpectSection').classList.add('hidden');
+            document.getElementById('generalFaqsSection').classList.add('hidden');
         }
 
         function showLogin() {
@@ -2116,7 +2184,7 @@
                     status: 'pending', // Default status
                     createdAt: new Date().toISOString()
                 });
-                console.log("Patient: Appointment request submitted for UID:", currentUser.uid, "Appointment ID:", newAppointmentRef.key);
+                console.log("Patient: Appointment request submitted for UID:", newAppointmentRef.key);
                 showMessage('Appointment request submitted successfully! We will review and get back to you shortly.');
                 hideBookingForm();
             } catch (error) {
@@ -2454,14 +2522,38 @@
         }
 
 
+        // --- Public Quick Access Content Functions ---
+
+        function showGuidedBreathing() {
+            hideAllScreens();
+            document.getElementById('guidedBreathingSection').classList.remove('hidden');
+            document.getElementById('backToMainFromBreathingBtn').onclick = showLoginScreenLayout;
+            console.log("Public: Showing Guided Breathing section.");
+        }
+
+        function showWhatToExpect() {
+            hideAllScreens();
+            document.getElementById('whatToExpectSection').classList.remove('hidden');
+            document.getElementById('backToMainFromExpectBtn').onclick = showLoginScreenLayout;
+            console.log("Public: Showing What to Expect section.");
+        }
+
+        function showGeneralFaqs() {
+            hideAllScreens();
+            document.getElementById('generalFaqsSection').classList.remove('hidden');
+            document.getElementById('backToMainFromFaqsBtn').onclick = showLoginScreenLayout;
+            console.log("Public: Showing General FAQs section.");
+        }
+
+
         // --- TMS Daily Questionnaire Functions (Patient Side / Public Access) ---
 
         // Called from public button OR logged-in button
         function showTmsQuestionnaire(isLoggedInCall = false) {
             // Reset contact info fields for fresh start
             document.getElementById('tmsFullName').value = '';
-            document.getElementById('tmsEmail').value = '';
-            document.getElementById('tmsPhone').value = '';
+            // document.getElementById('tmsEmail').value = ''; // Removed
+            // document.getElementById('tmsPhone').value = ''; // Removed
 
             // Pre-fill if logged in
             if (isLoggedInCall && currentUser) {
@@ -2469,8 +2561,8 @@
                     const patientData = snapshot.val();
                     if (patientData) {
                         document.getElementById('tmsFullName').value = patientData.fullName || '';
-                        document.getElementById('tmsEmail').value = patientData.email || '';
-                        document.getElementById('tmsPhone').value = patientData.phoneNumber || '';
+                        // document.getElementById('tmsEmail').value = patientData.email || ''; // Removed
+                        // document.getElementById('tmsPhone').value = patientData.phoneNumber || ''; // Removed
                     }
                 }).catch(error => console.error("Error pre-filling TMS form:", error));
             }
@@ -2586,11 +2678,11 @@
 
         async function submitTmsQuestionnaire() {
             const tmsFullName = document.getElementById('tmsFullName').value.trim();
-            const tmsEmail = document.getElementById('tmsEmail').value.trim();
-            const tmsPhone = document.getElementById('tmsPhone').value.trim();
+            // const tmsEmail = document.getElementById('tmsEmail').value.trim(); // Removed
+            // const tmsPhone = document.getElementById('tmsPhone').value.trim(); // Removed
 
-            if (!tmsFullName || !tmsEmail || !tmsPhone) {
-                showMessage('Please provide your Full Name, Email, and Phone Number at the top of the questionnaire.', true);
+            if (!tmsFullName) { // Only validate full name now
+                showMessage('Please provide your Full Name at the top of the questionnaire.', true);
                 return;
             }
 
@@ -2602,9 +2694,11 @@
             if (!q1Answer) { allRequiredAnswered = false; } else {
                 answers.q1_eat_drink = q1Answer.value;
                 if (q1Answer.value === 'yes') {
+                    // This field is now optional, so no validation check here
                     const details = document.getElementById('q1_eat_drink_details').value.trim();
-                    if (!details) { showMessage("Please provide details for Q1.", true); return; }
-                    answers.q1_eat_drink_details = details;
+                    if (details) { // Only add if details are provided
+                        answers.q1_eat_drink_details = details;
+                    }
                 }
             }
 
@@ -2678,8 +2772,8 @@
                 let tmsRefPath;
                 let tmsData = {
                     fullName: tmsFullName,
-                    email: tmsEmail,
-                    phoneNumber: tmsPhone,
+                    // email: tmsEmail, // Removed
+                    // phoneNumber: tmsPhone, // Removed
                     answers: answers,
                     submittedAt: new Date().toISOString()
                 };
@@ -2690,9 +2784,18 @@
                     tmsData.userId = currentUser.uid; // Add userId to data
                     // If currentUser exists, their name/email/phone from profile is more authoritative
                     // But for the form, we'll use what they typed if it differs.
+                    const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
+                    const patientData = patientSnapshot.val();
+                    if (patientData) {
+                        tmsData.email = patientData.email;
+                        tmsData.phoneNumber = patientData.phoneNumber;
+                    }
                 } else {
                     // If not logged in, save to a public path
                     tmsRefPath = `publicTmsQuestionnaires`;
+                    // For public submissions, we don't have email/phone if not explicitly asked
+                    tmsData.email = 'N/A';
+                    tmsData.phoneNumber = 'N/A';
                 }
 
                 const newTmsRef = push(ref(database, tmsRefPath));
@@ -3126,7 +3229,7 @@
                                     <li><strong>Full Name:</strong> ${q.fullName || 'N/A'}</li>
                                     <li><strong>Email:</strong> ${q.email || 'N/A'}</li>
                                     <li><strong>Phone:</strong> ${q.phoneNumber || 'N/A'}</li>
-                                    <li><strong>Q1. Eat/Drink:</strong> ${q.answers.q1_eat_drink} ${q.answers.q1_eat_drink === 'yes' ? `(Details: ${q.answers.q1_eat_drink_details})` : ''}</li>
+                                    <li><strong>Q1. Eat/Drink:</strong> ${q.answers.q1_eat_drink} ${q.answers.q1_eat_drink === 'yes' ? `(Details: ${q.answers.q1_eat_drink_details || 'No details provided'})` : ''}</li>
                                     <li><strong>Q2. Meds Prescribed:</strong> ${q.answers.q2_med_prescribed}</li>
                                     ${q.answers.q2_med_prescribed === 'no' ? `<li><strong>Q2a. Med Changes:</strong> ${q.answers.q2a_med_changes} ${q.answers.q2a_med_changes === 'yes' ? `(Details: ${q.answers.q2a_med_changes_details})` : ''}</li>` : ''}
                                     <li><strong>Q3. Sleep Hours:</strong> ${q.answers.q3_sleep_hours} hours</li>
@@ -3329,11 +3432,11 @@
                     // Reconstruct answers in desired order
                     const orderedAnswerKeys = [
                         'q1_eat_drink', 'q1_eat_drink_details',
+                        'q_unprescribed_substance', // Moved to be Q2
                         'q2_med_prescribed', 'q2a_med_changes', 'q2a_med_changes_details',
                         'q3_sleep_hours',
                         'q4_caffeine', 'q4_caffeine_details',
                         'q5_alcohol', 'q5_alcohol_details',
-                        'q_unprescribed_substance', // Added the new question
                         'q6_metal_head', 'q6_metal_head_details'
                     ];
 
@@ -3368,22 +3471,30 @@
                     const patientDropdown = document.getElementById('tmsPatientSelectDropdown');
                     const confirmAssignBtn = document.getElementById('confirmTmsAssignmentBtn');
 
-                    moveBtn.onclick = () => {
-                        assignSection.classList.toggle('hidden');
-                        if (!assignSection.classList.contains('hidden')) {
-                            populatePatientDropdown(patientDropdown);
-                        }
-                    };
+                    // Only show "Move to Patient" if it's currently a public submission
+                    if (submissionPath === 'publicTmsQuestionnaires') {
+                        moveBtn.classList.remove('hidden');
+                        assignSection.classList.add('hidden'); // Ensure hidden by default
+                        moveBtn.onclick = () => {
+                            assignSection.classList.toggle('hidden');
+                            if (!assignSection.classList.contains('hidden')) {
+                                populatePatientDropdown(patientDropdown);
+                            }
+                        };
 
-                    confirmAssignBtn.onclick = () => {
-                        const newPatientId = patientDropdown.value;
-                        if (newPatientId) {
-                            assignSubmissionToPatient(submissionId, 'tms', userId, newPatientId);
-                            document.getElementById('tmsDetailModal').classList.add('hidden'); // Close modal after action
-                        } else {
-                            showMessage('Please select a patient to assign to.', true);
-                        }
-                    };
+                        confirmAssignBtn.onclick = () => {
+                            const newPatientId = patientDropdown.value;
+                            if (newPatientId) {
+                                assignSubmissionToPatient(submissionId, 'tms', null, newPatientId); // currentUserId is null for public
+                                document.getElementById('tmsDetailModal').classList.add('hidden'); // Close modal after action
+                            } else {
+                                showMessage('Please select a patient to assign to.', true);
+                            }
+                        };
+                    } else {
+                        moveBtn.classList.add('hidden'); // Hide if it's already a user's submission
+                        assignSection.classList.add('hidden');
+                    }
 
 
                     document.getElementById('tmsDetailModal').classList.remove('hidden');
@@ -3655,6 +3766,7 @@
                     // Only show "Move to Patient" if it's a public-anonymous submission
                     if (submissionType === 'public-anonymous') {
                         moveBtn.classList.remove('hidden');
+                        assignSection.classList.add('hidden'); // Ensure hidden by default
                         moveBtn.onclick = () => {
                             assignSection.classList.toggle('hidden');
                             if (!assignSection.classList.contains('hidden')) {
@@ -3843,8 +3955,8 @@
         async function updateAppointmentDateTime(appointmentId, newStart, newEnd) {
             console.log(`Calendar: Updating appointment ${appointmentId} to start: ${newStart.toISOString()}, end: ${newEnd.toISOString()}`);
             try {
-                // Format newStart back to YYYY-MM-DD and HH:MM strings for Firebase
-                const newDateStr = newStart.toISOString().split('T')[0]; // YYYY-MM-DD
+                // Format newStart back toYYYY-MM-DD and HH:MM strings for Firebase
+                const newDateStr = newStart.toISOString().split('T')[0]; //YYYY-MM-DD
                 const newTimeStr = newStart.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); // HH:MM (24-hour format)
 
                 // Update the Firebase record
@@ -3927,6 +4039,7 @@
                             console.log("Calendar: Filtered approved appointments (after trim):", approvedAppointments);
 
                             const patientPromises = approvedAppointments.map(appt => get(ref(database, 'patients/' + appt.userId)));
+                            const patientSnapshots = await Promise.all(patientPromises);
                             const patientMap = {};
                             patientSnapshots.forEach(snap => {
                                 if (snap.exists()) {
@@ -4112,6 +4225,12 @@
             document.getElementById('publicTmsQuestionnaireBtn').addEventListener('click', () => showTmsQuestionnaire(false)); // false means not logged-in call
             document.getElementById('publicMentalHealthTestsBtn').addEventListener('click', showPublicMentalHealthTestSelection);
             document.getElementById('backToPublicAccessBtn').addEventListener('click', showLoginScreenLayout); // From public mental health tests selection
+
+            // NEW: Quick Access Content Buttons
+            document.getElementById('guidedBreathingBtn').addEventListener('click', showGuidedBreathing);
+            document.getElementById('whatToExpectBtn').addEventListener('click', showWhatToExpect);
+            document.getElementById('generalFaqsBtn').addEventListener('click', showGeneralFaqs);
+
 
             // Public mental health test selection buttons
             document.querySelectorAll('#publicMentalHealthTestsSection .test-card').forEach(card => {
