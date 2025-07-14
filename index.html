@@ -1130,6 +1130,10 @@
                 <input type="text" id="tmsFullName" placeholder="Your full name" required>
             </div>
             <div class="form-group">
+                <label for="tmsEmail">Email:</label>
+                <input type="email" id="tmsEmail" placeholder="Your email" required>
+            </div>
+            <div class="form-group">
                 <label for="tmsPhone">Phone Number:</label>
                 <input type="tel" id="tmsPhone" placeholder="Your phone number" required>
             </div>
@@ -1451,6 +1455,7 @@
         <div class="modal-content">
             <span class="close-button" id="closeTmsModalBtn">&times;</span>
             <h3 id="tmsModalTitle">TMS Questionnaire from <span id="tmsModalPatientName"></span></h3>
+            <p><strong>Email:</strong> <span id="tmsModalPatientEmail"></span></p>
             <p><strong>Phone:</strong> <span id="tmsModalPatientPhone"></span></p>
             <p><strong>Submitted On:</strong> <span id="tmsModalSubmittedAt"></span></p>
             <hr>
@@ -2581,10 +2586,11 @@
 
         async function submitTmsQuestionnaire() {
             const tmsFullName = document.getElementById('tmsFullName').value.trim();
+            const tmsEmail = document.getElementById('tmsEmail').value.trim();
             const tmsPhone = document.getElementById('tmsPhone').value.trim();
 
-            if (!tmsFullName || !tmsPhone) {
-                showMessage('Please provide your Full Name and Phone Number at the top of the questionnaire.', true);
+            if (!tmsFullName || !tmsEmail || !tmsPhone) {
+                showMessage('Please provide your Full Name, Email, and Phone Number at the top of the questionnaire.', true);
                 return;
             }
 
@@ -2672,6 +2678,7 @@
                 let tmsRefPath;
                 let tmsData = {
                     fullName: tmsFullName,
+                    email: tmsEmail,
                     phoneNumber: tmsPhone,
                     answers: answers,
                     submittedAt: new Date().toISOString()
@@ -2681,7 +2688,7 @@
                     // If logged in, save under user's specific path
                     tmsRefPath = `tmsQuestionnaires/${currentUser.uid}`;
                     tmsData.userId = currentUser.uid; // Add userId to data
-                    // If currentUser exists, their name/phone from profile is more authoritative
+                    // If currentUser exists, their name/email/phone from profile is more authoritative
                     // But for the form, we'll use what they typed if it differs.
                 } else {
                     // If not logged in, save to a public path
@@ -3117,6 +3124,7 @@
                                 <h4>Questionnaire Submitted on: ${new Date(q.submittedAt).toLocaleString()}</h4>
                                 <ul>
                                     <li><strong>Full Name:</strong> ${q.fullName || 'N/A'}</li>
+                                    <li><strong>Email:</strong> ${q.email || 'N/A'}</li>
                                     <li><strong>Phone:</strong> ${q.phoneNumber || 'N/A'}</li>
                                     <li><strong>Q1. Eat/Drink:</strong> ${q.answers.q1_eat_drink} ${q.answers.q1_eat_drink === 'yes' ? `(Details: ${q.answers.q1_eat_drink_details})` : ''}</li>
                                     <li><strong>Q2. Meds Prescribed:</strong> ${q.answers.q2_med_prescribed}</li>
@@ -3264,6 +3272,7 @@
                         <div class="tms-submission-card">
                             <div>
                                 <h4>TMS Questionnaire from ${submission.fullName || 'Anonymous'} (${submittedByInfo})</h4>
+                                <p><strong>Email:</strong> ${submission.email || 'N/A'}</p>
                                 <p><strong>Phone:</strong> ${submission.phoneNumber || 'N/A'}</p>
                                 <p><strong>Submitted On:</strong> ${new Date(submission.submittedAt).toLocaleString()}</p>
                             </div>
@@ -3311,6 +3320,7 @@
 
                 if (submission) {
                     document.getElementById('tmsModalPatientName').textContent = submission.fullName || 'Anonymous';
+                    document.getElementById('tmsModalPatientEmail').textContent = submission.email || 'N/A';
                     document.getElementById('tmsModalPatientPhone').textContent = submission.phoneNumber || 'N/A';
                     document.getElementById('tmsModalSubmittedAt').textContent = new Date(submission.submittedAt).toLocaleString();
                     
