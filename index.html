@@ -1461,6 +1461,8 @@
             <hr>
             <div id="tmsModalAnswers"></div>
             <hr>
+            <!-- NEW: Download PDF Button -->
+            <button class="btn" id="downloadTmsPdfBtn" style="margin-top: 15px;">Download PDF</button>
             <button class="btn" id="moveTmsToPatientBtn" style="margin-top: 15px;">Move to Patient Account</button>
             <div id="assignTmsToPatientSection" class="form-group hidden" style="margin-top: 20px;">
                 <label for="tmsPatientSelectDropdown">Assign to Patient:</label>
@@ -1469,7 +1471,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- NEW: Modal for displaying full Public Test submission details (Admin side) -->
     <div id="publicTestDetailModal" class="modal hidden">
         <div class="modal-content">
@@ -1533,6 +1535,8 @@
         let currentPatientIdInAdminView = null; // To track which patient is currently being viewed by admin
         let isPublicTestMode = false; // Flag to indicate if currently taking a public test
         let allPatientsData = []; // To store a list of all patients for dropdowns
+        let currentTmsSubmissionForPdf = null; // Stores the TMS submission data for PDF download
+
 
         // --- Admin Credentials (Email must exist in Firebase Authentication) ---
         const ADMIN_EMAIL = 'admin@healmed.com'; // Use the email you created in Firebase Auth
@@ -3319,6 +3323,8 @@
                 const submission = submissionSnapshot.val();
 
                 if (submission) {
+                    currentTmsSubmissionForPdf = submission; // Store for PDF download
+                    
                     document.getElementById('tmsModalPatientName').textContent = submission.fullName || 'Anonymous';
                     document.getElementById('tmsModalPatientEmail').textContent = submission.email || 'N/A';
                     document.getElementById('tmsModalPatientPhone').textContent = submission.phoneNumber || 'N/A';
@@ -4228,11 +4234,14 @@
             document.getElementById('cancelTmsQuestionnaireBtn').addEventListener('click', cancelTmsQuestionnaire);
             setupTmsFormListeners(); // Initialize listeners for conditional follow-ups
 
-            // Setup TMS Detail Modal close button
+          // Setup TMS Detail Modal close button
             document.getElementById('closeTmsModalBtn').addEventListener('click', () => {
                 document.getElementById('tmsDetailModal').classList.add('hidden');
                 document.getElementById('assignTmsToPatientSection').classList.add('hidden'); // Hide assignment section on close
+                currentTmsSubmissionForPdf = null; // Clear PDF data on modal close
             });
+            // Attach PDF download button listener
+            document.getElementById('downloadTmsPdfBtn').addEventListener('click', downloadTmsPdf);
 
             // Setup Public Test Detail Modal close button
             document.getElementById('closePublicTestModalBtn').addEventListener('click', () => {
