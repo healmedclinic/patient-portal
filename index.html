@@ -1121,13 +1121,14 @@
             <div id="publicTestResultDisplay" class="hidden"></div>
         </div>
 
-        <div id="tmsQuestionnaireSection" class="section hidden">
+<div id="tmsQuestionnaireSection" class="section hidden">
     <h2>TMS Daily Questionnaire</h2>
     <p>Please fill out the following information and questions.</p>
     <div class="form-group">
         <label for="tmsFullName">Full Name:</label>
-        <input type="text" id="tmsFullName" name="fullName" placeholder="Your full name" required>
+        <input type="text" id="tmsFullName" name="tmsFullName" placeholder="Your full name" required>
     </div>
+    <!-- Email and Phone Number fields removed as requested -->
     <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
 
     <div class="form-group">
@@ -1209,6 +1210,10 @@
             <textarea id="q6_metal_head_details" name="q6_metal_head_details"></textarea>
         </div>
     </div>
+
+    <button class="btn" id="submitTmsQuestionnaireBtn">Submit Questionnaire</button>
+    <button class="btn btn-secondary" id="cancelTmsQuestionnaireBtn">Cancel</button>
+</div>
 
     <button class="btn" id="submitTmsQuestionnaireBtn">Submit Questionnaire</button>
     <button class="btn btn-secondary" id="cancelTmsQuestionnaireBtn">Cancel</button>
@@ -2451,12 +2456,11 @@
 
         // --- TMS Daily Questionnaire Functions (Patient Side / Public Access) ---
 
-        // Called from public button OR logged-in button
+// Called from public button OR logged-in button
         function showTmsQuestionnaire(isLoggedInCall = false) {
             // Reset contact info fields for fresh start
             document.getElementById('tmsFullName').value = '';
-            document.getElementById('tmsEmail').value = '';
-            document.getElementById('tmsPhone').value = '';
+            // Removed direct references to tmsEmail and tmsPhone elements here
 
             // Pre-fill if logged in
             if (isLoggedInCall && currentUser) {
@@ -2464,8 +2468,7 @@
                     const patientData = snapshot.val();
                     if (patientData) {
                         document.getElementById('tmsFullName').value = patientData.fullName || '';
-                        document.getElementById('tmsEmail').value = patientData.email || '';
-                        document.getElementById('tmsPhone').value = patientData.phoneNumber || '';
+                        // Removed pre-fill for tmsEmail and tmsPhone as fields are gone
                     }
                 }).catch(error => console.error("Error pre-filling TMS form:", error));
             }
@@ -2493,99 +2496,24 @@
 
         function resetTmsForm() {
             // Reset contact info fields (if not pre-filled by logged-in user logic)
-            // No need to clear tmsFullName, tmsEmail, tmsPhone here, as showTmsQuestionnaire does it.
+            document.getElementById('tmsFullName').value = ''; // Clear full name
+            // Removed clearing for tmsEmail and tmsPhone
 
             // Reset questionnaire fields
             document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
             document.getElementById('tmsQuestionnaireSection').querySelectorAll('textarea').forEach(textarea => textarea.value = '');
-            document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+            document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="text"][id^="q"]').forEach(input => input.value = ''); // Clear text inputs like sleep hours
             document.getElementById('tmsQuestionnaireSection').querySelectorAll('.follow-up-question').forEach(div => div.classList.add('hidden'));
             console.log("Patient: TMS Daily Questionnaire form reset.");
         }
 
-        function setupTmsFormListeners() {
-            // Q1: Eat/Drink
-            document.querySelectorAll('input[name="q1_eat_drink"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    if (event.target.value === 'yes') {
-                        document.getElementById('q1_followup').classList.remove('hidden');
-                    } else {
-                        document.getElementById('q1_followup').classList.add('hidden');
-                        document.getElementById('q1_eat_drink_details').value = '';
-                    }
-                });
-            });
-
-            // Q2: Medication prescribed
-            document.querySelectorAll('input[name="q2_med_prescribed"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    if (event.target.value === 'no') { // Q2a appears if not taking as prescribed
-                        document.getElementById('q2_followup').classList.remove('hidden');
-                    } else {
-                        document.getElementById('q2_followup').classList.add('hidden');
-                        document.querySelectorAll('input[name="q2a_med_changes"]').forEach(r => r.checked = false); // Clear Q2a radios
-                        document.getElementById('q2a_followup').classList.add('hidden'); // Hide Q2a follow-up
-                        document.getElementById('q2a_med_changes_details').value = ''; // Clear Q2a text
-                    }
-                });
-            });
-
-            // Q2a: Medication changes
-            document.querySelectorAll('input[name="q2a_med_changes"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    if (event.target.value === 'yes') {
-                        document.getElementById('q2a_followup').classList.remove('hidden');
-                    } else {
-                        document.getElementById('q2a_followup').classList.add('hidden');
-                        document.getElementById('q2a_med_changes_details').value = '';
-                    }
-                });
-            });
-
-            // Q4: Caffeine
-            document.querySelectorAll('input[name="q4_caffeine"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    if (event.target.value === 'yes') {
-                        document.getElementById('q4_followup').classList.remove('hidden');
-                    } else {
-                        document.getElementById('q4_followup').classList.add('hidden');
-                        document.getElementById('q4_caffeine_details').value = '';
-                    }
-                });
-            });
-
-            // Q5: Alcohol
-            document.querySelectorAll('input[name="q5_alcohol"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    if (event.target.value === 'yes') {
-                        document.getElementById('q5_followup').classList.remove('hidden');
-                    } else {
-                        document.getElementById('q5_followup').classList.add('hidden');
-                        document.getElementById('q5_alcohol_details').value = '';
-                    }
-                });
-            });
-
-            // Q6: Metal in Head
-            document.querySelectorAll('input[name="q6_metal_head"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    if (event.target.value === 'yes') {
-                        document.getElementById('q6_followup').classList.remove('hidden');
-                    } else {
-                        document.getElementById('q6_followup').classList.add('hidden');
-                        document.getElementById('q6_metal_head_details').value = '';
-                    }
-                });
-            });
-        }
-
         async function submitTmsQuestionnaire() {
             const tmsFullName = document.getElementById('tmsFullName').value.trim();
-            const tmsEmail = document.getElementById('tmsEmail').value.trim();
-            const tmsPhone = document.getElementById('tmsPhone').value.trim();
+            // Removed direct access to tmsEmail and tmsPhone elements.
+            // Email and phone will now be derived from currentUser if logged in.
 
-            if (!tmsFullName || !tmsEmail || !tmsPhone) {
-                showMessage('Please provide your Full Name, Email, and Phone Number at the top of the questionnaire.', true);
+            if (!tmsFullName) { // Only validate full name since email/phone fields are removed
+                showMessage('Please provide your Full Name at the top of the questionnaire.', true);
                 return;
             }
 
@@ -2671,23 +2599,35 @@
 
             try {
                 let tmsRefPath;
+                let patientEmailForSubmission = 'N/A (Public Submission)';
+                let patientPhoneNumberForSubmission = 'N/A (Public Submission)';
+
+                if (currentUser) {
+                    // If logged in, save under user's specific path
+                    tmsRefPath = `tmsQuestionnaires/${currentUser.uid}`;
+                    // Fetch full patient data to get email and phone
+                    const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
+                    const patientData = patientSnapshot.val();
+                    if (patientData) {
+                        patientEmailForSubmission = patientData.email || 'N/A';
+                        patientPhoneNumberForSubmission = patientData.phoneNumber || 'N/A';
+                    }
+                } else {
+                    // If not logged in, save to a public path
+                    tmsRefPath = `publicTmsQuestionnaires`;
+                    // Email and phone remain 'N/A (Public Submission)' as there are no fields for them
+                }
+
                 let tmsData = {
                     fullName: tmsFullName,
-                    email: tmsEmail,
-                    phoneNumber: tmsPhone,
+                    email: patientEmailForSubmission,
+                    phoneNumber: patientPhoneNumberForSubmission,
                     answers: answers,
                     submittedAt: new Date().toISOString()
                 };
 
                 if (currentUser) {
-                    // If logged in, save under user's specific path
-                    tmsRefPath = `tmsQuestionnaires/${currentUser.uid}`;
-                    tmsData.userId = currentUser.uid; // Add userId to data
-                    // If currentUser exists, their name/email/phone from profile is more authoritative
-                    // But for the form, we'll use what they typed if it differs.
-                } else {
-                    // If not logged in, save to a public path
-                    tmsRefPath = `publicTmsQuestionnaires`;
+                    tmsData.userId = currentUser.uid; // Add userId for logged-in submissions
                 }
 
                 const newTmsRef = push(ref(database, tmsRefPath));
@@ -2701,7 +2641,6 @@
                 showMessage(`Error submitting TMS Questionnaire: ${error.message}`, true);
             }
         }
-
 
         // --- Admin-Specific Functionality ---
 
