@@ -3269,9 +3269,9 @@
             if (allTmsSubmissions.length > 0) {
                 allTmsSubmissions.forEach(submission => {
                     const submittedByInfo = submission.fromUser === 'public'
-                        ? `<strong>Public Submission</strong>`
+                        ? `<strong>from quick access</strong>` // Changed 'Public Submission' here
                         : `<strong>Logged-in User</strong>`; // User ID already in button data-user-id
-
+                    
                     tmsSubmissionsListDiv.innerHTML += `
                         <div class="tms-submission-card">
                             <div>
