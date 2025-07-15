@@ -4092,6 +4092,92 @@
             };
         }
 
+          // NEW: PDF Generation Function for TMS Questionnaire
+        function downloadTmsPdf() {
+            if (!currentTmsSubmissionForPdf) {
+                showMessage('No TMS submission data available for PDF download.', true);
+                return;
+            }
+
+            const submission = currentTmsSubmissionForPdf;
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            let y = 20; // Initial Y position
+            const margin = 15;
+            const lineHeight = 7;
+            const titleFontSize = 16;
+            const headerFontSize = 12;
+            const contentFontSize = 10;
+
+            doc.setFontSize(titleFontSize);
+            doc.text("HealMed Clinic - TMS Daily Questionnaire", margin, y);
+            y += lineHeight * 2;
+
+            doc.setFontSize(headerFontSize);
+            doc.text(`Submitted By: ${submission.fullName || 'Anonymous'}`, margin, y);
+            y += lineHeight;
+            doc.text(`Email: ${submission.email || 'N/A'}`, margin, y);
+            y += lineHeight;
+            doc.text(`Phone: ${submission.phoneNumber || 'N/A'}`, margin, y);
+            y += lineHeight;
+            doc.text(`Submitted On: ${new Date(submission.submittedAt).toLocaleString()}`, margin, y);
+            y += lineHeight * 2;
+
+            doc.setFontSize(headerFontSize);
+            doc.text("Questionnaire Answers:", margin, y);
+            y += lineHeight;
+
+            doc.setFontSize(contentFontSize);
+
+            const questions = [
+                { key: 'q1_eat_drink', text: '1. Had anything to eat or drink today?' },
+                { key: 'q1_eat_drink_details', text: '   Details:' },
+                { key: 'q_unprescribed_substance', text: '2. Have you consumed any substances that were NOT prescribed by any physicians today?' },
+                { key: 'q2_med_prescribed', text: '3. Have you been taking your medication as prescribed and at the same time?' },
+                { key: 'q2a_med_changes', text: '   3a. Any changes to your medication?' },
+                { key: 'q2a_med_changes_details', text: '   Details (3a):' },
+                { key: 'q3_sleep_hours', text: '4. How did you sleep last night? Number of hours?' },
+                { key: 'q4_caffeine', text: '5. Any caffeine intake today?' },
+                { key: 'q4_caffeine_details', text: '   Details (5):' },
+                { key: 'q5_alcohol', text: '6. Any alcohol intake today?' },
+                { key: 'q5_alcohol_details', text: '   Details (6):' },
+                { key: 'q6_metal_head', text: '7. Do you have any metal in or around your head (above the collar)?' },
+                { key: 'q6_metal_head_details', text: '   Details (7):' }
+            ];
+
+            questions.forEach(q => {
+                let answer = submission.answers[q.key];
+                if (answer !== undefined && answer !== null && answer !== '') {
+                    // Special handling for follow-up questions that should only show if parent is 'yes'
+                    if (q.key === 'q1_eat_drink_details' && submission.answers['q1_eat_drink'] !== 'yes') return;
+                    if (q.key === 'q2a_med_changes' && submission.answers['q2_med_prescribed'] !== 'no') return;
+                    if (q.key === 'q2a_med_changes_details' && (submission.answers['q2_med_prescribed'] !== 'no' || submission.answers['q2a_med_changes'] !== 'yes')) return;
+                    if (q.key === 'q4_caffeine_details' && submission.answers['q4_caffeine'] !== 'yes') return;
+                    if (q.key === 'q5_alcohol_details' && submission.answers['q5_alcohol'] !== 'yes') return;
+                    if (q.key === 'q6_metal_head_details' && submission.answers['q6_metal_head'] !== 'yes') return;
+                    
+                    let textToPrint = `${q.text} ${answer}`;
+                    
+                    // Handle line breaks for long answers
+                    const splitText = doc.splitTextToSize(textToPrint, doc.internal.pageSize.width - 2 * margin);
+                    doc.text(splitText, margin, y);
+                    y += (splitText.length * lineHeight);
+
+                    // Add a new page if content goes beyond current page height
+                    if (y > doc.internal.pageSize.height - margin) {
+                        doc.addPage();
+                        y = margin; // Reset Y for new page
+                    }
+                }
+            });
+
+            const filename = `TMS_Questionnaire_${submission.fullName.replace(/\s/g, '_') || 'Anonymous'}_${new Date(submission.submittedAt).toLocaleDateString().replace(/\//g, '-')}.pdf`;
+            doc.save(filename);
+            showMessage('PDF downloaded successfully!');
+            console.log("PDF generated and downloaded.");
+        }
+
 
         // --- Initial Load Logic and Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
