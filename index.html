@@ -2049,54 +2049,62 @@
         }
 
         // Book New Appointment (Updated to save date and DOB, with duplicate check)
-        async function bookAppointment() {
-            const dob = document.getElementById('bookApptDob').value;
-            const date = document.getElementById('appointmentDate').value;
-            const time = document.getElementById('appointmentTime').value;
-            const reason = document.getElementById('appointmentReason').value;
+       async function bookAppointment() {
+    const dob = document.getElementById('bookApptDob').value;
+    const date = document.getElementById('appointmentDate').value;
+    const time = document.getElementById('appointmentTime').value;
+    const reason = document.getElementById('appointmentReason').value;
 
-            if (!dob || !date || !time || !reason) {
-                showMessage('Please fill in all appointment details including your Date of Birth, preferred date, time, and reason for visit.', true);
-                return;
-            }
-            if (!currentUser) {
-                showMessage('You must be logged in to book an appointment. Please create an account or login.', true);
-                return;
-            }
+    if (!dob || !date || !time || !reason) {
+        showMessage('Please fill in all appointment details including your Date of Birth, preferred date, time, and reason for visit.', true);
+        return;
+    }
+    if (!currentUser) {
+        showMessage('You must be logged in to book an appointment. Please create an account or login.', true);
+        return;
+    }
 
-            try {
-                console.log("Patient: Attempting to book appointment for user UID:", currentUser.uid);
-                const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
-                const patientData = patientSnapshot.val();
+    try {
+        console.log("Patient: Attempting to book appointment for user UID:", currentUser.uid);
+        const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
+        const patientData = patientSnapshot.val();
 
-                if (!patientData) {
-                    showMessage('Could not retrieve patient data. Please try logging in again.', true);
-                    console.error("Patient: Data not found for UID:", currentUser.uid);
-                    return;
-                }
+        if (!patientData) {
+            showMessage('Could not retrieve patient data. Please try logging in again.', true);
+            console.error("Patient: Data not found for UID:", currentUser.uid);
+            return;
+        }
 
-                // --- DUPLICATE APPOINTMENT CHECK (based on fullName, DOB, date, time) ---
-                const appointmentsRef = ref(database, 'appointments');
-                const existingAppointmentsSnapshot = await get(appointmentsRef);
-                const existingAppointments = existingAppointmentsSnapshot.val();
-                
-                if (existingAppointments) {
-                    const apptArray = Object.values(existingAppointments);
+        // --- ADD THIS BLOCK ---
+        const appointmentData = {
+            userId: currentUser.uid, // <--- CRITICAL: Add the user ID here
+            fullName: patientData.fullName || 'N/A', // Fetch from patient profile
+            email: patientData.email || 'N/A',       // Fetch from patient profile
+            phoneNumber: patientData.phoneNumber || 'N/A', // Fetch from patient profile
+            dob: dob,
+            date: date,
+            time: time,
+            reason: reason,
+            status: 'pending', // Default status for new appointments
+            createdAt: new Date().toISOString()
+        };
 
-                    // Check for existing pending or approved appointments for THIS user's full name AND DOB for the same date/time
-                    const duplicateCheck = apptArray.some(appt =>
-                        appt.fullName === patientData.fullName && // Match full name
-                        appt.dob === dob && // Match DOB
-                        appt.appointmentDate === date &&
-                        appt.appointmentTime === time &&
-                        (appt.status === 'pending' || appt.status.trim() === 'approved') // Use trim for approved status
-                    );
+        const newAppointmentRef = push(ref(database, 'appointments'));
+        await set(newAppointmentRef, appointmentData);
+        // --- END ADD BLOCK ---
 
-                    if (duplicateCheck) {
-                        showMessage('An appointment request with this name and date of birth already exists for this exact date and time. Please check your existing appointments.', true);
-                        return; // Prevent booking
-                    }
-                }
+        showMessage('Appointment request sent successfully! We will contact you shortly to confirm.', false); // Changed to false for success message
+        document.getElementById('appointmentBookingForm').reset(); // Clear the form
+        // Assuming you have a function to refresh the patient's appointment list
+        loadPatientAppointments(currentUser.uid); // Pass the current user's UID
+        hideAppointmentBookingForm(); // Assuming you have this function
+        showPatientSection('appointments'); // Go back to appointments view
+
+    } catch (error) {
+        console.error("Patient: Error booking appointment:", error);
+        showMessage(`Error booking appointment: ${error.message}`, true);
+    }
+}
                 // --- END DUPLICATE APPOINTMENT CHECK ---
 
                 const newAppointmentRef = push(ref(database, 'appointments'));
