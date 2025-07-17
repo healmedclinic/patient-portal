@@ -1123,107 +1123,98 @@
         </div>
 
         <!-- TMS DAILY QUESTIONNAIRE SECTION: MOVED HERE, OUTSIDE DASHBOARD -->
-        <div id="tmsQuestionnaireSection" class="section hidden">
-            <h2>TMS Daily Questionnaire</h2>
-            <p>Please fill out the following information and questions.</p>
-            <div class="form-group">
-                <label for="tmsFullName">Full Name:</label>
-                <input type="text" id="tmsFullName" placeholder="Your full name" required>
-            </div>
-            <div class="form-group">
-                <label for="tmsEmail">Email:</label>
-                <input type="email" id="tmsEmail" placeholder="Your email" required>
-            </div>
-            <div class="form-group">
-                <label for="tmsPhone">Phone Number:</label>
-                <input type="tel" id="tmsPhone" placeholder="Your phone number" required>
-            </div>
-            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
+       <div id="tmsQuestionnaireSection" class="section hidden">
+    <h2>TMS Daily Questionnaire</h2>
+    <p>Please fill out the following information and questions.</p>
+    <div class="form-group">
+        <label for="tmsFullName">Full Name:</label>
+        <input type="text" id="tmsFullName" name="tmsFullName" placeholder="Your full name" required>
+    </div>
+    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
 
-            <div class="form-group">
-                <label>1. Have you had anything to eat or drink today?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
-                </div>
-                <div id="q1_followup" class="follow-up-question hidden">
-                    <label for="q1_eat_drink_details">What did you have to eat or drink?</label>
-                    <textarea id="q1_eat_drink_details"></textarea>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>3. Have you been taking your medication as prescribed and at the same time?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="no"> No</label>
-                </div>
-                <div id="q2_followup" class="follow-up-question hidden">
-                    <label>3a. Any changes to your medication?</label>
-                    <div class="radio-group-inline">
-                        <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="yes" required> Yes</label>
-                        <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="no"> No</label>
-                    </div>
-                    <div id="q2a_followup" class="follow-up-question hidden">
-                        <label for="q2a_med_changes_details">Please specify changes to your medication:</label>
-                        <textarea id="q2a_med_changes_details"></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="q3_sleep_hours">4. How did you sleep last night? Number of hours?</label>
-                <input type="text" id="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
-            </div>
-
-            <div class="form-group">
-                <label>5. Any caffeine intake today?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="no"> No</label>
-                </div>
-                <div id="q4_followup" class="follow-up-question hidden">
-                    <label for="q4_caffeine_details">What caffeine drink did you have or how many?</label>
-                    <textarea id="q4_caffeine_details"></textarea>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>6. Any alcohol intake today?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="no"> No</label>
-                </div>
-                <div id="q5_followup" class="follow-up-question hidden">
-                    <label for="q5_alcohol_details">How much alcohol?</label>
-                    <textarea id="q5_alcohol_details"></textarea>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>2. Have you consumed any substances that were NOT prescribed by any physicians today?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q_unprescribed_substance" value="yes" required> Yes</label> <!-- Changed name to avoid conflict -->
-                    <label class="radio-option-inline"><input type="radio" name="q_unprescribed_substance" value="no"> No</label>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>7. Do you have any metal in or around your head (above the collar)?</label>
-                <div class="radio-group-inline">
-                    <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="yes" required> Yes</label>
-                    <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="no"> No</label>
-                </div>
-                <div id="q6_followup" class="follow-up-question hidden">
-                    <label for="q6_metal_head_details">Please specify (e.g., dental implants, surgical clips, shrapnel, etc.):</label>
-                    <textarea id="q6_metal_head_details"></textarea>
-                </div>
-            </div>
-
-            <button class="btn" id="submitTmsQuestionnaireBtn">Submit Questionnaire</button>
-            <button class="btn btn-secondary" id="cancelTmsQuestionnaireBtn">Cancel</button>
+    <div class="form-group">
+        <label>1. Have you had anything to eat or drink today?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q1_eat_drink" value="no"> No</label>
         </div>
+        <div id="q1_followup" class="follow-up-question hidden">
+            <label for="q1_eat_drink_details">What did you have to eat or drink?</label>
+            <textarea id="q1_eat_drink_details" name="q1_eat_drink_details" placeholder="Optional: Elaborate further"></textarea>
+        </div>
+    </div>
 
+    <div class="form-group">
+        <label>3. Have you been taking your medication as prescribed and at the same time?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q2_med_prescribed" value="no"> No</label>
+        </div>
+        <div id="q2_followup" class="follow-up-question hidden">
+            <label>3a. Any changes to your medication?</label>
+            <div class="radio-group-inline">
+                <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="yes" required> Yes</label>
+                <label class="radio-option-inline"><input type="radio" name="q2a_med_changes" value="no"> No</label>
+            </div>
+            <div id="q2a_followup" class="follow-up-question hidden">
+                <label for="q2a_med_changes_details">Please specify changes to your medication:</label>
+                <textarea id="q2a_med_changes_details" name="q2a_med_changes_details" placeholder="Optional: Elaborate further"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="q3_sleep_hours">4. How did you sleep last night? Number of hours?</label>
+        <input type="text" id="q3_sleep_hours" name="q3_sleep_hours" min="0" max="24" placeholder="Enter hours" required>
+    </div>
+
+    <div class="form-group">
+        <label>5. Any caffeine intake today?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q4_caffeine" value="no"> No</label>
+        </div>
+        <div id="q4_followup" class="follow-up-question hidden">
+            <label for="q4_caffeine_details">What caffeine drink did you have or how many?</label>
+            <textarea id="q4_caffeine_details" name="q4_caffeine_details" placeholder="Optional: Elaborate further"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>6. Any alcohol intake today?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q5_alcohol" value="no"> No</label>
+        </div>
+        <div id="q5_followup" class="follow-up-question hidden">
+            <label for="q5_alcohol_details">How much alcohol?</label>
+            <textarea id="q5_alcohol_details" name="q5_alcohol_details" placeholder="Optional: Elaborate further"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>2. Have you consumed any substances that were NOT prescribed by any physicians today?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q_unprescribed_substance" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q_unprescribed_substance" value="no"> No</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>7. Do you have any metal in or around your head (above the collar)?</label>
+        <div class="radio-group-inline">
+            <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="yes" required> Yes</label>
+            <label class="radio-option-inline"><input type="radio" name="q6_metal_head" value="no"> No</label>
+        </div>
+        <div id="q6_followup" class="follow-up-question hidden">
+            <label for="q6_metal_head_details">Please specify (e.g., dental implants, surgical clips, shrapnel, etc.):</label>
+            <textarea id="q6_metal_head_details" name="q6_metal_head_details" placeholder="Optional: Elaborate further"></textarea>
+        </div>
+    </div>
+
+    <button class="btn" id="submitTmsQuestionnaireBtn">Submit Questionnaire</button>
+    <button class="btn btn-secondary" id="cancelTmsQuestionnaireBtn">Cancel</button>
+</div>
         <!-- Patient Dashboard -->
         <div id="patientDashboard" class="dashboard hidden">
             <button class="logout-btn" id="patientLogoutBtn">Logout</button>
@@ -2462,11 +2453,166 @@
         // --- TMS Daily Questionnaire Functions (Patient Side / Public Access) ---
 
         // Called from public button OR logged-in button
+        // Called from public button OR logged-in button
         function showTmsQuestionnaire(isLoggedInCall = false) {
             // Reset contact info fields for fresh start
             document.getElementById('tmsFullName').value = '';
-            document.getElementById('tmsEmail').value = '';
-            document.getElementById('tmsPhone').value = '';
+            // Removed direct references to tmsEmail and tmsPhone elements here
+
+            // Pre-fill if logged in
+            if (isLoggedInCall && currentUser) {
+                get(ref(database, 'patients/' + currentUser.uid)).then(snapshot => {
+                    const patientData = snapshot.val();
+                    if (patientData) {
+                        document.getElementById('tmsFullName').value = patientData.fullName || '';
+                        // Removed pre-fill for tmsEmail and tmsPhone as fields are gone
+                    }
+                }).catch(error => console.error("Error pre-filling TMS form:", error));
+            }
+
+            hideAllScreens(); // Hide login/main dashboard
+            document.getElementById('tmsQuestionnaireSection').classList.remove('hidden');
+            resetTmsForm(); // Clear any previous inputs for questions (but keep contact info from above pre-fill)
+            console.log("Patient: Showing TMS Daily Questionnaire. Logged-in call:", isLoggedInCall);
+        }
+
+        // Called from public button OR logged-in button
+        function cancelTmsQuestionnaire() {
+            document.getElementById('tmsQuestionnaireSection').classList.add('hidden');
+            
+            // Depending on where it was launched from, show the correct previous screen
+            if (currentUser) { // If a user is logged in, they came from the patient dashboard
+                showPatientSection('forms'); // Back to patient dashboard forms
+            } else { // Otherwise, they came from the public access screen
+                showLoginScreenLayout(); // Back to the login/public access page
+                showLogin(); // Ensure login form is visible
+            }
+            resetTmsForm(); // Clear all fields
+            console.log("Patient: TMS Daily Questionnaire cancelled.");
+        }
+
+        function resetTmsForm() {
+            // Reset contact info fields (if not pre-filled by logged-in user logic)
+            document.getElementById('tmsFullName').value = ''; // Clear full name
+            // Removed clearing for tmsEmail and tmsPhone
+
+            // Reset questionnaire fields
+            document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+            document.getElementById('tmsQuestionnaireSection').querySelectorAll('textarea').forEach(textarea => textarea.value = '');
+            document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="text"][id^="q"]').forEach(input => input.value = ''); // Clear text inputs like sleep hours
+            document.getElementById('tmsQuestionnaireSection').querySelectorAll('.follow-up-question').forEach(div => div.classList.add('hidden'));
+            console.log("Patient: TMS Daily Questionnaire form reset.");
+        }
+
+        async function submitTmsQuestionnaire() {
+            const tmsFullName = document.getElementById('tmsFullName').value.trim();
+            // Removed direct access to tmsEmail and tmsPhone elements.
+            // Email and phone will now be derived from currentUser if logged in.
+
+            if (!tmsFullName) { // Only validate full name since email/phone fields are removed
+                showMessage('Please provide your Full Name at the top of the questionnaire.', true);
+                return;
+            }
+
+            const answers = {};
+            // Removed allRequiredAnswered flag as optional fields no longer block submission
+
+            // Q1: Have you had anything to eat or drink today?
+            const q1Answer = document.querySelector('input[name="q1_eat_drink"]:checked');
+            if (!q1Answer) { showMessage("Please answer Q1.", true); return; }
+            answers.q1_eat_drink = q1Answer.value;
+            if (q1Answer.value === 'yes') {
+                answers.q1_eat_drink_details = document.getElementById('q1_eat_drink_details').value.trim(); // Now optional
+            }
+
+            // Q2: Have you been taking your medication as prescribed and at the same time?
+            const q2Answer = document.querySelector('input[name="q2_med_prescribed"]:checked');
+            if (!q2Answer) { showMessage("Please answer Q3.", true); return; }
+            answers.q2_med_prescribed = q2Answer.value;
+            if (q2Answer.value === 'no') {
+                // Q2a: Any changes to your medication?
+                const q2aAnswer = document.querySelector('input[name="q2a_med_changes"]:checked');
+                if (!q2aAnswer) { showMessage("Please answer Q3a.", true); return; }
+                answers.q2a_med_changes = q2aAnswer.value;
+                if (q2aAnswer.value === 'yes') {
+                    answers.q2a_med_changes_details = document.getElementById('q2a_med_changes_details').value.trim(); // Now optional
+                }
+            }
+
+            // Q3: How did you sleep last night? Number of hours?
+            const q3Answer = document.getElementById('q3_sleep_hours').value;
+            if (q3Answer === '' || isNaN(q3Answer)) { showMessage("Please enter sleep hours for Q4.", true); return; }
+            answers.q3_sleep_hours = parseFloat(q3Answer);
+
+            // Q4: Any caffeine intake today?
+            const q4Answer = document.querySelector('input[name="q4_caffeine"]:checked');
+            if (!q4Answer) { showMessage("Please answer Q5.", true); return; }
+            answers.q4_caffeine = q4Answer.value;
+            if (q4Answer.value === 'yes') {
+                answers.q4_caffeine_details = document.getElementById('q4_caffeine_details').value.trim(); // Now optional
+            }
+
+            // Q5: Any alcohol intake today?
+            const q5Answer = document.querySelector('input[name="q5_alcohol"]:checked');
+            if (!q5Answer) { showMessage("Please answer Q6.", true); return; }
+            answers.q5_alcohol = q5Answer.value;
+            if (q5Answer.value === 'yes') {
+                answers.q5_alcohol_details = document.getElementById('q5_alcohol_details').value.trim(); // Now optional
+            }
+
+            // Q_unprescribed_substance: Have you consumed any substances that were NOT prescribed by any physicians today?
+            const qUnprescribedSubstanceAnswer = document.querySelector('input[name="q_unprescribed_substance"]:checked');
+            if (!qUnprescribedSubstanceAnswer) { showMessage("Please answer Q2 (unprescribed substances).", true); return; }
+            answers.q_unprescribed_substance = qUnprescribedSubstanceAnswer.value;
+
+            // Q6: Do you have any metal in or around your head (above the collar)?
+            const q6Answer = document.querySelector('input[name="q6_metal_head"]:checked');
+            if (!q6Answer) { showMessage("Please answer Q7.", true); return; }
+            answers.q6_metal_head = q6Answer.value;
+            if (q6Answer.value === 'yes') {
+                answers.q6_metal_head_details = document.getElementById('q6_metal_head_details').value.trim(); // Now optional
+            }
+            
+            try {
+                let tmsRefPath;
+                let patientEmailForSubmission = 'N/A (Public Submission)';
+                let patientPhoneNumberForSubmission = 'N/A (Public Submission)';
+
+                if (currentUser) {
+                    tmsRefPath = `tmsQuestionnaires/${currentUser.uid}`;
+                    const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
+                    const patientData = patientSnapshot.val();
+                    if (patientData) {
+                        patientEmailForSubmission = patientData.email || 'N/A';
+                        patientPhoneNumberForSubmission = patientData.phoneNumber || 'N/A';
+                    }
+                } else {
+                    tmsRefPath = `publicTmsQuestionnaires`;
+                }
+
+                let tmsData = {
+                    fullName: tmsFullName,
+                    email: patientEmailForSubmission,
+                    phoneNumber: patientPhoneNumberForSubmission,
+                    answers: answers,
+                    submittedAt: new Date().toISOString()
+                };
+
+                if (currentUser) {
+                    tmsData.userId = currentUser.uid;
+                }
+
+                const newTmsRef = push(ref(database, tmsRefPath));
+                await set(newTmsRef, tmsData);
+                
+                console.log("Patient: TMS Questionnaire submitted successfully. Path:", newTmsRef.toString());
+                showMessage('TMS Daily Questionnaire submitted successfully!');
+                cancelTmsQuestionnaire();
+            } catch (error) {
+                console.error("Patient: Error submitting TMS Questionnaire:", error);
+                showMessage(`Error submitting TMS Questionnaire: ${error.message}`, true);
+            }
+        }
 
             // Pre-fill if logged in
             if (isLoggedInCall && currentUser) {
@@ -4209,8 +4355,40 @@
 }
 
         // --- Initial Load Logic and Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOM Content Loaded. Setting up event listeners.");
+       document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM Content Loaded. Setting up event listeners.");
+
+    // Set up main screen navigation (new layout)
+    document.getElementById('loginBtn').addEventListener('click', login);
+    document.getElementById('showSignupBtn').addEventListener('click', showSignup);
+    document.getElementById('showAdminLoginBtn').addEventListener('click', showAdminLogin);
+
+    document.getElementById('signupBtn').addEventListener('click', signup);
+    document.getElementById('backToLoginBtn').addEventListener('click', showLogin);
+
+    document.getElementById('adminLoginBtn').addEventListener('click', adminLogin);
+    document.getElementById('backToPatientLoginBtn').addEventListener('click', showLogin);
+
+    // Public access buttons (JavaScript actions)
+    document.getElementById('publicTmsQuestionnaireBtn').addEventListener('click', () => showTmsQuestionnaire(false));
+    document.getElementById('publicMentalHealthTestsBtn').addEventListener('click', showPublicMentalHealthTestSelection);
+    document.getElementById('backToPublicAccessBtn').addEventListener('click', showLoginScreenLayout);
+
+    // Public mental health test selection buttons
+    document.querySelectorAll('#publicMentalHealthTestsSection .test-card').forEach(card => {
+        card.addEventListener('click', (event) => {
+            const testType = event.currentTarget.dataset.testType;
+            startPublicTest(testType);
+        });
+    });
+
+    // TMS Daily Questionnaire button event listeners
+    document.getElementById('submitTmsQuestionnaireBtn').addEventListener('click', submitTmsQuestionnaire);
+    document.getElementById('cancelTmsQuestionnaireBtn').addEventListener('click', cancelTmsQuestionnaire);
+
+    // NEW: Initialize the TMS questionnaire radio button toggles
+    setupTmsRadioToggle();
+});
 
             // Set up main screen navigation (new layout)
             document.getElementById('loginBtn').addEventListener('click', login);
