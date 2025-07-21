@@ -2057,11 +2057,11 @@
             console.log("Patient: Hiding booking form.");
         }
 
-        // Book New Appointment (Updated to save date and DOB, with duplicate check)
+         // Book New Appointment (Updated to save date and DOB, with duplicate check)
         async function bookAppointment() {
             const dob = document.getElementById('bookApptDob').value;
-            const date = document.getElementById('appointmentDate').value;
-            const time = document.getElementById('appointmentTime').value;
+            const date = document.getElementById('appointmentDate').value; 
+            const time = document.getElementById('appointmentTime').value; 
             const reason = document.getElementById('appointmentReason').value;
 
             if (!dob || !date || !time || !reason) {
@@ -2093,7 +2093,7 @@
                     const apptArray = Object.values(existingAppointments);
 
                     // Check for existing pending or approved appointments for THIS user's full name AND DOB for the same date/time
-                    const duplicateCheck = apptArray.some(appt =>
+                    const duplicateCheck = apptArray.some(appt => 
                         appt.fullName === patientData.fullName && // Match full name
                         appt.dob === dob && // Match DOB
                         appt.appointmentDate === date &&
@@ -2114,20 +2114,64 @@
                     fullName: patientData.fullName,
                     email: patientData.email,
                     phoneNumber: patientData.phoneNumber,
-                    dob: dob,
-                    appointmentDate: date,
-                    appointmentTime: time,
+                    dob: dob, // Save DOB with appointment
+                    appointmentDate: date, 
+                    appointmentTime: time, 
                     reason: reason,
-                    status: 'pending', // Default status
+                    status: 'pending',
                     createdAt: new Date().toISOString()
                 });
-                console.log("Patient: Appointment request submitted for UID:", currentUser.uid, "Appointment ID:", newAppointmentRef.key);
-                showMessage('Appointment request submitted successfully! We will review and get back to you shortly.');
+                console.log("Patient: Appointment request submitted successfully to Firebase. Path:", newAppointmentRef.toString());
+                showMessage('Appointment request submitted successfully!');
                 hideBookingForm();
             } catch (error) {
                 console.error("Patient: Error booking appointment:", error);
                 showMessage(`Error booking appointment: ${error.message}`, true);
             }
+        }
+
+        // Load Patient's Appointments (Updated to show date and DOB)
+        function loadAppointments() {
+            const appointmentsListDiv = document.getElementById('appointmentsList');
+            if (!currentUser) {
+                appointmentsListDiv.innerHTML = '<p>Please log in to view your appointments.</p>';
+                return;
+            }
+            console.log("Patient: Loading appointments for patient UID:", currentUser.uid);
+            onValue(ref(database, 'appointments'), (snapshot) => {
+                appointmentsListDiv.innerHTML = '';
+                let hasAppointments = false;
+                snapshot.forEach((childSnapshot) => {
+                    const appt = childSnapshot.val();
+                    const apptId = childSnapshot.key;
+
+                    if (appt.userId === currentUser.uid) {
+                        hasAppointments = true;
+                        const statusClass = `status-${appt.status}`;
+                        // Display both date and time if available, otherwise fallback to old 'time' string
+                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
+                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
+                            : appt.time || 'N/A'; // Fallback for old data without specific date/time
+                        appointmentsListDiv.innerHTML += `
+                            <div class="appointment-card">
+                                <h4>Appointment Request</h4>
+                                <p><strong>Date & Time:</strong> ${displayDateTime}</p>
+                                <p><strong>Date of Birth:</strong> ${appt.dob || 'N/A'}</p>
+                                <p><strong>Reason:</strong> ${appt.reason}</p>
+                                <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${apptId}</p>
+                            </div>
+                        `;
+                    }
+                });
+                if (!hasAppointments) {
+                    appointmentsListDiv.innerHTML = '<p>No appointments found.</p>';
+                }
+                console.log("Patient: Appointments loaded. Total displayed:", appointmentsListDiv.children.length);
+            }, {
+                onlyOnce: false
+            });
         }
 
         // Start a Mental Health Test (for logged-in users)
