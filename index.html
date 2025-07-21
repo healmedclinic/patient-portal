@@ -1132,11 +1132,11 @@
             </div>
             <div class="form-group">
                 <label for="tmsEmail">Email:</label>
-                <input type="email" id="tmsEmail" placeholder="Email (optional)">
+                <input type="email" id="tmsEmail" placeholder="Your email" required>
             </div>
             <div class="form-group">
                 <label for="tmsPhone">Phone Number:</label>
-                <input type="tel" id="tmsPhone" placeholder="Phone Number (optional)">
+                <input type="tel" id="tmsPhone" placeholder="Your phone number" required>
             </div>
             <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
 
@@ -2589,126 +2589,128 @@
             });
         }
 
-      async function submitTmsQuestionnaire() {
-    const tmsFullName = document.getElementById('tmsFullName').value.trim();
-    const tmsEmail = document.getElementById('tmsEmail').value.trim(); // Will be "" if empty
-    const tmsPhone = document.getElementById('tmsPhone').value.trim(); // Will be "" if empty
+        async function submitTmsQuestionnaire() {
+            const tmsFullName = document.getElementById('tmsFullName').value.trim();
+            const tmsEmail = document.getElementById('tmsEmail').value.trim();
+            const tmsPhone = document.getElementById('tmsPhone').value.trim();
 
-    // --- ONLY CHANGE IS HERE: Removed || !tmsEmail || !tmsPhone ---
-    if (!tmsFullName) {
-        showMessage('Please provide your Full Name at the top of the questionnaire.', true);
-        return;
-    }
-    // --- END OF ONLY CHANGE ---
-
-    const answers = {};
-    // No need for allRequiredAnswered flag related to contact details anymore.
-
-    // --- Start of Question Validation (Keep these as they are for mandatory questions) ---
-    // Q1: Have you had anything to eat or drink today?
-    const q1Answer = document.querySelector('input[name="q1_eat_drink"]:checked');
-    if (!q1Answer) { showMessage("Please answer Q1.", true); return; }
-    answers.q1_eat_drink = q1Answer.value;
-    if (q1Answer.value === 'yes') {
-        answers.q1_eat_drink_details = document.getElementById('q1_eat_drink_details').value.trim();
-    }
-
-    // Q2: Have you been taking your medication as prescribed and at the same time?
-    const q2Answer = document.querySelector('input[name="q2_med_prescribed"]:checked');
-    if (!q2Answer) { showMessage("Please answer Q2.", true); return; }
-    answers.q2_med_prescribed = q2Answer.value;
-    if (q2Answer.value === 'no') {
-        // Q2a: Any changes to your medication?
-        const q2aAnswer = document.querySelector('input[name="q2a_med_changes"]:checked');
-        if (!q2aAnswer) { showMessage("Please answer Q2a.", true); return; }
-        answers.q2a_med_changes = q2aAnswer.value;
-        if (q2aAnswer.value === 'yes') {
-            answers.q2a_med_changes_details = document.getElementById('q2a_med_changes_details').value.trim();
-        }
-    }
-
-    // Q3: How did you sleep last night? Number of hours?
-    const q3Answer = document.getElementById('q3_sleep_hours').value;
-    if (q3Answer === '' || isNaN(q3Answer)) { showMessage("Please enter sleep hours for Q3.", true); return; }
-    answers.q3_sleep_hours = parseFloat(q3Answer);
-
-    // Q4: Any caffeine intake today?
-    const q4Answer = document.querySelector('input[name="q4_caffeine"]:checked');
-    if (!q4Answer) { showMessage("Please answer Q4.", true); return; }
-    answers.q4_caffeine = q4Answer.value;
-    if (q4Answer.value === 'yes') {
-        answers.q4_caffeine_details = document.getElementById('q4_caffeine_details').value.trim();
-    }
-
-    // Q5: Any alcohol intake today?
-    const q5Answer = document.querySelector('input[name="q5_alcohol"]:checked');
-    if (!q5Answer) { showMessage("Please answer Q5.", true); return; }
-    answers.q5_alcohol = q5Answer.value;
-    if (q5Answer.value === 'yes') {
-        answers.q5_alcohol_details = document.getElementById('q5_alcohol_details').value.trim();
-    }
-
-    // Q_unprescribed_substance: Have you consumed any substances that were NOT prescribed by any physicians today?
-    const qUnprescribedSubstanceAnswer = document.querySelector('input[name="q_unprescribed_substance"]:checked');
-    if (!qUnprescribedSubstanceAnswer) { showMessage("Please answer the unprescribed substance question.", true); return; }
-    answers.q_unprescribed_substance = qUnprescribedSubstanceAnswer.value;
-
-    // Q6: Do you have any metal in or around your head (above the collar)?
-    const q6Answer = document.querySelector('input[name="q6_metal_head"]:checked');
-    if (!q6Answer) { showMessage("Please answer Q6.", true); return; }
-    answers.q6_metal_head = q6Answer.value;
-    if (q6Answer.value === 'yes') {
-        answers.q6_metal_head_details = document.getElementById('q6_metal_head_details').value.trim();
-    }
-    // --- End of Question Validation ---
-
-    try {
-        let tmsRefPath;
-        let patientEmailForSubmission = tmsEmail;       // Will be "" if user left it blank
-        let patientPhoneNumberForSubmission = tmsPhone; // Will be "" if user left it blank
-        let currentUserId = null; // Initialize to null for public submissions
-
-        if (currentUser) {
-            // This part handles logged-in users, ensuring their profile data is preferred
-            tmsRefPath = `tmsQuestionnaires/${currentUser.uid}/submissions`; // Path for multiple submissions per user
-            currentUserId = currentUser.uid;
-            const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
-            const patientData = patientSnapshot.val();
-            if (patientData) {
-                // If profile has email/phone, use it; otherwise, use form input (which might be empty)
-                patientEmailForSubmission = patientData.email || tmsEmail || '';
-                patientPhoneNumberForSubmission = patientData.phoneNumber || tmsPhone || '';
-                // Optional: If you want to use the fullName from the profile for logged-in users, uncomment this:
-                // tmsFullName = patientData.fullName || tmsFullName;
+            if (!tmsFullName || !tmsEmail || !tmsPhone) {
+                showMessage('Please provide your Full Name, Email, and Phone Number at the top of the questionnaire.', true);
+                return;
             }
-        } else {
-            // For public users, push to the public collection
-            tmsRefPath = `publicTmsQuestionnaires`;
+
+            const answers = {};
+            let allRequiredAnswered = true;
+
+            // Q1: Have you had anything to eat or drink today?
+            const q1Answer = document.querySelector('input[name="q1_eat_drink"]:checked');
+            if (!q1Answer) { allRequiredAnswered = false; } else {
+                answers.q1_eat_drink = q1Answer.value;
+                if (q1Answer.value === 'yes') {
+                    const details = document.getElementById('q1_eat_drink_details').value.trim();
+                    if (!details) { showMessage("Please provide details for Q1.", true); return; }
+                    answers.q1_eat_drink_details = details;
+                }
+            }
+
+            // Q2: Have you been taking your medication as prescribed and at the same time?
+            const q2Answer = document.querySelector('input[name="q2_med_prescribed"]:checked');
+            if (!q2Answer) { allRequiredAnswered = false; } else {
+                answers.q2_med_prescribed = q2Answer.value;
+                if (q2Answer.value === 'no') {
+                    // Q2a: Any changes to your medication?
+                    const q2aAnswer = document.querySelector('input[name="q2a_med_changes"]:checked');
+                    if (!q2aAnswer) { showMessage("Please answer Q2a.", true); return; }
+                    answers.q2a_med_changes = q2aAnswer.value;
+                    if (q2aAnswer.value === 'yes') {
+                        const details = document.getElementById('q2a_med_changes_details').value.trim();
+                        if (!details) { showMessage("Please provide details for Q2a.", true); return; }
+                        answers.q2a_med_changes_details = details;
+                    }
+                }
+            }
+
+            // Q3: How did you sleep last night? Number of hours?
+            const q3Answer = document.getElementById('q3_sleep_hours').value;
+            if (q3Answer === '' || isNaN(q3Answer)) { showMessage("Please enter sleep hours for Q3.", true); return; }
+            answers.q3_sleep_hours = parseFloat(q3Answer);
+
+            // Q4: Any caffeine intake today?
+            const q4Answer = document.querySelector('input[name="q4_caffeine"]:checked');
+            if (!q4Answer) { allRequiredAnswered = false; } else {
+                answers.q4_caffeine = q4Answer.value;
+                if (q4Answer.value === 'yes') {
+                    const details = document.getElementById('q4_caffeine_details').value.trim();
+                    if (!details) { showMessage("Please provide details for Q4.", true); return; }
+                    answers.q4_caffeine_details = details;
+                }
+            }
+
+            // Q5: Any alcohol intake today?
+            const q5Answer = document.querySelector('input[name="q5_alcohol"]:checked');
+            if (!q5Answer) { allRequiredAnswered = false; } else {
+                answers.q5_alcohol = q5Answer.value;
+                if (q5Answer.value === 'yes') {
+                    const details = document.getElementById('q5_alcohol_details').value.trim();
+                    if (!details) { showMessage("Please provide details for Q5.", true); return; }
+                    answers.q5_alcohol_details = details;
+                }
+            }
+
+            // Q_unprescribed_substance: Have you consumed any substances that were NOT prescribed by any physicians today?
+            const qUnprescribedSubstanceAnswer = document.querySelector('input[name="q_unprescribed_substance"]:checked');
+            if (!qUnprescribedSubstanceAnswer) { allRequiredAnswered = false; } else {
+                answers.q_unprescribed_substance = qUnprescribedSubstanceAnswer.value;
+            }
+
+            // Q6: Do you have any metal in or around your head (above the collar)?
+            const q6Answer = document.querySelector('input[name="q6_metal_head"]:checked');
+            if (!q6Answer) { allRequiredAnswered = false; } else {
+                answers.q6_metal_head = q6Answer.value;
+                if (q6Answer.value === 'yes') {
+                    const details = document.getElementById('q6_metal_head_details').value.trim();
+                    if (!details) { showMessage("Please provide details for Q6.", true); return; }
+                    answers.q6_metal_head_details = details;
+                }
+            }
+            
+            if (!allRequiredAnswered) {
+                showMessage("Please answer all required questions before submitting.", true);
+                return;
+            }
+
+            try {
+                let tmsRefPath;
+                let tmsData = {
+                    fullName: tmsFullName,
+                    email: tmsEmail,
+                    phoneNumber: tmsPhone,
+                    answers: answers,
+                    submittedAt: new Date().toISOString()
+                };
+
+                if (currentUser) {
+                    // If logged in, save under user's specific path
+                    tmsRefPath = `tmsQuestionnaires/${currentUser.uid}`;
+                    tmsData.userId = currentUser.uid; // Add userId to data
+                    // If currentUser exists, their name/email/phone from profile is more authoritative
+                    // But for the form, we'll use what they typed if it differs.
+                } else {
+                    // If not logged in, save to a public path
+                    tmsRefPath = `publicTmsQuestionnaires`;
+                }
+
+                const newTmsRef = push(ref(database, tmsRefPath));
+                await set(newTmsRef, tmsData);
+                
+                console.log("Patient: TMS Questionnaire submitted successfully. Path:", newTmsRef.toString());
+                showMessage('TMS Daily Questionnaire submitted successfully!');
+                cancelTmsQuestionnaire();
+            } catch (error) {
+                console.error("Patient: Error submitting TMS Questionnaire:", error);
+                showMessage(`Error submitting TMS Questionnaire: ${error.message}`, true);
+            }
         }
-
-        let tmsData = {
-            fullName: tmsFullName,
-            email: patientEmailForSubmission,     // Saves "" if empty
-            phoneNumber: patientPhoneNumberForSubmission, // Saves "" if empty
-            answers: answers,
-            submittedAt: new Date().toISOString()
-        };
-
-        if (currentUserId) { // Only add userId if a user is logged in
-            tmsData.userId = currentUserId;
-        }
-
-        const newTmsRef = push(ref(database, tmsRefPath));
-        await set(newTmsRef, tmsData);
-
-        console.log("Patient: TMS Questionnaire submitted successfully. Path:", newTmsRef.toString());
-        showMessage('TMS Daily Questionnaire submitted successfully!');
-        cancelTmsQuestionnaire();
-    } catch (error) {
-        console.error("Patient: Error submitting TMS Questionnaire:", error);
-        showMessage(`Error submitting TMS Questionnaire: ${error.message}`, true);
-    }
-}
 
 
         // --- Admin-Specific Functionality ---
