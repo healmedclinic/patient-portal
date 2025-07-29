@@ -2412,95 +2412,102 @@
         }
 
         // Submit Public Mental Health Test (displays results, DOES save to Firebase for Admin)
-        async function submitPublicTest() {
-            const publicFullName = document.getElementById('publicTestFullName').value.trim(); // NEW: Get full name
-            if (!publicFullName) {
-                showMessage('Please enter your full name before submitting the test.', true);
-                return;
-            }
+async function submitPublicTest() {
+    const publicFullName = document.getElementById('publicTestFullName').value.trim(); // NEW: Get full name
+    if (!publicFullName) {
+        showMessage('Please enter your full name before submitting the test.', true);
+        return;
+    }
 
-            let score = 0;
-            const totalQuestions = currentTest.questions.length;
-            const answers = [];
+    let score = 0;
+    const totalQuestions = currentTest.questions.length;
+    const answers = [];
 
-            for (let i = 0; i < totalQuestions; i++) {
-                const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
-                if (!selectedOption) {
-                    showMessage(`Please answer question ${i + 1} before submitting.`, true);
-                    return;
-                }
-                const value = parseInt(selectedOption.value);
-                score += value;
-                answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
-            }
-
-            const breakdown = currentTest.getBreakdown(score, answers);
-            console.log("Public: Test submitted. Calculated Score:", score, "Breakdown:", breakdown);
-
-            try {
-                // Save public test results to Firebase (for Admin)
-                const newPublicTestResultRef = push(ref(database, 'publicMentalHealthTestSubmissions'));
-                await set(newPublicTestResultRef, {
-                    fullName: publicFullName, // NEW: Save full name
-                    testType: currentTest.title,
-                    score: score,
-                    breakdown: breakdown,
-                    answers: answers,
-                    submittedAt: new Date().toISOString()
-                });
-                console.log("Public: Test results saved to Firebase for admin review. Path:", newPublicTestResultRef.toString());
-                showMessage('Test submitted successfully! Your results are available for review by our staff.');
-            } catch (error) {
-                console.error("Public: Error submitting and saving public test:", error);
-                showMessage(`Error submitting test: ${error.message}`, true);
-            }
-
-            const resultDisplayDiv = document.getElementById('publicTestResultDisplay');
-            resultDisplayDiv.innerHTML = `
-                <h3>Your Test Results for ${currentTest.title}</h3>
-                <p><strong>Score:</strong> ${score}</p>
-                <p><strong>Result:</strong> ${breakdown}</p>
-                <p style="margin-top: 15px; font-size: 0.9em;">These results have been recorded for staff review. For a professional evaluation or to track your progress, please create an account.</p>
-                <button class="btn" id="publicTestBackToSelectionBtn">Back to Test Selection</button>
-                <button class="btn btn-secondary" id="publicTestGoToMainBtn">Go to Main Screen</button>
-            `;
-            resultDisplayDiv.classList.remove('hidden');
-            document.getElementById('testQuestions').innerHTML = ''; // Clear questions
-            document.getElementById('publicTestNameField').classList.add('hidden'); // NEW: Hide name field after submission
-            document.getElementById('submitTestBtn').classList.add('hidden'); // Hide submit
-            document.getElementById('cancelTestBtn').classList.add('hidden'); // Hide cancel
-
-            document.getElementById('publicTestBackToSelectionBtn').onclick = () => {
-                resultDisplayDiv.classList.add('hidden');
-                document.getElementById('testInterface').classList.add('hidden');
-                document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
-                document.getElementById('cancelTestBtn').classList.remove('hidden');
-                showPublicMentalHealthTestSelection(); // Go back to public test selection
-            };
-
-            document.getElementById('publicTestGoToMainBtn').onclick = () => {
-                resultDisplayDiv.classList.add('hidden');
-                document.getElementById('testInterface').classList.add('hidden');
-                document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
-                document.getElementById('cancelTestBtn').classList.remove('hidden');
-                showLoginScreenLayout(); // Go back to main login/public access screen
-                showLogin();
-            };
-            console.log("Public: Test results displayed on screen.");
+    for (let i = 0; i < totalQuestions; i++) {
+        const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!selectedOption) {
+            showMessage(`Please answer question ${i + 1} before submitting.`, true);
+            return;
         }
+        const value = parseInt(selectedOption.value);
+        score += value;
+        answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
+    }
 
-        // Cancel Public Mental Health Test
-        function cancelPublicTest() {
-            console.log("Public: Test cancelled.");
-            currentTest = null;
-            document.getElementById('testInterface').classList.add('hidden');
-            document.getElementById('testInterface').classList.remove('public-test-interface');
-            document.getElementById('testQuestions').innerHTML = '';
-            document.getElementById('publicTestNameField').classList.add('hidden'); // NEW: Hide name field on cancel
-            document.getElementById('publicTestFullName').value = ''; // NEW: Clear name field on cancel
-            document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Ensure hidden
-            showPublicMentalHealthTestSelection(); // Return to public test selection
-        }
+    const breakdown = currentTest.getBreakdown(score, answers);
+    console.log("Public: Test submitted. Calculated Score:", score, "Breakdown:", breakdown);
+
+    try {
+        // Save public test results to Firebase (for Admin)
+        const newPublicTestResultRef = push(ref(database, 'publicMentalHealthTestSubmissions'));
+        await set(newPublicTestResultRef, {
+            fullName: publicFullName, // NEW: Save full name
+            testType: currentTest.title,
+            score: score,
+            breakdown: breakdown,
+            answers: answers,
+            submittedAt: new Date().toISOString()
+        });
+        console.log("Public: Test results saved to Firebase for admin review. Path:", newPublicTestResultRef.toString());
+        showMessage('Test submitted successfully! Your results are available for review by our staff.');
+    } catch (error) {
+        console.error("Public: Error submitting and saving public test:", error);
+        showMessage(`Error submitting test: ${error.message}`, true);
+    }
+
+    const resultDisplayDiv = document.getElementById('publicTestResultDisplay');
+    resultDisplayDiv.innerHTML = `
+        <h3>Your Test Results for ${currentTest.title}</h3>
+        <p><strong>Score:</strong> ${score}</p>
+        <p><strong>Result:</strong> ${breakdown}</p>
+        <p style="margin-top: 15px; font-size: 0.9em;">These results have been recorded for staff review. For a professional evaluation or to track your progress, please create an account.</p>
+        <button class="btn" id="publicTestBackToSelectionBtn">Back to Test Selection</button>
+        <button class="btn btn-secondary" id="publicTestGoToMainBtn">Go to Main Screen</button>
+        <button class="btn btn-primary" id="publicTestReturnToPortalBtn">Return to Patient Portal</button> // NEW BUTTON HERE
+    `;
+    resultDisplayDiv.classList.remove('hidden');
+    document.getElementById('testQuestions').innerHTML = ''; // Clear questions
+    document.getElementById('publicTestNameField').classList.add('hidden'); // NEW: Hide name field after submission
+    document.getElementById('submitTestBtn').classList.add('hidden'); // Hide submit
+    document.getElementById('cancelTestBtn').classList.add('hidden'); // Hide cancel
+
+    document.getElementById('publicTestBackToSelectionBtn').onclick = () => {
+        resultDisplayDiv.classList.add('hidden');
+        document.getElementById('testInterface').classList.add('hidden');
+        document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
+        document.getElementById('cancelTestBtn').classList.remove('hidden');
+        showPublicMentalHealthTestSelection(); // Go back to public test selection
+    };
+
+    document.getElementById('publicTestGoToMainBtn').onclick = () => {
+        resultDisplayDiv.classList.add('hidden');
+        document.getElementById('testInterface').classList.add('hidden');
+        document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
+        document.getElementById('cancelTestBtn').classList.remove('hidden');
+        showLoginScreenLayout(); // Go back to main login/public access screen
+        showLogin();
+    };
+
+    // NEW ONCLICK HANDLER FOR THE NEW BUTTON
+    document.getElementById('publicTestReturnToPortalBtn').onclick = () => {
+        window.location.href = 'https://healmedclinic.github.io/patient-portal/';
+    };
+
+    console.log("Public: Test results displayed on screen.");
+}
+
+// Cancel Public Mental Health Test
+function cancelPublicTest() {
+    console.log("Public: Test cancelled.");
+    currentTest = null;
+    document.getElementById('testInterface').classList.add('hidden');
+    document.getElementById('testInterface').classList.remove('public-test-interface');
+    document.getElementById('testQuestions').innerHTML = '';
+    document.getElementById('publicTestNameField').classList.add('hidden'); // NEW: Hide name field on cancel
+    document.getElementById('publicTestFullName').value = ''; // NEW: Clear name field on cancel
+    document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Ensure hidden
+    showPublicMentalHealthTestSelection(); // Return to public test selection
+}
 
 
         // --- TMS Daily Questionnaire Functions (Patient Side / Public Access) ---
