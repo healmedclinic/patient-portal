@@ -2411,7 +2411,7 @@
             console.log("DEBUG: Test interface displayed for:", testType);
         }
 
-        // Submit Public Mental Health Test (displays results, DOES save to Firebase for Admin)
+     // Submit Public Mental Health Test (displays results, DOES save to Firebase for Admin)
 async function submitPublicTest() {
     const publicFullName = document.getElementById('publicTestFullName').value.trim(); // NEW: Get full name
     if (!publicFullName) {
@@ -2449,7 +2449,6 @@ async function submitPublicTest() {
             submittedAt: new Date().toISOString()
         });
         console.log("Public: Test results saved to Firebase for admin review. Path:", newPublicTestResultRef.toString());
-        showMessage('Test submitted successfully! Your results are available for review by our staff.');
     } catch (error) {
         console.error("Public: Error submitting and saving public test:", error);
         showMessage(`Error submitting test: ${error.message}`, true);
@@ -2462,8 +2461,7 @@ async function submitPublicTest() {
         <p><strong>Result:</strong> ${breakdown}</p>
         <p style="margin-top: 15px; font-size: 0.9em;">These results have been recorded for staff review. For a professional evaluation or to track your progress, please create an account.</p>
         <button class="btn" id="publicTestBackToSelectionBtn">Back to Test Selection</button>
-        <button class="btn btn-secondary" id="publicTestGoToMainBtn">Go to Main Screen</button>
-        <button class="btn btn-primary" id="publicTestReturnToPortalBtn">Return to Patient Portal</button> // NEW BUTTON HERE
+        <button class="btn btn-primary" id="publicTestReturnToPortalBtn">Return to Patient Portal</button> 
     `;
     resultDisplayDiv.classList.remove('hidden');
     document.getElementById('testQuestions').innerHTML = ''; // Clear questions
@@ -2477,15 +2475,6 @@ async function submitPublicTest() {
         document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
         document.getElementById('cancelTestBtn').classList.remove('hidden');
         showPublicMentalHealthTestSelection(); // Go back to public test selection
-    };
-
-    document.getElementById('publicTestGoToMainBtn').onclick = () => {
-        resultDisplayDiv.classList.add('hidden');
-        document.getElementById('testInterface').classList.add('hidden');
-        document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
-        document.getElementById('cancelTestBtn').classList.remove('hidden');
-        showLoginScreenLayout(); // Go back to main login/public access screen
-        showLogin();
     };
 
     // NEW ONCLICK HANDLER FOR THE NEW BUTTON
