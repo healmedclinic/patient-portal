@@ -2134,6 +2134,10 @@
                     () => hideBookingForm() // On OK/Confirm
                 );
                 hideBookingForm();
+
+            } catch (error) {
+                showMessage(`Error booking appointment: ${error.message}`, true);
+            }
         }
 
         function loadAppointments() {
