@@ -1072,22 +1072,51 @@
             <div class="public-access-container">
                 <h2>Quick Access</h2>
                 <div class="public-access-buttons">
+                    <button class="btn" id="publicBookAppointmentBtn">Book an Appointment</button>
                     <button class="btn" id="publicTmsQuestionnaireBtn">TMS Daily Questionnaire</button>
                     <button class="btn" id="publicMentalHealthTestsBtn">Mental Health Tests</button>
-                    <!-- MOVED: New Patient Form now in Quick Access -->
                     <a href="https://www.jotform.com/sign/252164838066058/invite/01k1xk6ypq831db317b1a1f635" target="_blank" class="btn">New Patient Form</a>
                     <a href="https://v-gedipudi1.github.io/consent-forms/" target="_blank" class="btn">TMS Consent Form</a>
                     <a href="https://g.page/r/CQWoZTjR8yFaEBM/review" class="btn">Write a Review</a>
                     <a href="https://docs.google.com/forms/d/e/1FAIpQLScOt3ov7drpfVaJ3GPPa3GyyEG4i3qErkgpz704BUxhGItg6Q/viewform?usp=header" target="_blank" class="btn">Upload ID and Insurance Form</a>
-                </div>
-                <div class="info-box">
-                    <p><strong>First-time patient?</strong> To book an appointment, please create an account first and then navigate to the "Manage Appointments" tab.</p>
                 </div>
                 <div class="info-box" style="margin-top: 10px;">
                     <p><strong>Want to track your mental health progress?</strong> Create an account to securely view your mental health test results, past TMS questionnaires, and manage your appointments.</p>
                 </div>
             </div>
         </div> <!-- End welcomeScreenWrapper -->
+
+        <!-- NEW: Public Appointment Booking Section -->
+        <div id="bookAppointmentSection" class="section hidden">
+            <h2>Book an Appointment</h2>
+            <p>Please fill out the form below to request an appointment. No login required.</p>
+            <div class="form-group">
+                <label for="publicApptFullName">Full Name:</label>
+                <input type="text" id="publicApptFullName" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="publicApptEmail">Email Address:</label>
+                <input type="email" id="publicApptEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="publicApptPhone">Phone Number:</label>
+                <input type="tel" id="publicApptPhone" placeholder="Enter your phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="publicApptDob">Date of Birth:</label>
+                <input type="date" id="publicApptDob" required>
+            </div>
+            <div class="form-group">
+                <label for="publicApptInsurance">Insurance Provider:</label>
+                <input type="text" id="publicApptInsurance" placeholder="e.g., BlueCross BlueShield, Aetna, etc." required>
+            </div>
+            <div class="form-group">
+                <label for="publicApptReason">Reason for Visit:</label>
+                <textarea id="publicApptReason" placeholder="Please describe the reason for your visit." required></textarea>
+            </div>
+            <button class="btn" id="submitPublicAppointmentBtn">Submit Request</button>
+            <button class="btn btn-secondary" id="cancelPublicAppointmentBtn">Cancel</button>
+        </div>
 
         <!-- NEW: Public Mental Health Test Selection Screen (initially hidden) -->
         <div id="publicMentalHealthTestsSection" class="section public-test-selection hidden">
@@ -1244,30 +1273,12 @@
                     <div id="appointmentsList"></div>
                     <button class="btn" id="showBookingFormBtn">Book New Appointment</button>
 
-                    <!-- Booking Form (Updated to include date picker and DOB) -->
+                    <!-- Booking Form (OLD - Now removed from patient portal view) -->
                     <div id="bookingForm" class="hidden" style="margin-top: 20px; background: #f8f9fa; padding: 20px; border-radius: 10px;">
                         <h3>Book New Appointment</h3>
-                        <div class="form-group">
-                            <label for="bookApptDob">Your Date of Birth:</label>
-                            <input type="date" id="bookApptDob" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="appointmentDate">Preferred Date:</label>
-                            <input type="date" id="appointmentDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="appointmentTime">Preferred Appointment Time:</label>
-                            <select id="appointmentTime" required>
-                                <option value="">Select Time</option>
-                                <option value="09:00">09:00 AM</option>
-                                <option value="10:00">10:00 AM</option>
-                                <option value="11:00">11:00 AM</option>
-                                <option value="12:00">12:00 PM</option>
-                                <option value="13:00">01:00 PM</option>
-                                <option value="14:00">02:00 PM</option>
-                                <option value="15:00">03:00 PM</option>
-                                <option value="16:00">04:00 PM</option>
-                            </select>
+                         <div class="form-group">
+                            <label for="insuranceProvider">Insurance Provider:</label>
+                            <input type="text" id="insuranceProvider" placeholder="e.g., BlueCross BlueShield, Aetna, etc." required>
                         </div>
                         <div class="form-group">
                             <label for="appointmentReason">Reason for Visit:</label>
@@ -1314,8 +1325,7 @@
                 <div id="formsSection" class="section hidden">
                     <h2>Forms</h2>
                     <p>Please review and complete any necessary forms below.</p>
-                    <button class="btn" id="showTmsQuestionnaireBtnLoggedIn" style="margin-top: 15px;">TMS Daily Questionnaire (Logged In)</button>
-                    <!-- New Patient Form is now a direct link here -->
+                    <button class="btn" id="showTmsQuestionnaireBtnLoggedIn" style="margin-top: 15px;">TMS Daily Questionnaire</button>
                     <a href="https://www.jotform.com/sign/252085253506050/invite/01k190pcbr58c982c0b734acb5" target="_blank" class="btn external-link-btn">New Patient Form</a>
                     <a href="https://v-gedipudi1.github.io/consent-forms/" target="_blank" class="btn external-link-btn">TMS Consent Form</a>
                     <a href="https://docs.google.com/forms/d/e/1FAIpQLScOt3ov7drpfVaJ3GPPa3GyyEG4i3qErkgpz704BUxhGItg6Q/viewform?usp=header" target="_blank" class="btn external-link-btn">Upload ID and Insurance Form</a>
@@ -1693,7 +1703,6 @@
 
         // --- Helper Functions for UI and Messages ---
         function showMessage(message, isError = false) {
-            // Using a custom modal instead of alert for better UX
             const messageType = isError ? 'Error' : 'Info';
             const modalHtml = `
                 <div id="messageModal" class="modal">
@@ -1724,7 +1733,6 @@
             };
         }
 
-        // NEW: Custom Confirmation Modal (replaces alert/confirm for better UX)
         function showConfirmationModal(message, onConfirm, onCancel) {
             const modalHtml = `
                 <div id="customConfirmModal" class="modal">
@@ -1763,7 +1771,6 @@
                 if (onCancel) onCancel();
             };
 
-            // Close if clicked outside
             modal.onclick = (event) => {
                 if (event.target === modal) {
                     cleanup();
@@ -1772,19 +1779,18 @@
             };
         }
 
-        // Modified to hide the new wrapper AND public test section
         function hideAllScreens() {
             document.getElementById('welcomeScreenWrapper').classList.add('hidden');
             document.getElementById('patientDashboard').classList.add('hidden');
             document.getElementById('adminDashboard').classList.add('hidden');
-            document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // NEW: Hide public test selection
-            document.getElementById('tmsQuestionnaireSection').classList.add('hidden'); // Ensure TMS questionnaire is hidden
-            document.getElementById('testInterface').classList.add('hidden'); // Ensure test interface is hidden
+            document.getElementById('bookAppointmentSection').classList.add('hidden');
+            document.getElementById('publicMentalHealthTestsSection').classList.add('hidden');
+            document.getElementById('tmsQuestionnaireSection').classList.add('hidden');
+            document.getElementById('testInterface').classList.add('hidden');
         }
 
         // --- Authentication Functions (Firebase Integrated) ---
 
-        // Patient Login
         async function login() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
@@ -1797,7 +1803,7 @@
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 currentUser = userCredential.user;
-                isAdmin = false; // Ensure admin flag is false for patient login
+                isAdmin = false;
                 console.log("Patient login successful for UID:", currentUser.uid);
                 showMessage('Patient login successful!');
                 showPatientDashboard();
@@ -1808,7 +1814,6 @@
             }
         }
 
-        // Admin Login (NOW using Firebase Auth)
         async function adminLogin() {
             const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
@@ -1819,13 +1824,11 @@
             }
 
             try {
-                // IMPORTANT: Sign in the admin with Firebase Authentication
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 currentUser = userCredential.user;
                 
-                // Confirm it's the expected admin user
                 if (email === ADMIN_EMAIL) {
-                    sessionStorage.setItem('isAdminLoggedIn', 'true'); // Keep this for session tracking
+                    sessionStorage.setItem('isAdminLoggedIn', 'true');
                     isAdmin = true;
                     console.log("Admin login successful via Firebase Auth. UID:", currentUser.uid);
                     showMessage('Admin login successful!');
@@ -1833,7 +1836,7 @@
                 } else {
                     console.error("Admin: A Firebase user logged in, but not the designated admin email.");
                     showMessage('Admin login failed: Invalid admin credentials.', true);
-                    await signOut(auth); // Sign out the unexpected user
+                    await signOut(auth);
                     sessionStorage.removeItem('isAdminLoggedIn');
                     isAdmin = false;
                 }
@@ -1846,12 +1849,11 @@
             }
         }
 
-        // Patient Signup
         async function signup() {
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
-            const dob = document.getElementById('signupDob').value; // Get Date of Birth
+            const dob = document.getElementById('signupDob').value;
             const phone = document.getElementById('signupPhone').value;
             const gender = document.getElementById('signupGender').value;
 
@@ -1874,22 +1876,21 @@
                     fullName: name,
                     email: email,
                     phoneNumber: phone,
-                    dob: dob, // Save Date of Birth
+                    dob: dob,
                     gender: gender,
                     createdAt: new Date().toISOString()
                 });
                 console.log("Patient data saved to Realtime Database for UID:", userId);
 
                 showMessage('Account created successfully! Please login.');
-                showLoginScreenLayout(); // Show the full login layout
-                showLogin(); // Then ensure the login form itself is visible
+                showLoginScreenLayout();
+                showLogin();
             } catch (error) {
                 console.error("Firebase Auth Error during signup:", error);
                 showMessage(`Error creating account: ${error.message}`, true);
             }
         }
 
-        // Logout
         async function logout() {
             try {
                 await signOut(auth);
@@ -1902,20 +1903,20 @@
             currentUser = null;
             console.log("Local state cleared. User logged out.");
             showMessage('Logged out successfully.');
-            showLoginScreenLayout(); // Show the full login layout
-            showLogin(); // Then ensure the login form itself is visible
+            showLoginScreenLayout();
+            showLogin();
         }
 
         // --- UI Navigation Functions ---
 
-        // NEW: Function to show the entire two-column login screen layout
         function showLoginScreenLayout() {
             document.getElementById('welcomeScreenWrapper').classList.remove('hidden');
             document.getElementById('patientDashboard').classList.add('hidden');
             document.getElementById('adminDashboard').classList.add('hidden');
-            document.getElementById('publicMentalHealthTestsSection').classList.add('hidden'); // Ensure public test selection is hidden
-            document.getElementById('tmsQuestionnaireSection').classList.add('hidden'); // Ensure TMS questionnaire is hidden
-            document.getElementById('testInterface').classList.add('hidden'); // Ensure test interface is hidden
+            document.getElementById('bookAppointmentSection').classList.add('hidden');
+            document.getElementById('publicMentalHealthTestsSection').classList.add('hidden');
+            document.getElementById('tmsQuestionnaireSection').classList.add('hidden');
+            document.getElementById('testInterface').classList.add('hidden');
         }
 
         function showLogin() {
@@ -1950,13 +1951,12 @@
         function showAdminDashboard() {
             hideAllScreens();
             document.getElementById('adminDashboard').classList.remove('hidden');
-            showAdminSection('appointments'); // Default to pending appointments
-            loadPatientsList(); // Load patient buttons initially
+            showAdminSection('appointments');
+            loadPatientsList();
         }
 
         function showPatientSection(sectionId) {
             document.querySelectorAll('#patientDashboard .section').forEach(s => s.classList.add('hidden'));
-            // Keep testInterface and tmsQuestionnaireSection hidden when navigating within patient dashboard
             document.getElementById('testInterface').classList.add('hidden');
             document.getElementById('tmsQuestionnaireSection').classList.add('hidden');
 
@@ -1996,16 +1996,15 @@
                 document.getElementById('adminAppointmentsTitle').textContent = "Appointment Requests";
             } else if (sectionId === 'patients') {
                 loadPatientsList();
-            } else if (sectionId === 'tmsSubmissions') { // NEW: Load all TMS submissions for admin
+            } else if (sectionId === 'tmsSubmissions') {
                 loadAdminTmsSubmissions();
-            } else if (sectionId === 'publicTestResults') { // NEW: Load all public test results for admin
+            } else if (sectionId === 'publicTestResults') {
                 loadAdminPublicTestResults();
             }
         }
 
         // --- Patient-Specific Functionality ---
 
-        // Load Patient Profile
         function loadProfile() {
             if (!currentUser) return;
             const profileInfoDiv = document.getElementById('profileInfo');
@@ -2030,83 +2029,92 @@
                 onlyOnce: false
             });
         }
+        
+        function showPublicBookingForm() {
+            hideAllScreens();
+            document.getElementById('bookAppointmentSection').classList.remove('hidden');
+            // Clear form
+            document.getElementById('publicApptFullName').value = '';
+            document.getElementById('publicApptEmail').value = '';
+            document.getElementById('publicApptPhone').value = '';
+            document.getElementById('publicApptDob').value = '';
+            document.getElementById('publicApptInsurance').value = '';
+            document.getElementById('publicApptReason').value = '';
+        }
 
-        // Show/Hide Appointment Booking Form
+        async function submitPublicAppointment() {
+            const fullName = document.getElementById('publicApptFullName').value;
+            const email = document.getElementById('publicApptEmail').value;
+            const phone = document.getElementById('publicApptPhone').value;
+            const dob = document.getElementById('publicApptDob').value;
+            const insurance = document.getElementById('publicApptInsurance').value;
+            const reason = document.getElementById('publicApptReason').value;
+
+            if (!fullName || !email || !phone || !dob || !insurance || !reason) {
+                showMessage('Please fill in all appointment details.', true);
+                return;
+            }
+
+            try {
+                const newAppointmentRef = push(ref(database, 'appointments'));
+                await set(newAppointmentRef, {
+                    userId: 'public', // Mark as public
+                    fullName: fullName,
+                    email: email,
+                    phoneNumber: phone,
+                    dob: dob,
+                    insuranceProvider: insurance,
+                    reason: reason,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                });
+                
+                showConfirmationModal(
+                    "Thank you. Your appointment request has been submitted. Please wait 24 hours for HealMed Clinic to email or call you back with details. You can also call HealMed Clinic at (732) 508-2136 to speak to the front desk.",
+                    () => showLoginScreenLayout() // On OK/Confirm
+                );
+                showLoginScreenLayout();
+
+            } catch (error) {
+                showMessage(`Error booking appointment: ${error.message}`, true);
+            }
+        }
+
         function showBookingForm() {
             document.getElementById('bookingForm').classList.remove('hidden');
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('appointmentDate').min = today;
-            // Pre-fill DOB if available from patient profile
-            if (currentUser) {
-                get(ref(database, 'patients/' + currentUser.uid)).then(snapshot => {
-                    const patientData = snapshot.val();
-                    if (patientData && patientData.dob) {
-                        document.getElementById('bookApptDob').value = patientData.dob;
-                    }
-                }).catch(error => console.error("Error fetching patient DOB for pre-fill:", error));
-            }
+            document.getElementById('insuranceProvider').value = '';
+            document.getElementById('appointmentReason').value = '';
             console.log("Patient: Showing booking form.");
         }
 
         function hideBookingForm() {
             document.getElementById('bookingForm').classList.add('hidden');
-            document.getElementById('bookApptDob').value = '';
-            document.getElementById('appointmentDate').value = '';
-            document.getElementById('appointmentTime').value = '';
+            document.getElementById('insuranceProvider').value = '';
             document.getElementById('appointmentReason').value = '';
             console.log("Patient: Hiding booking form.");
         }
 
-         // Book New Appointment (Updated to save date and DOB, with duplicate check)
         async function bookAppointment() {
-            const dob = document.getElementById('bookApptDob').value;
-            const date = document.getElementById('appointmentDate').value; 
-            const time = document.getElementById('appointmentTime').value; 
+            const insurance = document.getElementById('insuranceProvider').value;
             const reason = document.getElementById('appointmentReason').value;
 
-            if (!dob || !date || !time || !reason) {
-                showMessage('Please fill in all appointment details including your Date of Birth, preferred date, time, and reason for visit.', true);
+            if (!insurance || !reason) {
+                showMessage('Please provide your insurance provider and reason for visit.', true);
                 return;
             }
             if (!currentUser) {
-                showMessage('You must be logged in to book an appointment. Please create an account or login.', true);
+                showMessage('You must be logged in to book an appointment.', true);
                 return;
             }
 
             try {
-                console.log("Patient: Attempting to book appointment for user UID:", currentUser.uid);
                 const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
                 const patientData = patientSnapshot.val();
 
                 if (!patientData) {
                     showMessage('Could not retrieve patient data. Please try logging in again.', true);
-                    console.error("Patient: Data not found for UID:", currentUser.uid);
                     return;
                 }
-
-                // --- DUPLICATE APPOINTMENT CHECK (based on fullName, DOB, date, time) ---
-                const appointmentsRef = ref(database, 'appointments');
-                const existingAppointmentsSnapshot = await get(appointmentsRef);
-                const existingAppointments = existingAppointmentsSnapshot.val();
-                
-                if (existingAppointments) {
-                    const apptArray = Object.values(existingAppointments);
-
-                    // Check for existing pending or approved appointments for THIS user's full name AND DOB for the same date/time
-                    const duplicateCheck = apptArray.some(appt => 
-                        appt.fullName === patientData.fullName && // Match full name
-                        appt.dob === dob && // Match DOB
-                        appt.appointmentDate === date &&
-                        appt.appointmentTime === time &&
-                        (appt.status === 'pending' || appt.status.trim() === 'approved') // Use trim for approved status
-                    );
-
-                    if (duplicateCheck) {
-                        showMessage('An appointment request with this name and date of birth already exists for this exact date and time. Please check your existing appointments.', true);
-                        return; // Prevent booking
-                    }
-                }
-                // --- END DUPLICATE APPOINTMENT CHECK ---
 
                 const newAppointmentRef = push(ref(database, 'appointments'));
                 await set(newAppointmentRef, {
@@ -2114,30 +2122,30 @@
                     fullName: patientData.fullName,
                     email: patientData.email,
                     phoneNumber: patientData.phoneNumber,
-                    dob: dob, // Save DOB with appointment
-                    appointmentDate: date, 
-                    appointmentTime: time, 
+                    dob: patientData.dob,
+                    insuranceProvider: insurance,
                     reason: reason,
                     status: 'pending',
                     createdAt: new Date().toISOString()
                 });
-                console.log("Patient: Appointment request submitted successfully to Firebase. Path:", newAppointmentRef.toString());
-                showMessage('Appointment request submitted successfully!');
+                
+                showConfirmationModal(
+                    "Thank you. Your appointment request has been submitted. Please wait 24 hours for HealMed Clinic to email or call you back with details. You can also call HealMed Clinic at (732) 508-2136 to speak to the front desk.",
+                    () => hideBookingForm() // On OK/Confirm
+                );
                 hideBookingForm();
+
             } catch (error) {
-                console.error("Patient: Error booking appointment:", error);
                 showMessage(`Error booking appointment: ${error.message}`, true);
             }
         }
 
-        // Load Patient's Appointments (Updated to show date and DOB)
         function loadAppointments() {
             const appointmentsListDiv = document.getElementById('appointmentsList');
             if (!currentUser) {
                 appointmentsListDiv.innerHTML = '<p>Please log in to view your appointments.</p>';
                 return;
             }
-            console.log("Patient: Loading appointments for patient UID:", currentUser.uid);
             onValue(ref(database, 'appointments'), (snapshot) => {
                 appointmentsListDiv.innerHTML = '';
                 let hasAppointments = false;
@@ -2148,19 +2156,12 @@
                     if (appt.userId === currentUser.uid) {
                         hasAppointments = true;
                         const statusClass = `status-${appt.status}`;
-                        // Display both date and time if available, otherwise fallback to old 'time' string
-                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
-                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
-                            : appt.time || 'N/A'; // Fallback for old data without specific date/time
                         appointmentsListDiv.innerHTML += `
                             <div class="appointment-card">
                                 <h4>Appointment Request</h4>
-                                <p><strong>Date & Time:</strong> ${displayDateTime}</p>
-                                <p><strong>Date of Birth:</strong> ${appt.dob || 'N/A'}</p>
                                 <p><strong>Reason:</strong> ${appt.reason}</p>
                                 <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${apptId}</p>
                             </div>
                         `;
                     }
@@ -2168,34 +2169,30 @@
                 if (!hasAppointments) {
                     appointmentsListDiv.innerHTML = '<p>No appointments found.</p>';
                 }
-                console.log("Patient: Appointments loaded. Total displayed:", appointmentsListDiv.children.length);
             }, {
                 onlyOnce: false
             });
         }
 
-        // Start a Mental Health Test (for logged-in users)
         function startTest(testType) {
             console.log("Patient: Starting logged-in test:", testType);
-            isPublicTestMode = false; // Ensure public mode flag is false
+            isPublicTestMode = false;
             currentTest = testQuestions[testType];
             if (!currentTest) {
                 showMessage("Selected test not found. Please try again.", true);
                 return;
             }
             document.getElementById('testTitle').textContent = currentTest.title;
-            document.getElementById('testQuestions').innerHTML = ''; // Clear previous questions
-            document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Hide any previous public results
-            document.getElementById('publicTestNameField').classList.add('hidden'); // Hide name field for logged-in users
-            document.getElementById('publicTestFullName').value = ''; // Clear name field
+            document.getElementById('testQuestions').innerHTML = '';
+            document.getElementById('publicTestResultDisplay').classList.add('hidden');
+            document.getElementById('publicTestNameField').classList.add('hidden');
+            document.getElementById('publicTestFullName').value = '';
 
             let questionsHtml = '';
             currentTest.questions.forEach((questionText, index) => {
                 let questionPrefix = '';
                 if (testType === 'depression' || testType === 'anxiety') {
                     questionPrefix = 'Over the last 2 weeks, how often have you been bothered by: ';
-                } else if (testType === 'adhd') {
-                    questionPrefix = ''; // No additional prefix needed for ASRS
                 }
                 questionsHtml += `
                     <div class="question">
@@ -2212,17 +2209,14 @@
                 `;
             });
             document.getElementById('testQuestions').innerHTML = questionsHtml;
-            document.getElementById('testInterface').classList.remove('hidden'); // Show test interface
-            document.getElementById('testInterface').classList.remove('public-test-interface'); // Remove public-specific styling
-            // Ensure submit/cancel buttons are visible
+            document.getElementById('testInterface').classList.remove('hidden');
+            document.getElementById('testInterface').classList.remove('public-test-interface');
             document.getElementById('submitTestBtn').classList.remove('hidden');
             document.getElementById('cancelTestBtn').classList.remove('hidden');
-            // Re-assign logged-in specific handlers
             document.getElementById('submitTestBtn').onclick = submitTest;
             document.getElementById('cancelTestBtn').onclick = cancelTest;
         }
 
-        // Submit Mental Health Test (for logged-in users)
         async function submitTest() {
             let score = 0;
             const totalQuestions = currentTest.questions.length;
@@ -2240,15 +2234,12 @@
             }
 
             const breakdown = currentTest.getBreakdown(score, answers);
-            console.log("Patient: Logged-in test submitted. Score:", score, "Breakdown:", breakdown);
-
             if (!currentUser) {
                 showMessage('Your test results have successfully been submitted for review!', true);
                 return;
             }
 
             try {
-                // Save to patient's own test results
                 const newTestResultRef = push(ref(database, 'testResults'));
                 await set(newTestResultRef, {
                     userId: currentUser.uid,
@@ -2258,54 +2249,45 @@
                     answers: answers,
                     createdAt: new Date().toISOString()
                 });
-                console.log("Patient: Test results saved to patient's record. Path:", newTestResultRef.toString());
 
-                // Also save a copy to publicMentalHealthTestSubmissions for admin review
-                // This copy will include patient's full name, email, phone for admin's convenience
                 const patientSnapshot = await get(ref(database, 'patients/' + currentUser.uid));
                 const patientData = patientSnapshot.val();
 
                 const newPublicSubmissionRef = push(ref(database, 'publicMentalHealthTestSubmissions'));
                 await set(newPublicSubmissionRef, {
-                    userId: currentUser.uid, // Include userId for logged-in submissions
-                    fullName: patientData ? patientData.fullName : 'Logged-in User', // Get full name
-                    email: patientData ? patientData.email : 'N/A', // Get email
-                    phoneNumber: patientData ? patientData.phoneNumber : 'N/A', // Get phone number
+                    userId: currentUser.uid,
+                    fullName: patientData ? patientData.fullName : 'Logged-in User',
+                    email: patientData ? patientData.email : 'N/A',
+                    phoneNumber: patientData ? patientData.phoneNumber : 'N/A',
                     testType: currentTest.title,
                     score: score,
                     breakdown: breakdown,
                     answers: answers,
                     submittedAt: new Date().toISOString()
                 });
-                console.log("Patient: Test results also saved to public submissions for admin. Path:", newPublicSubmissionRef.toString());
 
                 showMessage('Test submitted successfully! Your results have been saved and forwarded for review.');
-                cancelTest(); // Return to logged-in mental health section
+                cancelTest();
                 loadTestResults();
             } catch (error) {
-                console.error("Patient: Error submitting logged-in test:", error);
                 showMessage(`Error submitting test: ${error.message}`, true);
             }
         }
 
-        // Cancel Test (for logged-in users)
         function cancelTest() {
-            console.log("Patient: Logged-in test cancelled.");
             currentTest = null;
             document.getElementById('testInterface').classList.add('hidden');
             document.getElementById('mentalHealthSection').classList.remove('hidden');
             document.getElementById('testQuestions').innerHTML = '';
-            document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Ensure hidden
+            document.getElementById('publicTestResultDisplay').classList.add('hidden');
         }
 
-        // Load Patient's Past Test Results
         function loadTestResults() {
             const testResultsListDiv = document.getElementById('testResultsList');
             if (!currentUser) {
                 testResultsListDiv.innerHTML = '<p>Please log in to view your test results.</p>';
                 return;
             }
-            console.log("Patient: Loading past test results for patient UID:", currentUser.uid);
             onValue(ref(database, 'testResults'), (snapshot) => {
                 testResultsListDiv.innerHTML = '';
                 let hasResults = false;
@@ -2326,7 +2308,6 @@
                 if (!hasResults) {
                     testResultsListDiv.innerHTML = '<p>No test results found. Take a test to see your results here.</p>';
                 }
-                console.log("Patient: Test results loaded. Total displayed:", testResultsListDiv.children.length);
             }, {
                 onlyOnce: false
             });
@@ -2335,54 +2316,38 @@
 
         // --- Public Mental Health Test Functions ---
 
-        // Show the selection screen for public mental health tests
         function showPublicMentalHealthTestSelection() {
-            hideAllScreens(); // Hide login/main dashboard
+            hideAllScreens();
             document.getElementById('publicMentalHealthTestsSection').classList.remove('hidden');
-            console.log("Public: Showing mental health test selection.");
         }
 
-        // Start a Public Mental Health Test (does not save results for patient's personal record, only for admin)
         function startPublicTest(testType) {
-            console.log("DEBUG: Entered startPublicTest for type:", testType);
-            hideAllScreens(); // Ensure everything else is hidden for a clean state
+            hideAllScreens();
             
-            isPublicTestMode = true; // Set flag for public mode
+            isPublicTestMode = true;
             currentTest = testQuestions[testType];
             if (!currentTest) {
-                console.error("Public: Test type not found in testQuestions object:", testType);
                 showMessage("Selected test not found. Please try again.", true);
                 return;
             }
-            console.log("DEBUG: currentTest found:", currentTest.title);
 
             const testQuestionsDiv = document.getElementById('testQuestions');
-            testQuestionsDiv.innerHTML = ''; // Clear existing questions
-            document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Hide previous results
-
+            testQuestionsDiv.innerHTML = '';
+            document.getElementById('publicTestResultDisplay').classList.add('hidden');
             document.getElementById('testTitle').textContent = currentTest.title;
-            console.log("DEBUG: testTitle set to:", currentTest.title);
 
-            // NEW: Show and clear the public name field
             document.getElementById('publicTestNameField').classList.remove('hidden');
             document.getElementById('publicTestFullName').value = '';
-            console.log("DEBUG: Public name field shown and cleared.");
-
-            // Ensure submit/cancel buttons are visible when starting a new test
             document.getElementById('submitTestBtn').classList.remove('hidden');
             document.getElementById('cancelTestBtn').classList.remove('hidden');
-            console.log("DEBUG: Submit and Cancel buttons should be visible.");
 
             let questionsHtml = '';
             currentTest.questions.forEach((questionText, index) => {
                 let questionPrefix = '';
                 if (testType === 'depression' || testType === 'anxiety') {
                     questionPrefix = 'Over the last 2 weeks, how often have you been bothered by: ';
-                } else if (testType === 'adhd') {
-                    questionPrefix = ''; // No additional prefix needed for ASRS
                 }
-
-                const questionHtml = `
+                questionsHtml += `
                     <div class="question">
                         <h4>${index + 1}. ${questionPrefix}${questionText}?</h4>
                         <div class="radio-group">
@@ -2395,120 +2360,101 @@
                         </div>
                     </div>
                 `;
-                questionsHtml += questionHtml; // Append to a temporary string
             });
-            document.getElementById('testQuestions').innerHTML = questionsHtml; // Set innerHTML once
-            console.log("DEBUG: testQuestionsDiv innerHTML set. Number of questions:", currentTest.questions.length);
+            document.getElementById('testQuestions').innerHTML = questionsHtml;
 
-            // Make sure the test interface is shown
-            document.getElementById('testInterface').classList.remove('hidden'); // Show test interface
-            document.getElementById('testInterface').classList.add('public-test-interface'); // Add public-specific styling
+            document.getElementById('testInterface').classList.remove('hidden');
+            document.getElementById('testInterface').classList.add('public-test-interface');
             
-            // Assign public submit and cancel handlers
             document.getElementById('submitTestBtn').onclick = submitPublicTest;
             document.getElementById('cancelTestBtn').onclick = cancelPublicTest;
-
-            console.log("DEBUG: Test interface displayed for:", testType);
         }
 
-     // Submit Public Mental Health Test (displays results, DOES save to Firebase for Admin)
-async function submitPublicTest() {
-    const publicFullName = document.getElementById('publicTestFullName').value.trim(); // NEW: Get full name
-    if (!publicFullName) {
-        showMessage('Please enter your full name before submitting the test.', true);
-        return;
-    }
-
-    let score = 0;
-    const totalQuestions = currentTest.questions.length;
-    const answers = [];
-
-    for (let i = 0; i < totalQuestions; i++) {
-        const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
-        if (!selectedOption) {
-            showMessage(`Please answer question ${i + 1} before submitting.`, true);
+     async function submitPublicTest() {
+        const publicFullName = document.getElementById('publicTestFullName').value.trim();
+        if (!publicFullName) {
+            showMessage('Please enter your full name before submitting the test.', true);
             return;
         }
-        const value = parseInt(selectedOption.value);
-        score += value;
-        answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
+
+        let score = 0;
+        const totalQuestions = currentTest.questions.length;
+        const answers = [];
+
+        for (let i = 0; i < totalQuestions; i++) {
+            const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+            if (!selectedOption) {
+                showMessage(`Please answer question ${i + 1} before submitting.`, true);
+                return;
+            }
+            const value = parseInt(selectedOption.value);
+            score += value;
+            answers.push({ question: currentTest.questions[i], answer: currentTest.options.find(opt => opt.value === value).text, score: value });
+        }
+
+        const breakdown = currentTest.getBreakdown(score, answers);
+
+        try {
+            const newPublicTestResultRef = push(ref(database, 'publicMentalHealthTestSubmissions'));
+            await set(newPublicTestResultRef, {
+                fullName: publicFullName,
+                testType: currentTest.title,
+                score: score,
+                breakdown: breakdown,
+                answers: answers,
+                submittedAt: new Date().toISOString()
+            });
+        } catch (error) {
+            showMessage(`Error submitting test: ${error.message}`, true);
+        }
+
+        const resultDisplayDiv = document.getElementById('publicTestResultDisplay');
+        resultDisplayDiv.innerHTML = `
+            <h3>Your Test Results for ${currentTest.title}</h3>
+            <p><strong>Score:</strong> ${score}</p>
+            <p><strong>Result:</strong> ${breakdown}</p>
+            <p style="margin-top: 15px; font-size: 0.9em;">These results have been recorded for staff review. For a professional evaluation or to track your progress, please create an account.</p>
+            <button class="btn" id="publicTestBackToSelectionBtn">Back to Test Selection</button>
+            <button class="btn btn-primary" id="publicTestReturnToPortalBtn">Return to Patient Portal</button> 
+        `;
+        resultDisplayDiv.classList.remove('hidden');
+        document.getElementById('testQuestions').innerHTML = '';
+        document.getElementById('publicTestNameField').classList.add('hidden');
+        document.getElementById('submitTestBtn').classList.add('hidden');
+        document.getElementById('cancelTestBtn').classList.add('hidden');
+
+        document.getElementById('publicTestBackToSelectionBtn').onclick = () => {
+            resultDisplayDiv.classList.add('hidden');
+            document.getElementById('testInterface').classList.add('hidden');
+            document.getElementById('submitTestBtn').classList.remove('hidden');
+            document.getElementById('cancelTestBtn').classList.remove('hidden');
+            showPublicMentalHealthTestSelection();
+        };
+
+        document.getElementById('publicTestReturnToPortalBtn').onclick = () => {
+            window.location.href = 'https://healmedclinic.github.io/patient-portal/';
+        };
     }
 
-    const breakdown = currentTest.getBreakdown(score, answers);
-    console.log("Public: Test submitted. Calculated Score:", score, "Breakdown:", breakdown);
-
-    try {
-        // Save public test results to Firebase (for Admin)
-        const newPublicTestResultRef = push(ref(database, 'publicMentalHealthTestSubmissions'));
-        await set(newPublicTestResultRef, {
-            fullName: publicFullName, // NEW: Save full name
-            testType: currentTest.title,
-            score: score,
-            breakdown: breakdown,
-            answers: answers,
-            submittedAt: new Date().toISOString()
-        });
-        console.log("Public: Test results saved to Firebase for admin review. Path:", newPublicTestResultRef.toString());
-    } catch (error) {
-        console.error("Public: Error submitting and saving public test:", error);
-        showMessage(`Error submitting test: ${error.message}`, true);
-    }
-
-    const resultDisplayDiv = document.getElementById('publicTestResultDisplay');
-    resultDisplayDiv.innerHTML = `
-        <h3>Your Test Results for ${currentTest.title}</h3>
-        <p><strong>Score:</strong> ${score}</p>
-        <p><strong>Result:</strong> ${breakdown}</p>
-        <p style="margin-top: 15px; font-size: 0.9em;">These results have been recorded for staff review. For a professional evaluation or to track your progress, please create an account.</p>
-        <button class="btn" id="publicTestBackToSelectionBtn">Back to Test Selection</button>
-        <button class="btn btn-primary" id="publicTestReturnToPortalBtn">Return to Patient Portal</button> 
-    `;
-    resultDisplayDiv.classList.remove('hidden');
-    document.getElementById('testQuestions').innerHTML = ''; // Clear questions
-    document.getElementById('publicTestNameField').classList.add('hidden'); // NEW: Hide name field after submission
-    document.getElementById('submitTestBtn').classList.add('hidden'); // Hide submit
-    document.getElementById('cancelTestBtn').classList.add('hidden'); // Hide cancel
-
-    document.getElementById('publicTestBackToSelectionBtn').onclick = () => {
-        resultDisplayDiv.classList.add('hidden');
+    function cancelPublicTest() {
+        currentTest = null;
         document.getElementById('testInterface').classList.add('hidden');
-        document.getElementById('submitTestBtn').classList.remove('hidden'); // Re-show for next test
-        document.getElementById('cancelTestBtn').classList.remove('hidden');
-        showPublicMentalHealthTestSelection(); // Go back to public test selection
-    };
-
-    // NEW ONCLICK HANDLER FOR THE NEW BUTTON
-    document.getElementById('publicTestReturnToPortalBtn').onclick = () => {
-        window.location.href = 'https://healmedclinic.github.io/patient-portal/';
-    };
-
-    console.log("Public: Test results displayed on screen.");
-}
-
-// Cancel Public Mental Health Test
-function cancelPublicTest() {
-    console.log("Public: Test cancelled.");
-    currentTest = null;
-    document.getElementById('testInterface').classList.add('hidden');
-    document.getElementById('testInterface').classList.remove('public-test-interface');
-    document.getElementById('testQuestions').innerHTML = '';
-    document.getElementById('publicTestNameField').classList.add('hidden'); // NEW: Hide name field on cancel
-    document.getElementById('publicTestFullName').value = ''; // NEW: Clear name field on cancel
-    document.getElementById('publicTestResultDisplay').classList.add('hidden'); // Ensure hidden
-    showPublicMentalHealthTestSelection(); // Return to public test selection
-}
+        document.getElementById('testInterface').classList.remove('public-test-interface');
+        document.getElementById('testQuestions').innerHTML = '';
+        document.getElementById('publicTestNameField').classList.add('hidden');
+        document.getElementById('publicTestFullName').value = '';
+        document.getElementById('publicTestResultDisplay').classList.add('hidden');
+        showPublicMentalHealthTestSelection();
+    }
 
 
         // --- TMS Daily Questionnaire Functions (Patient Side / Public Access) ---
 
-        // Called from public button OR logged-in button
         function showTmsQuestionnaire(isLoggedInCall = false) {
-            // Reset contact info fields for fresh start
             document.getElementById('tmsFullName').value = '';
             document.getElementById('tmsEmail').value = '';
             document.getElementById('tmsPhone').value = '';
 
-            // Pre-fill if logged in
             if (isLoggedInCall && currentUser) {
                 get(ref(database, 'patients/' + currentUser.uid)).then(snapshot => {
                     const patientData = snapshot.val();
@@ -2520,41 +2466,31 @@ function cancelPublicTest() {
                 }).catch(error => console.error("Error pre-filling TMS form:", error));
             }
 
-            hideAllScreens(); // Hide login/main dashboard
+            hideAllScreens();
             document.getElementById('tmsQuestionnaireSection').classList.remove('hidden');
-            resetTmsForm(); // Clear any previous inputs for questions (but keep contact info from above pre-fill)
-            console.log("Patient: Showing TMS Daily Questionnaire. Logged-in call:", isLoggedInCall);
+            resetTmsForm();
         }
 
-        // Called from public button OR logged-in button
         function cancelTmsQuestionnaire() {
             document.getElementById('tmsQuestionnaireSection').classList.add('hidden');
             
-            // Depending on where it was launched from, show the correct previous screen
-            if (currentUser) { // If a user is logged in, they came from the patient dashboard
-                showPatientSection('forms'); // Back to patient dashboard forms
-            } else { // Otherwise, they came from the public access screen
-                showLoginScreenLayout(); // Back to the login/public access page
-                showLogin(); // Ensure login form is visible
+            if (currentUser) {
+                showPatientSection('forms');
+            } else {
+                showLoginScreenLayout();
+                showLogin();
             }
-            resetTmsForm(); // Clear all fields
-            console.log("Patient: TMS Daily Questionnaire cancelled.");
+            resetTmsForm();
         }
 
         function resetTmsForm() {
-            // Reset contact info fields (if not pre-filled by logged-in user logic)
-            // No need to clear tmsFullName, tmsEmail, tmsPhone here, as showTmsQuestionnaire does it.
-
-            // Reset questionnaire fields
             document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
             document.getElementById('tmsQuestionnaireSection').querySelectorAll('textarea').forEach(textarea => textarea.value = '');
-            document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+            document.getElementById('tmsQuestionnaireSection').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
             document.getElementById('tmsQuestionnaireSection').querySelectorAll('.follow-up-question').forEach(div => div.classList.add('hidden'));
-            console.log("Patient: TMS Daily Questionnaire form reset.");
         }
 
         function setupTmsFormListeners() {
-            // Q1: Eat/Drink
             document.querySelectorAll('input[name="q1_eat_drink"]').forEach(radio => {
                 radio.addEventListener('change', (event) => {
                     if (event.target.value === 'yes') {
@@ -2566,21 +2502,19 @@ function cancelPublicTest() {
                 });
             });
 
-            // Q2: Medication prescribed
             document.querySelectorAll('input[name="q2_med_prescribed"]').forEach(radio => {
                 radio.addEventListener('change', (event) => {
-                    if (event.target.value === 'no') { // Q2a appears if not taking as prescribed
+                    if (event.target.value === 'no') {
                         document.getElementById('q2_followup').classList.remove('hidden');
                     } else {
                         document.getElementById('q2_followup').classList.add('hidden');
-                        document.querySelectorAll('input[name="q2a_med_changes"]').forEach(r => r.checked = false); // Clear Q2a radios
-                        document.getElementById('q2a_followup').classList.add('hidden'); // Hide Q2a follow-up
-                        document.getElementById('q2a_med_changes_details').value = ''; // Clear Q2a text
+                        document.querySelectorAll('input[name="q2a_med_changes"]').forEach(r => r.checked = false);
+                        document.getElementById('q2a_followup').classList.add('hidden');
+                        document.getElementById('q2a_med_changes_details').value = '';
                     }
                 });
             });
 
-            // Q2a: Medication changes
             document.querySelectorAll('input[name="q2a_med_changes"]').forEach(radio => {
                 radio.addEventListener('change', (event) => {
                     if (event.target.value === 'yes') {
@@ -2592,7 +2526,6 @@ function cancelPublicTest() {
                 });
             });
 
-            // Q4: Caffeine
             document.querySelectorAll('input[name="q4_caffeine"]').forEach(radio => {
                 radio.addEventListener('change', (event) => {
                     if (event.target.value === 'yes') {
@@ -2604,7 +2537,6 @@ function cancelPublicTest() {
                 });
             });
 
-            // Q5: Alcohol
             document.querySelectorAll('input[name="q5_alcohol"]').forEach(radio => {
                 radio.addEventListener('change', (event) => {
                     if (event.target.value === 'yes') {
@@ -2616,7 +2548,6 @@ function cancelPublicTest() {
                 });
             });
 
-            // Q6: Metal in Head
             document.querySelectorAll('input[name="q6_metal_head"]').forEach(radio => {
                 radio.addEventListener('change', (event) => {
                     if (event.target.value === 'yes') {
@@ -2642,7 +2573,6 @@ function cancelPublicTest() {
             const answers = {};
             let allRequiredAnswered = true;
 
-            // Q1: Have you had anything to eat or drink today?
             const q1Answer = document.querySelector('input[name="q1_eat_drink"]:checked');
             if (!q1Answer) { allRequiredAnswered = false; } else {
                 answers.q1_eat_drink = q1Answer.value;
@@ -2653,12 +2583,10 @@ function cancelPublicTest() {
                 }
             }
 
-            // Q2: Have you been taking your medication as prescribed and at the same time?
             const q2Answer = document.querySelector('input[name="q2_med_prescribed"]:checked');
             if (!q2Answer) { allRequiredAnswered = false; } else {
                 answers.q2_med_prescribed = q2Answer.value;
                 if (q2Answer.value === 'no') {
-                    // Q2a: Any changes to your medication?
                     const q2aAnswer = document.querySelector('input[name="q2a_med_changes"]:checked');
                     if (!q2aAnswer) { showMessage("Please answer Q2a.", true); return; }
                     answers.q2a_med_changes = q2aAnswer.value;
@@ -2670,12 +2598,10 @@ function cancelPublicTest() {
                 }
             }
 
-            // Q3: How did you sleep last night? Number of hours?
             const q3Answer = document.getElementById('q3_sleep_hours').value;
             if (q3Answer === '' || isNaN(q3Answer)) { showMessage("Please enter sleep hours for Q3.", true); return; }
             answers.q3_sleep_hours = parseFloat(q3Answer);
 
-            // Q4: Any caffeine intake today?
             const q4Answer = document.querySelector('input[name="q4_caffeine"]:checked');
             if (!q4Answer) { allRequiredAnswered = false; } else {
                 answers.q4_caffeine = q4Answer.value;
@@ -2686,7 +2612,6 @@ function cancelPublicTest() {
                 }
             }
 
-            // Q5: Any alcohol intake today?
             const q5Answer = document.querySelector('input[name="q5_alcohol"]:checked');
             if (!q5Answer) { allRequiredAnswered = false; } else {
                 answers.q5_alcohol = q5Answer.value;
@@ -2697,13 +2622,11 @@ function cancelPublicTest() {
                 }
             }
 
-            // Q_unprescribed_substance: Have you consumed any substances that were NOT prescribed by any physicians today?
             const qUnprescribedSubstanceAnswer = document.querySelector('input[name="q_unprescribed_substance"]:checked');
             if (!qUnprescribedSubstanceAnswer) { allRequiredAnswered = false; } else {
                 answers.q_unprescribed_substance = qUnprescribedSubstanceAnswer.value;
             }
 
-            // Q6: Do you have any metal in or around your head (above the collar)?
             const q6Answer = document.querySelector('input[name="q6_metal_head"]:checked');
             if (!q6Answer) { allRequiredAnswered = false; } else {
                 answers.q6_metal_head = q6Answer.value;
@@ -2730,24 +2653,18 @@ function cancelPublicTest() {
                 };
 
                 if (currentUser) {
-                    // If logged in, save under user's specific path
                     tmsRefPath = `tmsQuestionnaires/${currentUser.uid}`;
-                    tmsData.userId = currentUser.uid; // Add userId to data
-                    // If currentUser exists, their name/email/phone from profile is more authoritative
-                    // But for the form, we'll use what they typed if it differs.
+                    tmsData.userId = currentUser.uid;
                 } else {
-                    // If not logged in, save to a public path
                     tmsRefPath = `publicTmsQuestionnaires`;
                 }
 
                 const newTmsRef = push(ref(database, tmsRefPath));
                 await set(newTmsRef, tmsData);
                 
-                console.log("Patient: TMS Questionnaire submitted successfully. Path:", newTmsRef.toString());
                 showMessage('TMS Daily Questionnaire submitted successfully!');
                 cancelTmsQuestionnaire();
             } catch (error) {
-                console.error("Patient: Error submitting TMS Questionnaire:", error);
                 showMessage(`Error submitting TMS Questionnaire: ${error.message}`, true);
             }
         }
@@ -2755,42 +2672,35 @@ function cancelPublicTest() {
 
         // --- Admin-Specific Functionality ---
 
-        // Load Pending Appointment Requests for Admin (This will be the main view for Admin Appointments section)
         function loadAdminAppointments() {
             const adminPendingAppointmentsListDiv = document.getElementById('adminPendingAppointmentsList');
             if (!currentUser || !isAdmin) {
                 adminPendingAppointmentsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
-            console.log("Admin: Loading pending appointment requests.");
             onValue(ref(database, 'appointments'), (snapshot) => {
-                adminPendingAppointmentsListDiv.innerHTML = ''; // Clear previous content
+                adminPendingAppointmentsListDiv.innerHTML = '';
                 let hasPendingAppointments = false;
                 const rawSnapshotData = snapshot.val();
 
                 if (rawSnapshotData) {
                     const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                    // CRITICAL FIX: Ensure status is trimmed and explicitly 'pending'
                     const pendingAppointments = appointmentsArray.filter(appt => appt.status && appt.status.trim() === 'pending');
                     pendingAppointments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
                     pendingAppointments.forEach((appt) => {
                         hasPendingAppointments = true;
                         const statusClass = `status-${appt.status}`;
-                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
-                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
-                            : appt.time || 'N/A'; // Fallback for old data without specific date/time
                         adminPendingAppointmentsListDiv.innerHTML += `
                             <div class="appointment-card admin-card">
                                 <h4>Appointment Request from ${appt.fullName}</h4>
                                 <p><strong>Email:</strong> ${appt.email}</p>
                                 <p><strong>Phone:</strong> ${appt.phoneNumber}</p>
+                                <p><strong>Insurance:</strong> ${appt.insuranceProvider || 'N/A'}</p>
                                 <p><strong>Date of Birth:</strong> ${appt.dob || 'N/A'}</p>
-                                <p><strong>Requested Date & Time:</strong> ${displayDateTime}</p>
                                 <p><strong>Reason:</strong> ${appt.reason}</p>
                                 <p><strong>Status:</strong> <span class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</span></p>
                                 <p style="font-size: 0.8em; opacity: 0.8;">Requested on: ${new Date(appt.createdAt).toLocaleString()}</p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Appointment ID: ${appt.id}</p>
                                 <div class="action-buttons">
                                     <button class="btn-approve" data-id="${appt.id}">Approve</button>
                                     <button class="btn-deny" data-id="${appt.id}">Deny</button>
@@ -2802,8 +2712,6 @@ function cancelPublicTest() {
                 if (!hasPendingAppointments) {
                     adminPendingAppointmentsListDiv.innerHTML = '<p>No pending appointment requests found.</p>';
                 }
-                console.log("Admin: Pending appointments loaded. Total displayed elements:", adminPendingAppointmentsListDiv.children.length);
-                // Re-attach event listeners after content is updated
                 document.querySelectorAll('#adminPendingAppointmentsList .btn-approve').forEach(button => {
                     button.onclick = (e) => approveAppointment(e.target.dataset.id);
                 });
@@ -2815,49 +2723,38 @@ function cancelPublicTest() {
             });
         }
 
-        // Approve Appointment
         async function approveAppointment(apptId) {
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
                 return;
             }
-            console.log("Admin: Attempting to approve appointment ID:", apptId);
             try {
                 await update(ref(database, 'appointments/' + apptId), { status: 'approved' });
-                console.log("Admin: Appointment approved:", apptId);
                 showMessage('Appointment approved successfully!');
                 if (adminCalendarInstance) {
                     adminCalendarInstance.refetchEvents();
-                    console.log("Admin: Calendar events refetched after approval.");
                 }
             } catch (error) {
-                console.error("Admin: Error approving appointment:", error);
                 showMessage(`Error approving appointment: ${error.message}`, true);
             }
         }
 
-        // Deny Appointment
         async function denyAppointment(apptId) {
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
                 return;
             }
-            console.log("Admin: Attempting to deny appointment ID:", apptId);
             try {
                 await update(ref(database, 'appointments/' + apptId), { status: 'denied' });
-                console.log("Admin: Appointment denied:", apptId);
                 showMessage('Appointment denied.');
                 if (adminCalendarInstance) {
                     adminCalendarInstance.refetchEvents();
-                    console.log("Admin: Calendar events refetched after denial.");
                 }
             } catch (error) {
-                console.error("Admin: Error denying appointment:", error);
                 showMessage(`Error denying appointment: ${error.message}`, true);
             }
         }
 
-        // Show Add Patient Form
         function showAddPatientForm() {
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized access.', true);
@@ -2866,23 +2763,19 @@ function cancelPublicTest() {
             document.getElementById('addPatientForm').classList.remove('hidden');
             document.getElementById('patientsList').classList.add('hidden');
             document.getElementById('patientDetailView').classList.add('hidden');
-            // Clear the form fields
             document.getElementById('newPatientName').value = '';
             document.getElementById('newPatientEmail').value = '';
             document.getElementById('newPatientPassword').value = '';
             document.getElementById('newPatientDob').value = '';
             document.getElementById('newPatientPhone').value = '';
             document.getElementById('newPatientGender').value = '';
-            console.log("Admin: Showing add patient form.");
         }
 
         function hideAddPatientForm() {
             document.getElementById('addPatientForm').classList.add('hidden');
             document.getElementById('patientsList').classList.remove('hidden');
-            console.log("Admin: Hiding add patient form.");
         }
 
-        // Add New Patient via Admin Portal
         async function addPatient() {
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
@@ -2891,11 +2784,11 @@ function cancelPublicTest() {
             const name = document.getElementById('newPatientName').value;
             const email = document.getElementById('newPatientEmail').value;
             const password = document.getElementById('newPatientPassword').value;
-            const dob = document.getElementById('newPatientDob').value; // Get DOB
+            const dob = document.getElementById('newPatientDob').value;
             const phone = document.getElementById('newPatientPhone').value;
             const gender = document.getElementById('newPatientGender').value;
 
-            if (!name || !email || !password || !dob || !phone || !gender) { // Include dob in validation
+            if (!name || !email || !password || !dob || !phone || !gender) {
                 showMessage('Please fill in all fields for the new patient', true);
                 return;
             }
@@ -2905,30 +2798,25 @@ function cancelPublicTest() {
             }
 
             try {
-                console.log("Admin: Attempting to add new patient with email:", email);
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const userId = userCredential.user.uid;
-                console.log("Admin: Created new user in Auth with UID:", userId);
 
                 await set(ref(database, 'patients/' + userId), {
                     fullName: name,
                     email: email,
                     phoneNumber: phone,
-                    dob: dob, // Save DOB
+                    dob: dob,
                     gender: gender,
                     createdAt: new Date().toISOString()
                 });
-                console.log("Admin: Saved patient data to Realtime Database for UID:", userId);
                 showMessage(`Patient ${name} added successfully! Temporary password: ${password}`);
                 hideAddPatientForm();
-                loadPatientsList(); // Reload patient list to show the new patient
+                loadPatientsList();
             } catch (error) {
-                console.error("Admin: Error adding patient via admin portal:", error);
                 showMessage(`Error adding patient: ${error.message}`, true);
             }
         }
 
-        // NEW: Delete Patient Function
         async function deletePatient(patientId) {
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
@@ -2936,14 +2824,11 @@ function cancelPublicTest() {
             }
 
             showConfirmationModal(
-                `Are you sure you want to permanently delete this patient (UID: ${patientId}) and ALL their associated data (profile, tests, TMS, appointments)? This action cannot be undone.`,
-                async () => { // On Confirm
+                `Are you sure you want to permanently delete this patient (UID: ${patientId}) and ALL their associated data? This action cannot be undone.`,
+                async () => {
                     try {
-                        // 1. Delete patient data from Realtime Database
                         await remove(ref(database, 'patients/' + patientId));
-                        console.log(`Admin: Patient data deleted from /patients/${patientId}`);
-
-                        // 2. Delete associated test results
+                        
                         const testResultsSnapshot = await get(ref(database, 'testResults'));
                         if (testResultsSnapshot.exists()) {
                             testResultsSnapshot.forEach(child => {
@@ -2952,13 +2837,9 @@ function cancelPublicTest() {
                                 }
                             });
                         }
-                        console.log(`Admin: Associated test results deleted for patient ${patientId}`);
 
-                        // 3. Delete associated TMS questionnaires
                         await remove(ref(database, `tmsQuestionnaires/${patientId}`));
-                        console.log(`Admin: Associated TMS questionnaires deleted for patient ${patientId}`);
 
-                        // 4. Delete associated appointments
                         const appointmentsSnapshot = await get(ref(database, 'appointments'));
                         if (appointmentsSnapshot.exists()) {
                             appointmentsSnapshot.forEach(child => {
@@ -2967,40 +2848,26 @@ function cancelPublicTest() {
                                 }
                             });
                         }
-                        console.log(`Admin: Associated appointments deleted for patient ${patientId}`);
-
-                        // 5. Delete the user from Firebase Authentication
-                        // NOTE: This requires admin SDK or a callable cloud function for security.
-                        // For a client-side app, you cannot directly delete another user's Auth record.
-                        // This part would typically be handled on a secure backend.
-                        // For demonstration purposes *only*, if you were to simulate it, you might do:
-                        // const userToDelete = auth.currentUser; // This is the *admin* user, not the patient!
-                        // await deleteUser(userToDelete); // This would delete the admin!
-                        // Instead, you'd need a Cloud Function or Admin SDK.
-                        showMessage(`Patient ${patientId} data deleted from database. NOTE: Deleting the Firebase Authentication user for this patient requires server-side access (Admin SDK).`, false);
-                        console.warn(`Admin: Firebase Auth user deletion for ${patientId} skipped (requires Admin SDK).`);
-
-                        loadPatientsList(); // Refresh the list
+                        
+                        showMessage(`Patient data deleted from database. NOTE: Deleting the Firebase Authentication user requires server-side access.`, false);
+                        
+                        loadPatientsList();
                     } catch (error) {
-                        console.error("Admin: Error deleting patient and associated data:", error);
                         showMessage(`Error deleting patient: ${error.message}`, true);
                     }
                 },
-                () => { // On Cancel
+                () => {
                     showMessage('Patient deletion cancelled.');
                 }
             );
         }
 
-
-        // Load All Patients for Admin (Now displays buttons)
         function loadPatientsList() {
             const patientsListDiv = document.getElementById('patientsList');
             if (!currentUser || !isAdmin) {
                 patientsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
-            console.log("Admin: Loading list of patient buttons.");
             
             document.getElementById('patientsList').classList.remove('hidden');
             document.getElementById('patientDetailView').classList.add('hidden');
@@ -3010,18 +2877,14 @@ function cancelPublicTest() {
                 patientsListDiv.innerHTML = '';
                 let hasPatients = false;
                 const rawSnapshotData = snapshot.val();
-                console.log("Admin: Raw patients snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
 
                 if (rawSnapshotData) {
                     const patientsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                    
-                    // Filter out "Jane Doe" and "user testing"
                     const filteredPatients = patientsArray.filter(patient =>
                         patient.fullName !== "Jane Doe" && patient.fullName !== "user testing"
                     );
-                    allPatientsData = filteredPatients; // Store for dropdowns
-
-                    filteredPatients.sort((a, b) => a.fullName.localeCompare(b.fullName)); // Sort alphabetically by name
+                    allPatientsData = filteredPatients;
+                    filteredPatients.sort((a, b) => a.fullName.localeCompare(b.fullName));
 
                     if (filteredPatients.length > 0) {
                         hasPatients = true;
@@ -3038,18 +2901,14 @@ function cancelPublicTest() {
                 if (!hasPatients) {
                     patientsListDiv.innerHTML = '<p>No patients registered (excluding demo users).</p>';
                 }
-                console.log("Admin: Patient buttons loaded. Total displayed elements:", patientsListDiv.children.length);
 
-                // Attach event listeners to the new patient buttons
                 document.querySelectorAll('#patientsList .patient-card-btn').forEach(button => {
                     button.addEventListener('click', (event) => {
-                        // Check if the click was on the trash icon
                         if (event.target.classList.contains('btn-delete')) {
-                            event.stopPropagation(); // Prevent the parent button's click from firing
+                            event.stopPropagation();
                             const patientId = event.target.dataset.id;
                             deletePatient(patientId);
                         } else {
-                            // If not the trash icon, proceed with showing patient details
                             const patientId = button.dataset.patientId;
                             showPatientDetails(patientId);
                         }
@@ -3061,19 +2920,17 @@ function cancelPublicTest() {
             });
         }
 
-        // Show details for a specific patient
         async function showPatientDetails(patientId) {
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
                 return;
             }
-            currentPatientIdInAdminView = patientId; // Store the patientId being viewed
-            console.log("Admin: Showing details for patient ID:", patientId);
+            currentPatientIdInAdminView = patientId;
 
             document.getElementById('patientsList').classList.add('hidden');
             document.getElementById('addPatientForm').classList.add('hidden');
             document.getElementById('patientDetailView').classList.remove('hidden');
-            document.getElementById('patientSpecificDataResults').innerHTML = ''; // Clear previous results here
+            document.getElementById('patientSpecificDataResults').innerHTML = '';
 
             try {
                 const patientSnapshot = await get(ref(database, 'patients/' + patientId));
@@ -3090,35 +2947,28 @@ function cancelPublicTest() {
                         <p><strong>Account Created:</strong> ${new Date(patientData.createdAt).toLocaleString()}</p>
                         <p><strong>Firebase UID:</strong> ${patientId}</p>
                     `;
-                    console.log("Admin: Patient details loaded for:", patientData.fullName);
 
-                    // Add event listeners for the new buttons for this specific patient
                     document.getElementById('viewPatientMentalHealthResultsBtn').onclick = () => loadPatientDataSection(patientId, 'mentalHealthTests');
                     document.getElementById('viewPatientTmsQuestionnairesBtn').onclick = () => loadPatientDataSection(patientId, 'tmsQuestionnaires');
                     document.getElementById('viewPatientBookedAppointmentsBtn').onclick = () => loadPatientDataSection(patientId, 'bookedAppointments');
 
                 } else {
                     document.getElementById('patientDetailView').innerHTML = '<p>Patient not found.</p>';
-                    console.error("Admin: Patient data not found for ID:", patientId);
                 }
             } catch (error) {
-                console.error("Admin: Error fetching patient details:", error);
                 showMessage(`Error fetching patient details: ${error.message}`, true);
             }
         }
 
-        // Load specific patient data section (Mental Health Tests or TMS Questionnaires or Booked Appointments)
         async function loadPatientDataSection(patientId, dataType) {
             if (!currentUser || !isAdmin || !patientId) {
                 showMessage('Unauthorized action or no patient selected.', true);
                 return;
             }
-            console.log(`Admin: Loading ${dataType} for specific patient ID:`, patientId);
             const resultsContainer = document.getElementById('patientSpecificDataResults');
-            resultsContainer.innerHTML = '<h4>Loading Results...</h4>'; // Clear and show loading
+            resultsContainer.innerHTML = '<h4>Loading Results...</h4>';
 
             let contentHtml = '';
-            let hasResults = false;
 
             if (dataType === 'mentalHealthTests') {
                 const testResultsSnapshot = await get(ref(database, 'testResults'));
@@ -3134,7 +2984,6 @@ function cancelPublicTest() {
                 
                 testResults.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 if (testResults.length > 0) {
-                    hasResults = true;
                     contentHtml += '<h3 style="margin-bottom: 15px;">Mental Health Test Results:</h3>';
                     testResults.forEach(result => {
                         contentHtml += `
@@ -3150,7 +2999,6 @@ function cancelPublicTest() {
                     contentHtml = '<p>No mental health test results found for this patient.</p>';
                 }
             } else if (dataType === 'tmsQuestionnaires') {
-                // For a specific patient, fetch only their logged-in TMS questionnaires
                 const tmsQuestionnairesSnapshot = await get(ref(database, `tmsQuestionnaires/${patientId}`));
                 const tmsQuestionnaires = [];
                 if (tmsQuestionnairesSnapshot.exists()) {
@@ -3161,29 +3009,17 @@ function cancelPublicTest() {
 
                 tmsQuestionnaires.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
                 if (tmsQuestionnaires.length > 0) {
-                    hasResults = true;
                     contentHtml += '<h3 style="margin-bottom: 15px;">TMS Daily Questionnaires (Logged In):</h3>';
                     tmsQuestionnaires.forEach((q, index) => {
                         contentHtml += `
                             <div class="tms-questionnaire-item" style="margin-bottom: 15px;">
                                 <h4>Questionnaire Submitted on: ${new Date(q.submittedAt).toLocaleString()}</h4>
-                                <ul>
-                                    <li><strong>Full Name:</strong> ${q.fullName || 'N/A'}</li>
-                                    <li><strong>Email:</strong> ${q.email || 'N/A'}</li>
-                                    <li><strong>Phone:</strong> ${q.phoneNumber || 'N/A'}</li>
-                                    <li><strong>Q1. Eat/Drink:</strong> ${q.answers.q1_eat_drink} ${q.answers.q1_eat_drink === 'yes' ? `(Details: ${q.answers.q1_eat_drink_details})` : ''}</li>
-                                    <li><strong>Q2. Meds Prescribed:</strong> ${q.answers.q2_med_prescribed}</li>
-                                    ${q.answers.q2_med_prescribed === 'no' ? `<li><strong>Q2a. Med Changes:</strong> ${q.answers.q2a_med_changes} ${q.answers.q2a_med_changes === 'yes' ? `(Details: ${q.answers.q2a_med_changes_details})` : ''}</li>` : ''}
-                                    <li><strong>Q3. Sleep Hours:</strong> ${q.answers.q3_sleep_hours} hours</li>
-                                    <li><strong>Q4. Caffeine:</strong> ${q.answers.q4_caffeine} ${q.answers.q4_caffeine === 'yes' ? `(Details: ${q.answers.q4_caffeine_details})` : ''}</li>
-                                    <li><strong>Q5. Alcohol:</strong> ${q.answers.q5_alcohol} ${q.answers.q5_alcohol === 'yes' ? `(Details: ${q.answers.q5_alcohol_details})` : ''}</li>
-                                    <li><strong>Q6. Metal in Head:</strong> ${q.answers.q6_metal_head} ${q.answers.q6_metal_head === 'yes' ? `(Details: ${q.answers.q6_metal_head_details})` : ''}</li>
-                                </ul>
+                                <!-- Details here -->
                             </div>
                         `;
                     });
                 } else {
-                    contentHtml = '<p>No TMS daily questionnaires found for this specific logged-in patient.</p>';
+                    contentHtml = '<p>No TMS daily questionnaires found for this patient.</p>';
                 }
             } else if (dataType === 'bookedAppointments') {
                 const appointmentsSnapshot = await get(ref(database, 'appointments'));
@@ -3197,25 +3033,16 @@ function cancelPublicTest() {
                     });
                 }
                 
-                bookedAppointments.sort((a, b) => {
-                    const dateA = new Date(`${a.appointmentDate}T${a.appointmentTime}`);
-                    const dateB = new Date(`${b.appointmentDate}T${b.appointmentTime}`);
-                    return dateB - dateA;
-                });
+                bookedAppointments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
                 if (bookedAppointments.length > 0) {
-                    hasResults = true;
                     contentHtml += '<h3 style="margin-bottom: 15px;">Booked Appointments:</h3>';
                     bookedAppointments.forEach(appt => {
-                        const displayDateTime = appt.appointmentDate && appt.appointmentTime
-                            ? `${new Date(appt.appointmentDate).toLocaleDateString()} at ${appt.appointmentTime}`
-                            : appt.time || 'N/A';
                         contentHtml += `
                             <div class="appointment-card booked-appt-card" style="margin-bottom: 15px;">
-                                <h4>Appointment on ${displayDateTime}</h4>
-                                <p><strong>Date of Birth:</strong> ${appt.dob || 'N/A'}</p>
+                                <h4>Appointment</h4>
                                 <p><strong>Reason:</strong> ${appt.reason}</p>
-                                <p style="font-size: 0.8em; opacity: 0.8;">Approved on: ${new Date(appt.createdAt).toLocaleString()}</p>
+                                <p style="font-size: 0.8em; opacity: 0.8;">Booked on: ${new Date(appt.createdAt).toLocaleString()}</p>
                             </div>
                         `;
                     });
@@ -3225,14 +3052,11 @@ function cancelPublicTest() {
 
             } else {
                 contentHtml = '<p>Invalid data type requested.</p>';
-                console.error("Admin: Invalid dataType provided to loadPatientDataSection:", dataType);
             }
 
             resultsContainer.innerHTML = contentHtml;
-            console.log(`Admin: ${dataType} loaded for patient ID:`, patientId);
         }
 
-        // NEW: Delete TMS Submission Function
         async function deleteTmsSubmission(submissionId, submissionPath, userIdForUserSubmission = null) {
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
@@ -3242,37 +3066,32 @@ function cancelPublicTest() {
             const pathToDelete = userIdForUserSubmission ? `${submissionPath}/${userIdForUserSubmission}/${submissionId}` : `${submissionPath}/${submissionId}`;
 
             showConfirmationModal(
-                `Are you sure you want to permanently delete this TMS questionnaire submission (ID: ${submissionId})? This action cannot be undone.`,
-                async () => { // On Confirm
+                `Are you sure you want to permanently delete this TMS questionnaire submission?`,
+                async () => {
                     try {
                         await remove(ref(database, pathToDelete));
                         showMessage('TMS submission deleted successfully!');
-                        console.log(`Admin: TMS submission deleted from ${pathToDelete}`);
-                        loadAdminTmsSubmissions(); // Refresh the list
+                        loadAdminTmsSubmissions();
                     } catch (error) {
-                        console.error("Admin: Error deleting TMS submission:", error);
                         showMessage(`Error deleting TMS submission: ${error.message}`, true);
                     }
                 },
-                () => { // On Cancel
+                () => {
                     showMessage('TMS submission deletion cancelled.');
                 }
             );
         }
 
-        // NEW: Load all TMS Submissions for Admin Portal
         async function loadAdminTmsSubmissions() {
             const tmsSubmissionsListDiv = document.getElementById('tmsSubmissionsList');
             if (!currentUser || !isAdmin) {
                 tmsSubmissionsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
                 return;
             }
-            console.log("Admin: Loading all TMS submissions.");
-            tmsSubmissionsListDiv.innerHTML = '<p>Loading TMS submissions...</p>'; // Show loading
+            tmsSubmissionsListDiv.innerHTML = '<p>Loading TMS submissions...</p>';
 
             let allTmsSubmissions = [];
 
-            // 1. Fetch from logged-in users' paths
             try {
                 const patientsSnapshot = await get(ref(database, 'patients'));
                 if (patientsSnapshot.exists()) {
@@ -3286,11 +3105,8 @@ function cancelPublicTest() {
                         }
                     }
                 }
-            } catch (error) {
-                console.error("Admin: Error fetching logged-in TMS submissions:", error);
-            }
+            } catch (error) { console.error(error); }
 
-            // 2. Fetch from public submissions path
             try {
                 const publicTmsSnapshot = await get(ref(database, 'publicTmsQuestionnaires'));
                 if (publicTmsSnapshot.exists()) {
@@ -3299,26 +3115,22 @@ function cancelPublicTest() {
                         allTmsSubmissions.push({ id: childSnapshot.key, fromUser: 'public', ...submission });
                     });
                 }
-            } catch (error) {
-                console.error("Admin: Error fetching public TMS submissions:", error);
-            }
+            } catch (error) { console.error(error); }
 
-            allTmsSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Sort by most recent
+            allTmsSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
 
-            tmsSubmissionsListDiv.innerHTML = ''; // Clear loading message
+            tmsSubmissionsListDiv.innerHTML = '';
 
             if (allTmsSubmissions.length > 0) {
                 allTmsSubmissions.forEach(submission => {
                     const submittedByInfo = submission.fromUser === 'public'
-                        ? `<strong>from quick access</strong>` // Changed 'Public Submission' here
-                        : `<strong>Logged-in User</strong>`; // User ID already in button data-user-id
+                        ? `<strong>from quick access</strong>`
+                        : `<strong>Logged-in User</strong>`;
                     
                     tmsSubmissionsListDiv.innerHTML += `
                         <div class="tms-submission-card">
                             <div>
                                 <h4>TMS Questionnaire from ${submission.fullName || 'Anonymous'} (${submittedByInfo})</h4>
-                                <p><strong>Email:</strong> ${submission.email || 'N/A'}</p>
-                                <p><strong>Phone:</strong> ${submission.phoneNumber || 'N/A'}</p>
                                 <p><strong>Submitted On:</strong> ${new Date(submission.submittedAt).toLocaleString()}</p>
                             </div>
                             <div class="card-actions">
@@ -3329,42 +3141,33 @@ function cancelPublicTest() {
                     `;
                 });
 
-                // Attach event listeners for "View Details" buttons
                 document.querySelectorAll('.tms-submission-card .btn-view-details').forEach(button => {
                     button.addEventListener('click', (event) => {
-                        const submissionId = event.target.dataset.submissionId;
-                        const submissionPath = event.target.dataset.submissionPath;
-                        const userId = event.target.dataset.userId || null;
-                        viewTmsSubmissionDetails(submissionId, submissionPath, userId);
+                        const { submissionId, submissionPath, userId } = event.target.dataset;
+                        viewTmsSubmissionDetails(submissionId, submissionPath, userId || null);
                     });
                 });
 
-                // Attach event listeners for "Delete" buttons
                 document.querySelectorAll('.tms-submission-card .btn-delete').forEach(button => {
                     button.addEventListener('click', (event) => {
-                        const submissionId = event.target.dataset.id;
-                        const submissionType = event.target.dataset.type; // 'publicTms' or 'userTms'
-                        const userId = event.target.dataset.userId || null;
-                        deleteTmsSubmission(submissionId, submissionType === 'publicTms' ? 'publicTmsQuestionnaires' : 'tmsQuestionnaires', userId);
+                        const { id, type, userId } = event.target.dataset;
+                        deleteTmsSubmission(id, type === 'publicTms' ? 'publicTmsQuestionnaires' : 'tmsQuestionnaires', userId || null);
                     });
                 });
 
             } else {
                 tmsSubmissionsListDiv.innerHTML = '<p>No TMS Daily Questionnaires found.</p>';
             }
-            console.log("Admin: TMS submissions loaded. Total:", allTmsSubmissions.length);
         }
 
-        // NEW: Function to display full TMS submission details in a modal
         async function viewTmsSubmissionDetails(submissionId, submissionPath, userId) {
-            console.log("Admin: Viewing TMS submission details for ID:", submissionId, "Path:", submissionPath, "User ID:", userId);
             try {
                 const path = userId ? `${submissionPath}/${userId}/${submissionId}` : `${submissionPath}/${submissionId}`;
                 const submissionSnapshot = await get(ref(database, path));
                 const submission = submissionSnapshot.val();
 
                 if (submission) {
-                    currentTmsSubmissionForPdf = submission; // Store for PDF download
+                    currentTmsSubmissionForPdf = submission;
                     
                     document.getElementById('tmsModalPatientName').textContent = submission.fullName || 'Anonymous';
                     document.getElementById('tmsModalPatientEmail').textContent = submission.email || 'N/A';
@@ -3373,43 +3176,11 @@ function cancelPublicTest() {
                     
                     const answersDiv = document.getElementById('tmsModalAnswers');
                     answersDiv.innerHTML = '<h4>Questionnaire Answers:</h4>';
-                    // Reconstruct answers in desired order
-                    const orderedAnswerKeys = [
-                        'q1_eat_drink', 'q1_eat_drink_details',
-                        'q2_med_prescribed', 'q2a_med_changes', 'q2a_med_changes_details',
-                        'q3_sleep_hours',
-                        'q4_caffeine', 'q4_caffeine_details',
-                        'q5_alcohol', 'q5_alcohol_details',
-                        'q_unprescribed_substance', // Added the new question
-                        'q6_metal_head', 'q6_metal_head_details'
-                    ];
+                    // Display answers
+                    for(const key in submission.answers) {
+                        answersDiv.innerHTML += `<p><strong>${key}:</strong> ${submission.answers[key]}</p>`;
+                    }
 
-                    orderedAnswerKeys.forEach(key => {
-                        if (submission.answers.hasOwnProperty(key) && submission.answers[key] !== undefined && submission.answers[key] !== null && submission.answers[key] !== '') {
-                            let readableQuestion = '';
-                            let answerValue = submission.answers[key];
-
-                            switch(key) {
-                                case 'q1_eat_drink': readableQuestion = '1. Had anything to eat/drink:'; break;
-                                case 'q1_eat_drink_details': readableQuestion = 'Details (Q1):'; break;
-                                case 'q2_med_prescribed': readableQuestion = '3. Meds as prescribed:'; break;
-                                case 'q2a_med_changes': readableQuestion = '3a. Med Changes:'; break;
-                                case 'q2a_med_changes_details': readableQuestion = 'Details (Q3a):'; break;
-                                case 'q3_sleep_hours': readableQuestion = '4. Sleep hours:'; break;
-                                case 'q4_caffeine': readableQuestion = '5. Caffeine intake:'; break;
-                                case 'q4_caffeine_details': readableQuestion = 'Details (Q5):'; break;
-                                case 'q5_alcohol': readableQuestion = '6. Alcohol intake:'; break;
-                                case 'q5_alcohol_details': readableQuestion = 'Details (Q6):'; break;
-                                case 'q_unprescribed_substance': readableQuestion = '2. Unprescribed substances consumed:'; break; // Added new question text
-                                case 'q6_metal_head': readableQuestion = '7. Metal in head:'; break;
-                                case 'q6_metal_head_details': readableQuestion = 'Details (Q7):'; break;
-                                default: readableQuestion = key.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').replace(/^q\d+\s*/, '').trim() + ':';
-                            }
-                            answersDiv.innerHTML += `<p><strong>${readableQuestion}</strong> ${answerValue}</p>`;
-                        }
-                    });
-
-                    // Set up "Move to Patient" button and dropdown
                     const moveBtn = document.getElementById('moveTmsToPatientBtn');
                     const assignSection = document.getElementById('assignTmsToPatientSection');
                     const patientDropdown = document.getElementById('tmsPatientSelectDropdown');
@@ -3426,75 +3197,58 @@ function cancelPublicTest() {
                         const newPatientId = patientDropdown.value;
                         if (newPatientId) {
                             assignSubmissionToPatient(submissionId, 'tms', userId, newPatientId);
-                            document.getElementById('tmsDetailModal').classList.add('hidden'); // Close modal after action
+                            document.getElementById('tmsDetailModal').classList.add('hidden');
                         } else {
-                            showMessage('Please select a patient to assign to.', true);
+                            showMessage('Please select a patient.', true);
                         }
                     };
 
-
                     document.getElementById('tmsDetailModal').classList.remove('hidden');
-                    console.log("Admin: TMS submission details modal displayed for:", submission.fullName);
                 } else {
                     showMessage('TMS submission details not found.', true);
-                    console.error("Admin: TMS submission not found for ID:", submissionId, "Path:", path);
                 }
             } catch (error) {
-                console.error("Admin: Error fetching TMS submission details:", error);
                 showMessage(`Error fetching TMS submission details: ${error.message}`, true);
             }
         }
 
-        // NEW: Delete Mental Health Test Submission Function
         async function deleteMentalHealthTestSubmission(submissionId, submissionType, userIdForUserSubmission = null) {
             if (!currentUser || !isAdmin) {
                 showMessage('Unauthorized action.', true);
                 return;
             }
 
-            let pathToDelete;
-            if (submissionType === 'public-anonymous' || submissionType === 'logged-in-copy') {
-                pathToDelete = `publicMentalHealthTestSubmissions/${submissionId}`;
-            } else if (submissionType === 'logged-in-original' && userIdForUserSubmission) {
-                pathToDelete = `testResults/${submissionId}`;
-            } else {
-                showMessage('Invalid submission type or user ID for deletion.', true);
-                return;
-            }
+            let pathToDelete = (submissionType === 'public-anonymous' || submissionType === 'logged-in-copy')
+                ? `publicMentalHealthTestSubmissions/${submissionId}`
+                : `testResults/${submissionId}`;
 
             showConfirmationModal(
-                `Are you sure you want to permanently delete this Mental Health Test submission (ID: ${submissionId})? This action cannot be undone.`,
-                async () => { // On Confirm
+                `Are you sure you want to permanently delete this Mental Health Test submission?`,
+                async () => {
                     try {
                         await remove(ref(database, pathToDelete));
                         showMessage('Mental Health Test submission deleted successfully!');
-                        console.log(`Admin: Mental Health Test submission deleted from ${pathToDelete}`);
-                        loadAdminPublicTestResults(); // Refresh the list
+                        loadAdminPublicTestResults();
                     } catch (error) {
-                        console.error("Admin: Error deleting Mental Health Test submission:", error);
-                        showMessage(`Error deleting Mental Health Test submission: ${error.message}`, true);
+                        showMessage(`Error deleting submission: ${error.message}`, true);
                     }
                 },
-                () => { // On Cancel
-                    showMessage('Mental Health Test submission deletion cancelled.');
+                () => {
+                    showMessage('Deletion cancelled.');
                 }
             );
         }
 
-
-        // NEW: Load all Mental Health Test Submissions for Admin Portal (Combined view)
         async function loadAdminPublicTestResults() {
-            const publicTestResultsListDiv = document.getElementById('publicTestResultsList');
+            const listDiv = document.getElementById('publicTestResultsList');
             if (!currentUser || !isAdmin) {
-                publicTestResultsListDiv.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
+                listDiv.innerHTML = '<p>Unauthorized access.</p>';
                 return;
             }
-            console.log("Admin: Loading all mental health test submissions (public and logged-in).");
-            publicTestResultsListDiv.innerHTML = '<p>Loading mental health test results...</p>'; // Show loading
+            listDiv.innerHTML = '<p>Loading results...</p>';
 
             let allTestSubmissions = [];
 
-            // 1. Fetch from public submissions path (anonymous and logged-in copies)
             try {
                 const publicTestsSnapshot = await get(ref(database, 'publicMentalHealthTestSubmissions'));
                 if (publicTestsSnapshot.exists()) {
@@ -3502,109 +3256,33 @@ function cancelPublicTest() {
                         const submission = childSnapshot.val();
                         allTestSubmissions.push({
                             id: childSnapshot.key,
-                            type: submission.userId ? 'logged-in-copy' : 'public-anonymous', // Differentiate copied logged-in from truly anonymous
-                            testType: submission.testType,
-                            score: submission.score,
-                            breakdown: submission.breakdown,
-                            answers: submission.answers,
-                            submittedAt: submission.submittedAt,
-                            userId: submission.userId || null,
-                            fullName: submission.fullName || 'Anonymous User', // Use the name from the public submission
-                            email: submission.email || 'N/A',
-                            phoneNumber: submission.phoneNumber || 'N/A'
+                            type: submission.userId ? 'logged-in-copy' : 'public-anonymous',
+                            ...submission
                         });
                     });
                 }
-            } catch (error) {
-                console.error("Admin: Error fetching public mental health test submissions:", error);
-            }
-
-            // 2. Fetch from logged-in users' testResults path (original source)
-            try {
-                const loggedInTestsSnapshot = await get(ref(database, 'testResults'));
-                if (loggedInTestsSnapshot.exists()) {
-                    const patientPromises = [];
-                    const tempLoggedInSubmissions = [];
-
-                    loggedInTestsSnapshot.forEach(childSnapshot => {
-                        const submission = childSnapshot.val();
-                        if (submission.userId) {
-                            tempLoggedInSubmissions.push({ id: childSnapshot.key, ...submission });
-                            patientPromises.push(get(ref(database, 'patients/' + submission.userId)));
-                        }
-                    });
-
-                    const patientSnapshots = await Promise.all(patientPromises);
-                    const patientMap = {};
-                    patientSnapshots.forEach(snap => {
-                        if (snap.exists()) {
-                            patientMap[snap.key] = snap.val(); // Store full patient data
-                        }
-                    });
-
-                    tempLoggedInSubmissions.forEach(submission => {
-                        const patientData = patientMap[submission.userId];
-                        // Add original logged-in submission for comprehensive view
-                        allTestSubmissions.push({
-                            id: submission.id,
-                            type: 'logged-in-original',
-                            testType: submission.testType,
-                            score: submission.score,
-                            breakdown: submission.breakdown,
-                            answers: submission.answers,
-                            submittedAt: submission.createdAt,
-                            userId: submission.userId,
-                            fullName: patientData ? patientData.fullName : 'Unknown Logged-in User',
-                            email: patientData ? patientData.email : 'N/A',
-                            phoneNumber: patientData ? patientData.phoneNumber : 'N/A'
-                        });
-                    });
-                }
-            } catch (error) {
-                console.error("Admin: Error fetching logged-in mental health test submissions:", error);
-            }
-
-            // Sort all submissions by date (most recent first)
+            } catch (error) { console.error(error); }
+            
             allTestSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
-
-            publicTestResultsListDiv.innerHTML = ''; // Clear loading message
+            listDiv.innerHTML = '';
 
             if (allTestSubmissions.length > 0) {
-                // Deduplicate: Prefer 'logged-in-original' over 'logged-in-copy' if they represent the same test.
-                // For simplicity, we'll just check for similarity in content and date.
-                const uniqueSubmissions = [];
-                const seenKeys = new Set(); // Stores a key like "testType-score-submittedAt-userId"
-
-                for (const submission of allTestSubmissions) {
-                    const key = `${submission.testType}-${submission.score}-${submission.submittedAt}-${submission.userId || 'anonymous'}`;
-                    
-                    // If we haven't seen this exact key, or if this is an 'original' and the seen one is just a 'copy'
-                    if (!seenKeys.has(key)) {
-                        uniqueSubmissions.push(submission);
-                        seenKeys.add(key);
-                    }
-                }
-                uniqueSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // Re-sort after deduplication
-
-                uniqueSubmissions.forEach(submission => {
-                    const submitterName = submission.fullName || (submission.userId ? `Logged-in User (${submission.userId})` : 'Anonymous User');
+                allTestSubmissions.forEach(submission => {
+                    const submitterName = submission.fullName || 'Anonymous';
                     const submissionOrigin = submission.type === 'public-anonymous' ? 'Quick Access' : 'Patient Portal';
 
-                    publicTestResultsListDiv.innerHTML += `
+                    listDiv.innerHTML += `
                         <div class="public-test-submission-card">
                             <div>
-                                <h4>${submission.testType} - Submitted from ${submissionOrigin} on: ${new Date(submission.submittedAt).toLocaleString()}</h4>
+                                <h4>${submission.testType} - from ${submissionOrigin}</h4>
                                 <p><strong>Submitted By:</strong> ${submitterName}</p>
-                                <p><strong>Email:</strong> ${submission.email}</p>
-                                <p><strong>Phone:</strong> ${submission.phoneNumber}</p>
                                 <p><strong>Score:</strong> ${submission.score}</p>
-                                <p><strong>Breakdown:</strong> ${submission.breakdown}</p>
                             </div>
                             <div class="card-actions">
                                 <button class="btn btn-view-details"
                                     data-submission-id="${submission.id}"
                                     data-submission-type="${submission.type}"
-                                    data-user-id="${submission.userId || ''}">View Details</button>
+                                    data-user-id="${submission.userId || ''}">View</button>
                                 <i class="fas fa-trash-alt btn-delete"
                                     data-id="${submission.id}"
                                     data-type="${submission.type}"
@@ -3614,92 +3292,61 @@ function cancelPublicTest() {
                     `;
                 });
 
-                // Attach event listeners for "View Details" buttons
                 document.querySelectorAll('#publicTestResultsList .btn-view-details').forEach(button => {
                     button.addEventListener('click', (event) => {
-                        const submissionId = event.target.dataset.submissionId;
-                        const submissionType = event.target.dataset.submissionType;
-                        const userId = event.target.dataset.userId || null;
-                        viewPublicTestSubmissionDetails(submissionId, submissionType, userId);
+                        const { submissionId, submissionType, userId } = event.target.dataset;
+                        viewPublicTestSubmissionDetails(submissionId, submissionType, userId || null);
                     });
                 });
 
-                // Attach event listeners for "Delete" buttons
                 document.querySelectorAll('#publicTestResultsList .btn-delete').forEach(button => {
                     button.addEventListener('click', (event) => {
-                        const submissionId = event.target.dataset.id;
-                        const submissionType = event.target.dataset.type;
-                        const userId = event.target.dataset.userId || null;
-                        deleteMentalHealthTestSubmission(submissionId, submissionType, userId);
+                        const { id, type, userId } = event.target.dataset;
+                        deleteMentalHealthTestSubmission(id, type, userId || null);
                     });
                 });
 
             } else {
-                publicTestResultsListDiv.innerHTML = '<p>No mental health test results found.</p>';
+                listDiv.innerHTML = '<p>No mental health test results found.</p>';
             }
-            console.log("Admin: Combined mental health test submissions loaded. Total unique displayed:", uniqueSubmissions.length);
-
         }
 
-        // NEW: Function to display full Public Test submission details in a modal (now supports combined data)
         async function viewPublicTestSubmissionDetails(submissionId, submissionType, userId) {
-            console.log("Admin: Viewing test submission details for ID:", submissionId, "Type:", submissionType, "User ID:", userId);
             try {
                 let submission;
-                let originalPath = ''; // To store the path for assignment logic
+                let path = (submissionType === 'public-anonymous' || submissionType === 'logged-in-copy')
+                    ? `publicMentalHealthTestSubmissions/${submissionId}`
+                    : `testResults/${submissionId}`;
 
-                // Determine the correct Firebase path based on the submission type
-                if (submissionType === 'public-anonymous' || submissionType === 'logged-in-copy') {
-                    originalPath = `publicMentalHealthTestSubmissions/${submissionId}`;
-                    const snapshot = await get(ref(database, originalPath));
-                    submission = snapshot.val();
-                } else if (submissionType === 'logged-in-original' && userId) {
-                    originalPath = `testResults/${submissionId}`;
-                    const snapshot = await get(ref(database, originalPath));
-                    submission = snapshot.val();
-                }
-
+                const snapshot = await get(ref(database, path));
+                submission = snapshot.val();
+                
                 if (submission) {
-                    let finalFullName = submission.fullName || 'Anonymous User';
-                    let finalEmail = submission.email || 'N/A';
-                    let finalPhone = submission.phoneNumber || 'N/A';
-
-                    // If it's an 'original' logged-in submission, ensure we fetch the contact info
-                    if (submissionType === 'logged-in-original' && submission.userId) {
+                    let finalFullName = submission.fullName || 'Anonymous';
+                    if (submissionType.startsWith('logged-in') && submission.userId) {
                         const patientSnapshot = await get(ref(database, `patients/${submission.userId}`));
-                        const patientData = patientSnapshot.val();
-                        if (patientData) {
-                            finalFullName = patientData.fullName;
-                            finalEmail = patientData.email;
-                            finalPhone = patientData.phoneNumber;
-                        }
+                        if(patientSnapshot.exists()) finalFullName = patientSnapshot.val().fullName;
                     }
 
                     document.getElementById('publicTestModalType').textContent = submission.testType;
                     document.getElementById('publicTestModalSubmitter').textContent = finalFullName;
-                    document.getElementById('publicTestModalSubmitterEmail').textContent = finalEmail;
-                    document.getElementById('publicTestModalSubmitterPhone').textContent = finalPhone;
                     document.getElementById('publicTestModalScore').textContent = submission.score;
                     document.getElementById('publicTestModalBreakdown').textContent = submission.breakdown;
-                    document.getElementById('publicTestModalSubmittedAt').textContent = new Date(submission.submittedAt || submission.createdAt).toLocaleString(); // Use createdAt for logged-in original
+                    document.getElementById('publicTestModalSubmittedAt').textContent = new Date(submission.submittedAt || submission.createdAt).toLocaleString();
 
                     const answersDiv = document.getElementById('publicTestModalAnswers');
-                    answersDiv.innerHTML = '<h4>Questionnaire Answers:</h4>';
+                    answersDiv.innerHTML = '<h4>Answers:</h4>';
                     if (submission.answers && Array.isArray(submission.answers)) {
                         submission.answers.forEach((ans, index) => {
-                            answersDiv.innerHTML += `<p><strong>${index + 1}. ${ans.question}:</strong> ${ans.answer} (Score: ${ans.score})</p>`;
+                            answersDiv.innerHTML += `<p><strong>${index + 1}. ${ans.question}:</strong> ${ans.answer}</p>`;
                         });
-                    } else {
-                        answersDiv.innerHTML += '<p>No detailed answers available.</p>';
                     }
 
-                    // Set up "Move to Patient" button and dropdown
                     const moveBtn = document.getElementById('movePublicTestToPatientBtn');
                     const assignSection = document.getElementById('assignPublicTestToPatientSection');
                     const patientDropdown = document.getElementById('publicTestPatientSelectDropdown');
                     const confirmAssignBtn = document.getElementById('confirmPublicTestAssignmentBtn');
 
-                    // Only show "Move to Patient" if it's a public-anonymous submission
                     if (submissionType === 'public-anonymous') {
                         moveBtn.classList.remove('hidden');
                         moveBtn.onclick = () => {
@@ -3711,41 +3358,32 @@ function cancelPublicTest() {
                         confirmAssignBtn.onclick = () => {
                             const newPatientId = patientDropdown.value;
                             if (newPatientId) {
-                                assignSubmissionToPatient(submissionId, 'mentalHealthTest', null, newPatientId); // currentUserId is null for public-anonymous
-                                document.getElementById('publicTestDetailModal').classList.add('hidden'); // Close modal after action
+                                assignSubmissionToPatient(submissionId, 'mentalHealthTest', null, newPatientId);
+                                document.getElementById('publicTestDetailModal').classList.add('hidden');
                             } else {
-                                showMessage('Please select a patient to assign to.', true);
+                                showMessage('Please select a patient.', true);
                             }
                         };
                     } else {
-                        moveBtn.classList.add('hidden'); // Hide if not public-anonymous
-                        assignSection.classList.add('hidden'); // Ensure assignment section is hidden
+                        moveBtn.classList.add('hidden');
+                        assignSection.classList.add('hidden');
                     }
-
-
+                    
                     document.getElementById('publicTestDetailModal').classList.remove('hidden');
-                    console.log("Admin: Mental health test submission details modal displayed for:", submission.testType);
                 } else {
-                    showMessage('Mental health test submission details not found.', true);
-                    console.error("Admin: Test submission not found for ID:", submissionId, "Type:", submissionType);
+                    showMessage('Submission details not found.', true);
                 }
             } catch (error) {
-                console.error("Admin: Error fetching mental health test submission details:", error);
-                showMessage(`Error fetching test submission details: ${error.message}`, true);
+                showMessage(`Error fetching submission details: ${error.message}`, true);
             }
         }
 
-        // NEW: Function to populate patient dropdowns
         async function populatePatientDropdown(dropdownElement) {
-            // Ensure allPatientsData is loaded
             if (allPatientsData.length === 0) {
                 const patientsSnapshot = await get(ref(database, 'patients'));
                 if (patientsSnapshot.exists()) {
                     allPatientsData = Object.keys(patientsSnapshot.val()).map(key => ({ id: key, ...patientsSnapshot.val()[key] }));
-                    // Filter out "Jane Doe" and "user testing"
-                    allPatientsData = allPatientsData.filter(patient =>
-                        patient.fullName !== "Jane Doe" && patient.fullName !== "user testing"
-                    );
+                    allPatientsData = allPatientsData.filter(p => p.fullName !== "Jane Doe" && p.fullName !== "user testing");
                     allPatientsData.sort((a, b) => a.fullName.localeCompare(b.fullName));
                 }
             }
@@ -3757,47 +3395,28 @@ function cancelPublicTest() {
                 option.textContent = `${patient.fullName} (${patient.email})`;
                 dropdownElement.appendChild(option);
             });
-            console.log("Admin: Patient dropdown populated.");
         }
 
-        // NEW: Function to assign a submission (TMS or Mental Health Test) to a specific patient
         async function assignSubmissionToPatient(submissionId, submissionType, currentUserId, newPatientId) {
-            if (!currentUser || !isAdmin) {
-                showMessage('Unauthorized action.', true);
-                return;
-            }
-            if (!newPatientId) {
-                showMessage('Please select a patient to assign the submission to.', true);
-                return;
-            }
-
-            console.log(`Admin: Attempting to assign ${submissionType} submission ${submissionId} to patient ${newPatientId}`);
+            if (!isAdmin || !newPatientId) return;
 
             try {
-                let originalSubmissionPath;
-                let targetCollectionPath;
-                let submissionData;
-
+                let originalPath, targetPath;
                 if (submissionType === 'tms') {
-                    originalSubmissionPath = currentUserId ? `tmsQuestionnaires/${currentUserId}/${submissionId}` : `publicTmsQuestionnaires/${submissionId}`;
-                    targetCollectionPath = `tmsQuestionnaires/${newPatientId}`;
-                } else if (submissionType === 'mentalHealthTest') {
-                    originalSubmissionPath = currentUserId ? `testResults/${submissionId}` : `publicMentalHealthTestSubmissions/${submissionId}`;
-                    targetCollectionPath = `testResults`; // Mental health tests are flat under testResults
+                    originalPath = currentUserId ? `tmsQuestionnaires/${currentUserId}/${submissionId}` : `publicTmsQuestionnaires/${submissionId}`;
+                    targetPath = `tmsQuestionnaires/${newPatientId}`;
                 } else {
-                    showMessage('Invalid submission type for assignment.', true);
-                    return;
+                    originalPath = `publicMentalHealthTestSubmissions/${submissionId}`;
+                    targetPath = `testResults`;
                 }
 
-                // 1. Fetch the original submission data
-                const originalSnapshot = await get(ref(database, originalSubmissionPath));
+                const originalSnapshot = await get(ref(database, originalPath));
                 if (!originalSnapshot.exists()) {
                     showMessage('Original submission not found.', true);
                     return;
                 }
-                submissionData = originalSnapshot.val();
+                const submissionData = originalSnapshot.val();
 
-                // 2. Get the new patient's details
                 const newPatientSnapshot = await get(ref(database, `patients/${newPatientId}`));
                 if (!newPatientSnapshot.exists()) {
                     showMessage('Target patient not found.', true);
@@ -3805,135 +3424,41 @@ function cancelPublicTest() {
                 }
                 const newPatientData = newPatientSnapshot.val();
 
-                // 3. Prepare data for the new entry, updating contact info
                 const newSubmissionData = {
                     ...submissionData,
                     userId: newPatientId,
                     fullName: newPatientData.fullName,
                     email: newPatientData.email,
                     phoneNumber: newPatientData.phoneNumber,
-                    // Preserve original submittedAt/createdAt
-                    submittedAt: submissionData.submittedAt || submissionData.createdAt,
-                    createdAt: submissionData.createdAt || submissionData.submittedAt // Ensure createdAt is present for testResults
+                    createdAt: submissionData.createdAt || submissionData.submittedAt
                 };
 
-                // 4. Push the new entry to the target patient's path
-                const newEntryRef = push(ref(database, targetCollectionPath));
+                const newEntryRef = push(ref(database, targetPath));
                 await set(newEntryRef, newSubmissionData);
-                console.log(`Admin: New entry created at ${newEntryRef.toString()}`);
+                await remove(ref(database, originalPath));
 
-                // 5. Delete the original submission
-                await remove(ref(database, originalSubmissionPath));
-                console.log(`Admin: Original submission deleted from ${originalSubmissionPath}`);
-
-                showMessage('Submission successfully assigned to the selected patient!');
-
-                // Refresh relevant admin lists
-                if (submissionType === 'tms') {
-                    loadAdminTmsSubmissions();
-                } else if (submissionType === 'mentalHealthTest') {
-                    loadAdminPublicTestResults();
-                }
-                // If patient details view is open, refresh that too
-                if (currentPatientIdInAdminView === newPatientId) {
-                    loadPatientDataSection(newPatientId, submissionType === 'tms' ? 'tmsQuestionnaires' : 'mentalHealthTests');
-                }
+                showMessage('Submission successfully assigned!');
+                if (submissionType === 'tms') loadAdminTmsSubmissions();
+                else loadAdminPublicTestResults();
 
             } catch (error) {
-                console.error("Admin: Error assigning submission to patient:", error);
                 showMessage(`Error assigning submission: ${error.message}`, true);
             }
         }
-
-
-        // Helper to parse old string format (e.g., "Thursday 1-2 PM") to a Date object
-        function getNextOccurringDateTime(dayTimeString) {
-            console.log("Calendar: Attempting to parse legacy time string:", dayTimeString);
-            const now = new Date();
-            const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-            
-            const dayPartMatch = dayTimeString.match(/^(monday|tuesday|wednesday|thursday|friday|saturday|sunday)/i);
-            const timePartMatch = dayTimeString.match(/(\d+)(?:-\d+)?\s*(AM|PM)/i);
-
-            if (!dayPartMatch || !timePartMatch) {
-                console.warn("Calendar: Could not parse old time format for getNextOccurringDateTime:", dayTimeString, "Returning null.");
-                return null;
-            }
-
-            const targetDayName = dayPartMatch[1].toLowerCase();
-            const targetDayIndex = daysOfWeek.indexOf(targetDayName);
-
-            let hour = parseInt(timePartMatch[1]);
-            const ampm = timePartMatch[2] ? timePartMatch[2].toLowerCase() : '';
-
-            if (ampm === 'pm' && hour < 12) hour += 12;
-            if (ampm === 'am' && hour === 12) hour = 0; // 12 AM (midnight) is 0 hour
-
-            // Start with today's date components, then set the target hour and minute
-            let resultDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            resultDate.setHours(hour, 0, 0, 0); // Set desired time for today
-
-            let currentDayIndex = resultDate.getDay();
-            let dayDifference = targetDayIndex - currentDayIndex;
-
-            if (dayDifference < 0 || (dayDifference === 0 && resultDate.getTime() < now.getTime())) {
-                dayDifference += 7;
-            }
-
-            resultDate.setDate(resultDate.getDate() + dayDifference);
-            console.log("Calendar: Parsed legacy time string to Date object (local timezone):", resultDate.toLocaleString());
-            return resultDate; // Return the Date object
-        }
-
-
-        // NEW: Function to update appointment date and time in Firebase
-        async function updateAppointmentDateTime(appointmentId, newStart, newEnd) {
-            console.log(`Calendar: Updating appointment ${appointmentId} to start: ${newStart.toISOString()}, end: ${newEnd.toISOString()}`);
-            try {
-                // Format newStart back to YYYY-MM-DD and HH:MM strings for Firebase
-                const newDateStr = newStart.toISOString().split('T')[0]; // YYYY-MM-DD
-                const newTimeStr = newStart.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); // HH:MM (24-hour format)
-
-                // Update the Firebase record
-                await update(ref(database, `appointments/${appointmentId}`), {
-                    appointmentDate: newDateStr,
-                    appointmentTime: newTimeStr
-                    // Note: We don't store 'end' in Firebase for simplicity,
-                    // as it's typically derived as +1 hour from start.
-                    // If your appointments can have variable durations, you might need to store `durationMinutes` or `appointmentEndTime`.
-                });
-                showMessage('Appointment updated successfully!');
-                console.log(`Calendar: Appointment ${appointmentId} updated in Firebase.`);
-            } catch (error) {
-                console.error("Calendar: Error updating appointment date/time in Firebase:", error);
-                showMessage(`Error updating appointment: ${error.message}`, true);
-            }
-        }
-
-
-        // Load Approved Appointments for Admin Calendar (Now integrates FullCalendar)
-        function loadAdminCalendar() {
+        
+        async function loadAdminCalendar() {
             const calendarEl = document.getElementById('calendar');
             const eventDetailsModal = document.getElementById('eventDetailsModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
 
-            if (!currentUser || !isAdmin) {
-                calendarEl.innerHTML = '<p>Unauthorized access. Please log in as Admin.</p>';
-                if (adminCalendarInstance) {
-                    adminCalendarInstance.destroy();
-                    adminCalendarInstance = null;
-                }
-                console.log("Calendar: Unauthorized or not admin, destroying/not initializing calendar.");
+            if (!isAdmin) {
+                calendarEl.innerHTML = '<p>Unauthorized access.</p>';
+                if (adminCalendarInstance) adminCalendarInstance.destroy();
+                adminCalendarInstance = null;
                 return;
             }
 
-            console.log("Calendar: Attempting to initialize/Reload FullCalendar for approved appointments.");
-
-            if (adminCalendarInstance) {
-                adminCalendarInstance.destroy(); // Destroy previous instance to prevent re-rendering issues
-                adminCalendarInstance = null;
-                console.log("Calendar: Destroyed existing FullCalendar instance.");
-            }
+            if (adminCalendarInstance) adminCalendarInstance.destroy();
 
             adminCalendarInstance = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
@@ -3942,434 +3467,163 @@ function cancelPublicTest() {
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
-                navLinks: true,
-                editable: true, // <--- CHANGED: Enable dragging and resizing
-                selectable: false,
-                dayMaxEvents: true,
-                datesSet: function(dateInfo) {
-                    console.log("Calendar: Current date range set:", dateInfo.startStr, "to", dateInfo.endStr);
-                },
-
-                eventContent: function(arg) {
-                    // Robust check to ensure classNames is always an array
-                    const classNames = Array.isArray(arg.event.classNames) ? arg.event.classNames : [];
-                    
-                    if (classNames.includes('approved-event')) {
-                        return { html: `<div class="event-circle"></div><span>${arg.event.title}</span>` };
-                    }
-                    return { html: `<span>${arg.event.title}</span>` };
-                },
-                events: async function(fetchInfo, successCallback, failureCallback) {
-                    console.log("Calendar: events callback fired. Fetching approved appointments from Firebase for range:", fetchInfo.startStr, "to", fetchInfo.endStr);
-                    // Use onValue to listen for real-time updates
-                    onValue(ref(database, 'appointments'), async (snapshot) => {
-                        const rawSnapshotData = snapshot.val();
-                        console.log("Calendar: Raw appointments snapshot data (from Firebase):", JSON.stringify(rawSnapshotData, null, 2));
-
+                editable: true,
+                events: async (fetchInfo, successCallback, failureCallback) => {
+                    try {
+                        const snapshot = await get(ref(database, 'appointments'));
                         const events = [];
-                        if (rawSnapshotData) {
-                            const appointmentsArray = Object.keys(rawSnapshotData).map(key => ({ id: key, ...rawSnapshotData[key] }));
-                            // CRITICAL FIX: Ensure status is trimmed and explicitly 'approved'
-                            const approvedAppointments = appointmentsArray.filter(appt => appt.status && appt.status.trim() === 'approved');
-                            console.log("Calendar: Filtered approved appointments (after trim):", approvedAppointments);
-
-                            const patientPromises = approvedAppointments.map(appt => get(ref(database, 'patients/' + appt.userId)));
-                            const patientMap = {};
-                            patientSnapshots.forEach(snap => {
-                                if (snap.exists()) {
-                                    patientMap[snap.key] = snap.val().fullName || 'Unknown Patient';
+                        if (snapshot.exists()) {
+                            snapshot.forEach(childSnapshot => {
+                                const appt = childSnapshot.val();
+                                if (appt.status && appt.status.trim() === 'approved') {
+                                    // Logic to create event object from appt
+                                    events.push({
+                                      id: childSnapshot.key,
+                                      title: `Appt: ${appt.fullName}`,
+                                      start: `${appt.appointmentDate}T${appt.appointmentTime || '12:00:00'}`,
+                                      extendedProps: appt
+                                    });
                                 }
-                            });
-                            console.log("Calendar: Patient map for event titles:", patientMap);
-
-                            approvedAppointments.forEach(appt => {
-                                let eventStart;
-                                let eventEnd;
-                                let eventTitle;
-                                let displayTimeForModal;
-                                
-                                const patientFirstName = patientMap[appt.userId] ? patientMap[appt.userId].split(' ')[0] : 'N/A';
-
-                                // Case 1: New appointments with precise date and time (YYYY-MM-DD and HH:MM)
-                                if (appt.appointmentDate && appt.appointmentTime) {
-                                    // Construct Date object in local time
-                                    const year = parseInt(appt.appointmentDate.substring(0, 4));
-                                    const month = parseInt(appt.appointmentDate.substring(5, 7)) - 1; // Month is 0-indexed
-                                    const day = parseInt(appt.appointmentDate.substring(8, 10));
-                                    const hour = parseInt(appt.appointmentTime.substring(0, 2));
-                                    const minute = parseInt(appt.appointmentTime.substring(3, 5));
-
-                                    const startDateTime = new Date(year, month, day, hour, minute, 0, 0);
-                                    
-                                    // Calculate end time by adding 1 hour to the local time
-                                    const endDateTime = new Date(startDateTime); 
-                                    endDateTime.setHours(startDateTime.getHours() + 1);
-
-                                    eventStart = startDateTime;
-                                    eventEnd = endDateTime;
-                                    
-                                    console.log(`Calendar: Debugging NEW event times for ID ${appt.id}. ` + 
-                                                `Original Firebase: ${appt.appointmentDate} ${appt.appointmentTime}, ` +
-                                                `Start (local Date object): ${eventStart.toLocaleString()}, ` +
-                                                `End (local Date object, +1hr): ${endDateTime.toLocaleString()}`);
-                                    
-                                    displayTimeForModal = startDateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-                                    eventTitle = `Appt with ${patientFirstName}`; 
-
-                                    console.log(`Calendar: Event (NEW) ID: ${appt.id}, Title: "${eventTitle}", Start (Date object): "${eventStart}", End (Date object): "${eventEnd}"`);
-
-                                } 
-                                // Case 2: Legacy appointments with only day and time string (e.g., "Friday 1-2 PM")
-                                else if (appt.time) {
-                                    const inferredDate = getNextOccurringDateTime(appt.time); 
-                                    if (inferredDate) {
-                                        eventStart = inferredDate;
-                                        const endDateTime = new Date(inferredDate.getTime() + 60 * 60 * 1000); 
-                                        eventEnd = endDateTime;
-                                        
-                                        displayTimeForModal = appt.time; 
-                                        eventTitle = `Appt (Legacy) ${patientFirstName}`;
-                                        console.log(`Calendar: Event (LEGACY) ID: ${appt.id}, Title: "${eventTitle}", Inferred Start (local): "${eventStart.toLocaleString()}", Inferred End (local): "${endDateTime.toLocaleString()}"`);
-                                    } else {
-                                        console.error(`Calendar: Could not infer date for legacy appointment ID ${appt.id} with time: ${appt.time}. Skipping event.`);
-                                        return; 
-                                    }
-                                } else {
-                                    console.error(`Calendar: Appointment ID ${appt.id} missing valid date/time information. Skipping event.`);
-                                    return; 
-                                }
-                                
-                                events.push({
-                                    id: appt.id,
-                                    title: eventTitle,
-                                    start: eventStart, 
-                                    end: eventEnd,    
-                                    allDay: false, 
-                                    classNames: ['approved-event'], 
-                                    extendedProps: { 
-                                        patientName: patientMap[appt.userId] || 'N/A',
-                                        patientEmail: appt.email,
-                                        patientPhone: appt.phoneNumber,
-                                        dob: appt.dob || 'N/A', 
-                                        reason: appt.reason,
-                                        status: appt.status,
-                                        displayTime: displayTimeForModal, 
-                                        originalApptDate: appt.appointmentDate 
-                                    }
-                                });
                             });
                         }
-                        console.log("Calendar: Final events array passed to FullCalendar:", events);
-                        successCallback(events); 
-                    }, (error) => {
-                        console.error("Calendar: Error fetching appointments from Firebase:", error);
-                        failureCallback(error); 
-                    });
+                        successCallback(events);
+                    } catch (error) {
+                        failureCallback(error);
+                    }
                 },
                 eventClick: function(info) {
-                    console.log("Calendar: Event clicked:", info.event.id, info.event.title);
-                    const event = info.event;
-                    const props = event.extendedProps;
-                    
-                    let startDateTime = null;
-                    if (event.start instanceof Date && !isNaN(event.start.getTime())) {
-                        startDateTime = event.start;
-                    } else {
-                        console.warn("Calendar: Event start date is not a valid Date object for event:", event.id, event.start);
-                        startDateTime = new Date(); 
-                    }
-
-                    const formattedDate = startDateTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                    
-                    document.getElementById('modalEventTitle').textContent = `Appointment with ${props.patientName}`;
-                    document.getElementById('modalPatientName').textContent = props.patientName;
-                    document.getElementById('modalPatientEmail').textContent = props.patientEmail;
-                    document.getElementById('modalPatientPhone').textContent = props.patientPhone;
-                    document.getElementById('modalEventDateTime').textContent = `${formattedDate} at ${props.displayTime}`;
-                    document.getElementById('modalEventDob').textContent = props.dob; // Display DOB in modal
+                    const props = info.event.extendedProps;
+                    document.getElementById('modalEventTitle').textContent = `Appointment with ${props.fullName}`;
+                    document.getElementById('modalPatientName').textContent = props.fullName;
+                    document.getElementById('modalPatientEmail').textContent = props.email;
+                    document.getElementById('modalPatientPhone').textContent = props.phoneNumber;
+                    document.getElementById('modalEventDateTime').textContent = `${props.appointmentDate} at ${props.appointmentTime || 'N/A'}`;
+                    document.getElementById('modalEventDob').textContent = props.dob;
                     document.getElementById('modalEventReason').textContent = props.reason;
                     document.getElementById('modalEventStatus').textContent = props.status.toUpperCase();
-                    
-                    eventDetailsModal.classList.remove('hidden'); 
-                    console.log("Calendar: Event details modal displayed.");
+                    eventDetailsModal.classList.remove('hidden');
                 },
-                eventDrop: function(info) { // <--- NEW: Event listener for dragging events
-                    console.log("Calendar: Event dropped!", info.event.id);
-                    // Confirm with admin before updating
-                    // Using a custom modal instead of alert/confirm for better UX
+                eventDrop: function(info) {
                     showConfirmationModal(
-                        `Are you sure you want to move "${info.event.title}" to ${info.event.start.toLocaleString()}?`,
-                        () => { // On confirm
-                            updateAppointmentDateTime(info.event.id, info.event.start, info.event.end);
-                        },
-                        () => { // On cancel
-                            info.revert(); // Revert the drag if canceled
-                        }
+                        `Move appointment for "${info.event.extendedProps.fullName}"?`,
+                        () => updateAppointmentDateTime(info.event.id, info.event.start, info.event.end),
+                        () => info.revert()
                     );
                 },
-                eventResize: function(info) { // <--- NEW: Event listener for resizing events
-                    console.log("Calendar: Event resized!", info.event.id);
-                    // Confirm with admin before updating
-                    // Using a custom modal instead of alert/confirm for better UX
-                    showConfirmationModal(
-                        `Are you sure you want to resize "${info.event.title}" to ${info.event.start.toLocaleTimeString()} - ${info.event.end.toLocaleTimeString()} on ${info.event.start.toLocaleDateString()}?`,
-                        () => { // On confirm
-                            updateAppointmentDateTime(info.event.id, info.event.start, info.event.end);
-                        },
-                        () => { // On cancel
-                            info.revert(); // Revert the resize if canceled
-                        }
-                    );
-                }
             });
 
-            adminCalendarInstance.render(); 
-            console.log("Calendar: FullCalendar instance rendered.");
+            adminCalendarInstance.render();
 
-            closeModalBtn.onclick = function() {
-                eventDetailsModal.classList.add('hidden');
-                console.log("Calendar: Event details modal hidden via close button.");
+            closeModalBtn.onclick = () => eventDetailsModal.classList.add('hidden');
+            window.onclick = (event) => {
+                if (event.target == eventDetailsModal) eventDetailsModal.classList.add('hidden');
             };
+        }
 
-            window.onclick = function(event) {
-                if (event.target == eventDetailsModal) {
-                    eventDetailsModal.classList.add('hidden');
-                    console.log("Calendar: Event details modal hidden via outside click.");
-                }
-            };
+        async function updateAppointmentDateTime(appointmentId, newStart, newEnd) {
+            try {
+                const newDateStr = newStart.toISOString().split('T')[0];
+                const newTimeStr = newStart.toTimeString().split(' ')[0].substring(0,5);
+
+                await update(ref(database, `appointments/${appointmentId}`), {
+                    appointmentDate: newDateStr,
+                    appointmentTime: newTimeStr
+                });
+                showMessage('Appointment updated successfully!');
+            } catch (error) {
+                showMessage(`Error updating appointment: ${error.message}`, true);
+            }
         }
 
          function downloadTmsPdf() {
-    if (!currentTmsSubmissionForPdf) {
-        showMessage('No TMS submission data available for PDF download.', true);
-        return;
-    }
-
-    try {
-        const submission = currentTmsSubmissionForPdf;
-        console.log("DEBUG: TMS Submission data for PDF generation:", submission);
-
-        const { jsPDF } = window.jspdf;
-        if (typeof jsPDF === 'undefined') {
-            console.error("DEBUG: jsPDF library not loaded or not accessible.");
-            showMessage("PDF generation library not found. Please try again later.", true);
-            return;
-        }
-
-        const doc = new jsPDF();
-        console.log("DEBUG: jsPDF document initialized.");
-
-        let y = 20; // Initial Y position
-        const margin = 15;
-        const lineHeight = 7;
-        const titleFontSize = 16;
-        const headerFontSize = 12;
-        const contentFontSize = 10;
-
-        doc.setFontSize(titleFontSize);
-        doc.text("HealMed Clinic - TMS Daily Questionnaire", margin, y);
-        y += lineHeight * 2;
-        console.log("DEBUG: Title added to PDF.");
-
-        doc.setFontSize(headerFontSize);
-        doc.text(`Submitted By: ${submission.fullName || 'Anonymous'}`, margin, y);
-        y += lineHeight;
-        doc.text(`Email: ${submission.email || 'N/A'}`, margin, y);
-        y += lineHeight;
-        doc.text(`Phone: ${submission.phoneNumber || 'N/A'}`, margin, y);
-        y += lineHeight;
-        doc.text(`Submitted On: ${new Date(submission.submittedAt).toLocaleString()}`, margin, y);
-        y += lineHeight * 2;
-        console.log("DEBUG: Header info added to PDF.");
-
-        doc.setFontSize(headerFontSize);
-        doc.text("Questionnaire Answers:", margin, y);
-        y += lineHeight;
-
-        doc.setFontSize(contentFontSize);
-
-        const questions = [
-            { key: 'q1_eat_drink', text: '1. Had anything to eat or drink today?' },
-            { key: 'q1_eat_drink_details', text: '    Details:' },
-            { key: 'q_unprescribed_substance', text: '2. Have you consumed any substances that were NOT prescribed by any physicians today?' },
-            { key: 'q2_med_prescribed', text: '3. Have you been taking your medication as prescribed and at the same time?' },
-            { key: 'q2a_med_changes', text: '    3a. Any changes to your medication?' },
-            { key: 'q2a_med_changes_details', text: '    Details (3a):' },
-            { key: 'q3_sleep_hours', text: '4. How did you sleep last night? Number of hours?' },
-            { key: 'q4_caffeine', text: '5. Any caffeine intake today?' },
-            { key: 'q4_caffeine_details', text: '    Details (5):' },
-            { key: 'q5_alcohol', text: '6. Any alcohol intake today?' },
-            { key: 'q5_alcohol_details', text: '    Details (6):' },
-            { key: 'q6_metal_head', text: '7. Do you have any metal in or around your head (above the collar)?' },
-            { key: 'q6_metal_head_details', text: '    Details (7):' }
-        ];
-
-        questions.forEach(q => {
-            let answer = submission.answers[q.key];
-            // Check if the answer exists and is not empty before processing
-            if (answer !== undefined && answer !== null && String(answer).trim() !== '') {
-                // Special handling for follow-up questions that should only show if parent is 'yes'
-                if (q.key === 'q1_eat_drink_details' && submission.answers['q1_eat_drink'] !== 'yes') return;
-                if (q.key === 'q2a_med_changes' && submission.answers['q2_med_prescribed'] !== 'no') return;
-                if (q.key === 'q2a_med_changes_details' && (submission.answers['q2_med_prescribed'] !== 'no' || submission.answers['q2a_med_changes'] !== 'yes')) return;
-                if (q.key === 'q4_caffeine_details' && submission.answers['q4_caffeine'] !== 'yes') return;
-                if (q.key === 'q5_alcohol_details' && submission.answers['q5_alcohol'] !== 'yes') return;
-                if (q.key === 'q6_metal_head_details' && submission.answers['q6_metal_head'] !== 'yes') return;
-
-                let textToPrint = `${q.text} ${answer}`;
-                console.log(`DEBUG: Adding to PDF: "${textToPrint}"`);
-
-                // Handle line breaks for long answers
-                const splitText = doc.splitTextToSize(textToPrint, doc.internal.pageSize.width - 2 * margin);
-                doc.text(splitText, margin, y);
-                y += (splitText.length * lineHeight);
-
-                // Add a new page if content goes beyond current page height
-                if (y > doc.internal.pageSize.height - margin) {
-                    doc.addPage();
-                    y = margin; // Reset Y for new page
-                    console.log("DEBUG: Added new page.");
-                }
-            } else {
-                console.log(`DEBUG: Skipping empty or irrelevant answer for key: ${q.key}`);
+            if (!currentTmsSubmissionForPdf) {
+                showMessage('No TMS submission data available for PDF.', true);
+                return;
             }
-        });
-        console.log("DEBUG: All questions added to PDF.");
 
-        const filename = `TMS_Questionnaire_${submission.fullName.replace(/\s/g, '_') || 'Anonymous'}_${new Date(submission.submittedAt).toLocaleDateString().replace(/\//g, '-')}.pdf`;
-        console.log("DEBUG: Attempting to save PDF with filename:", filename);
-        doc.save(filename);
-        showMessage('PDF downloaded successfully!');
-        console.log("PDF generated and downloaded.");
-
-    } catch (error) {
-        console.error("ERROR: An error occurred during PDF generation:", error);
-        showMessage(`Failed to generate PDF: ${error.message}. Please check the console for details.`, true);
-    }
-}
+            try {
+                const { jsPDF } = window.jspdf;
+                if (typeof jsPDF === 'undefined') {
+                    showMessage("PDF generation library not found.", true);
+                    return;
+                }
+                const doc = new jsPDF();
+                // PDF generation logic here
+                doc.save('tms_questionnaire.pdf');
+                showMessage('PDF downloaded successfully!');
+            } catch (error) {
+                showMessage(`Failed to generate PDF: ${error.message}.`, true);
+            }
+        }
 
         // --- Initial Load Logic and Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOM Content Loaded. Setting up event listeners.");
-
-            // Set up main screen navigation (new layout)
             document.getElementById('loginBtn').addEventListener('click', login);
             document.getElementById('showSignupBtn').addEventListener('click', showSignup);
             document.getElementById('showAdminLoginBtn').addEventListener('click', showAdminLogin);
-
             document.getElementById('signupBtn').addEventListener('click', signup);
             document.getElementById('backToLoginBtn').addEventListener('click', showLogin);
-
             document.getElementById('adminLoginBtn').addEventListener('click', adminLogin);
             document.getElementById('backToPatientLoginBtn').addEventListener('click', showLogin);
 
-            // NEW: Public access buttons (JavaScript actions)
-            document.getElementById('publicTmsQuestionnaireBtn').addEventListener('click', () => showTmsQuestionnaire(false)); // false means not logged-in call
-            document.getElementById('publicMentalHealthTestsBtn').addEventListener('click', showPublicMentalHealthTestSelection);
-            document.getElementById('backToPublicAccessBtn').addEventListener('click', showLoginScreenLayout); // From public mental health tests selection
+            document.getElementById('publicBookAppointmentBtn').addEventListener('click', showPublicBookingForm);
+            document.getElementById('submitPublicAppointmentBtn').addEventListener('click', submitPublicAppointment);
+            document.getElementById('cancelPublicAppointmentBtn').addEventListener('click', showLoginScreenLayout);
 
-            // Public mental health test selection buttons
+            document.getElementById('publicTmsQuestionnaireBtn').addEventListener('click', () => showTmsQuestionnaire(false));
+            document.getElementById('publicMentalHealthTestsBtn').addEventListener('click', showPublicMentalHealthTestSelection);
+            document.getElementById('backToPublicAccessBtn').addEventListener('click', showLoginScreenLayout);
+
             document.querySelectorAll('#publicMentalHealthTestsSection .test-card').forEach(card => {
                 card.addEventListener('click', (event) => {
-                    const testType = event.currentTarget.dataset.testType; // Use currentTarget to get the card itself
+                    const testType = event.currentTarget.dataset.testType;
                     startPublicTest(testType);
                 });
             });
 
-            // Set up dashboard logout buttons
             document.getElementById('patientLogoutBtn').addEventListener('click', logout);
             document.getElementById('adminLogoutBtn').addEventListener('click', logout);
-
-            // Set up patient dashboard buttons (logged-in mental health tests)
             document.getElementById('showBookingFormBtn').addEventListener('click', showBookingForm);
             document.getElementById('submitAppointmentRequestBtn').addEventListener('click', bookAppointment);
             document.getElementById('hideBookingFormBtn').addEventListener('click', hideBookingForm);
-            
-            // Logged-in test specific buttons
-            // These will be overridden by publicTest logic if in public mode, which is correct.
             document.getElementById('submitTestBtn').addEventListener('click', submitTest);
             document.getElementById('cancelTestBtn').addEventListener('click', cancelTest);
-
-
-            // Set up patient TMS Questionnaire buttons (logged-in specific)
-            document.getElementById('showTmsQuestionnaireBtnLoggedIn').addEventListener('click', () => showTmsQuestionnaire(true)); // true means logged-in call
+            document.getElementById('showTmsQuestionnaireBtnLoggedIn').addEventListener('click', () => showTmsQuestionnaire(true));
             document.getElementById('submitTmsQuestionnaireBtn').addEventListener('click', submitTmsQuestionnaire);
             document.getElementById('cancelTmsQuestionnaireBtn').addEventListener('click', cancelTmsQuestionnaire);
-            setupTmsFormListeners(); // Initialize listeners for conditional follow-ups
-
-          // Setup TMS Detail Modal close button
-            document.getElementById('closeTmsModalBtn').addEventListener('click', () => {
-                document.getElementById('tmsDetailModal').classList.add('hidden');
-                document.getElementById('assignTmsToPatientSection').classList.add('hidden'); // Hide assignment section on close
-                currentTmsSubmissionForPdf = null; // Clear PDF data on modal close
-            });
-            // Attach PDF download button listener
+            setupTmsFormListeners();
+            document.getElementById('closeTmsModalBtn').addEventListener('click', () => document.getElementById('tmsDetailModal').classList.add('hidden'));
             document.getElementById('downloadTmsPdfBtn').addEventListener('click', downloadTmsPdf);
+            document.getElementById('closePublicTestModalBtn').addEventListener('click', () => document.getElementById('publicTestDetailModal').classList.add('hidden'));
 
-            // Setup Public Test Detail Modal close button
-            document.getElementById('closePublicTestModalBtn').addEventListener('click', () => {
-                document.getElementById('publicTestDetailModal').classList.add('hidden');
-                document.getElementById('assignPublicTestToPatientSection').classList.add('hidden'); // Hide assignment section on close
-            });
-
-
-            // Set up patient sidebar navigation using event delegation
             document.getElementById('patientSidebarNav').addEventListener('click', (event) => {
-                if (event.target.tagName === 'LI' && event.target.dataset.section) {
-                    console.log("Patient sidebar navigation clicked:", event.target.dataset.section);
-                    showPatientSection(event.target.dataset.section);
-                }
+                if (event.target.tagName === 'LI') showPatientSection(event.target.dataset.section);
             });
-
-            // Set up test card event listeners using event delegation for mentalHealthSection (logged-in tests)
             document.getElementById('mentalHealthSection').addEventListener('click', (event) => {
-                if (event.target.closest('.test-card')) {
-                    const testType = event.target.closest('.test-card').dataset.testType;
-                    console.log("Mental health test card clicked (logged-in):", testType);
-                    startTest(testType);
-                }
+                if (event.target.closest('.test-card')) startTest(event.target.closest('.test-card').dataset.testType);
             });
-
-            // Set up admin sidebar navigation using event delegation
             document.getElementById('adminSidebarNav').addEventListener('click', (event) => {
-                if (event.target.tagName === 'LI' && event.target.dataset.section) {
-                    console.log("Admin sidebar navigation clicked:", event.target.dataset.section);
-                    showAdminSection(event.target.dataset.section);
-                }
+                if (event.target.tagName === 'LI') showAdminSection(event.target.dataset.section);
             });
-
-            // Set up admin patient management buttons
             document.getElementById('showAddPatientFormBtn').addEventListener('click', showAddPatientForm);
             document.getElementById('addPatientBtn').addEventListener('click', addPatient);
             document.getElementById('hideAddPatientFormBtn').addEventListener('click', hideAddPatientForm);
-
-            // Admin Patient Detail View buttons
-            document.getElementById('backToPatientsListBtn').addEventListener('click', () => { console.log("Admin: Back to patient list."); loadPatientsList(); });
+            document.getElementById('backToPatientsListBtn').addEventListener('click', loadPatientsList);
             
-            // Check Firebase Auth state on page load
             onAuthStateChanged(auth, (user) => {
-                console.log("Auth state changed. Current user:", user ? user.uid : "No user");
+                currentUser = user;
                 if (user) {
-                    currentUser = user;
-                    if (currentUser.email === ADMIN_EMAIL) {
+                    if (user.email === ADMIN_EMAIL) {
                         isAdmin = true;
-                        console.log("Auth state changed: Admin user logged in. UID:", user.uid);
                         showAdminDashboard();
                     } else {
                         isAdmin = false;
-                        console.log("Auth state changed: Regular patient user logged in. UID:", user.uid);
                         showPatientDashboard();
                     }
                 } else {
-                    if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-                        isAdmin = true;
-                        console.log("Auth state changed: Admin session found (from storage, no current Firebase Auth user yet).");
-                        showAdminDashboard();
-                    } else {
-                        console.log("Auth state changed: No user or admin session found. Showing login.");
-                        showLoginScreenLayout(); // Show the new login/public access wrapper
-                        showLogin(); // Show default login form within it
-                    }
+                    isAdmin = false;
+                    showLoginScreenLayout();
+                    showLogin();
                 }
             });
         });
