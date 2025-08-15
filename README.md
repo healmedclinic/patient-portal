@@ -14,6 +14,7 @@ There’s also an admin section for staff to handle appointments, manage patient
 ---
 
 ## Firebase Rules for Patient Portal Backend
+
 {
   "rules": {
     "publicTmsQuestionnaires": {
