@@ -7,7 +7,7 @@
 
 ## About the Project
 
-This is the official patient portal for HealMed Clinic. I built it to make it easier for patients, staff, and doctors to connect in one place. Through the portal, patients can book appointments, take mental health assessments, fill out daily TMS questionnaires, and manage their records—all without having to call the front desk.  
+This is the official patient portal for HealMed Clinic. I built it to make it easier for patients, staff, and doctors to connect in one place. Through the portal, patients can book appointments, take mental health assessments, fill out daily TMS questionnaires, and manage their records-all without having to call the front desk.  
 
 There’s also an admin section for staff to handle appointments, manage patient accounts, and review test results, plus a dedicated doctor portal for clinical use.
 
