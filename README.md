@@ -5,7 +5,7 @@
 
 ---
 ##Table of Contents
-- [UI/UX Design](#Patient Portal UI/UX Design)
+- [UI/UX Design](#Patient-Portal-UI/UX-Design)
 - [About the Project](#AbouttheProject)
 - [Firebase Rules](#FirebaseRulesforPatientPortalBackend)
 - [What You Can Do](#WhatYouCanDo)
