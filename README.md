@@ -90,8 +90,8 @@ There’s also an admin section for staff to handle appointments, manage patient
         }
       }
     }
-  }
-}
+    }
+    }
 
 ## What You Can Do
 
