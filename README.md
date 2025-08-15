@@ -15,13 +15,13 @@ There’s also an admin section for staff to handle appointments, manage patient
 
 ## Firebase Rules for Patient Portal Backend
 
-{
-  "rules": {
+
+    {
+    "rules":{
     "publicTmsQuestionnaires": {
       ".read": "true",
       ".write": "true"
     },
-
     "publicMentalHealthTestSubmissions": {
       ".read": "true",
       ".write": "true"
