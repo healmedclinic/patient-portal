@@ -9,6 +9,8 @@
 - [About the Project](#About-the-Project)
 - [Firebase Rules](#Firebase-Rules-for-Patient-Portal-Backend)
 - [What You Can Do](#What-You-Can-Do)
+- [Tech Used](#Tech-Used)
+- [Running it Locally](#Running-It-Locally)
 
 ## Patient Portal UI/UX Design
 ![Model](https://github.com/healmedclinic/patient-portal/blob/main/patient%20portal.jpg)
