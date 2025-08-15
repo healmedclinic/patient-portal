@@ -5,6 +5,10 @@
 
 ---
 
+## Patient Portal UI/UX Design
+![Model](https://github.com/healmedclinic/patient-portal/blob/main/patient%20portal.jpg)
+
+
 ## About the Project
 
 This is the official patient portal for HealMed Clinic. I built it to make it easier for patients, staff, and doctors to connect in one place. Through the portal, patients can book appointments, take mental health assessments, fill out daily TMS questionnaires, and manage their records-all without having to call the front desk.  
