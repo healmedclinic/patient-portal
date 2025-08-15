@@ -4,6 +4,11 @@
 **GitHub Repo:** [https://github.com/healmedclinic/patient-portal](https://github.com/healmedclinic/patient-portal)
 
 ---
+##Table of Contents
+- [UI/UX Design](#PatientPortalUI/UXDesign)
+- [About the Project](#AbouttheProject)
+- [Firebase Rules](#FirebaseRulesforPatientPortalBackend)
+- [What You Can Do](#WhatYouCanDo)
 
 ## Patient Portal UI/UX Design
 ![Model](https://github.com/healmedclinic/patient-portal/blob/main/patient%20portal.jpg)
